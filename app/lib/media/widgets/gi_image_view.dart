@@ -24,7 +24,20 @@ class GiImageView extends StatelessWidget {
 
     return Image.asset(
       image.assetPath,
-      fit: BoxFit.cover,
+      // **`contain`, never `cover`.** An endoscopic image arrives at whatever
+      // shape the scope and the publication left it in: a 1400x1081 frame, a
+      // 1356x520 three-panel strip, a 527x675 portrait. `cover` fills the
+      // frame by cutting whatever does not fit, and in an endoscopic image the
+      // edge of the lumen is often the finding. Cropping it is a clinical
+      // mistake dressed as a design one, and stretching it to fit is worse.
+      //
+      // The frame around this is already sized to the set's tallest image (see
+      // `Tageskarte.frameAspect`), so in the common case there is nothing to
+      // letterbox. What letterboxing remains sits on the ramp, not on a
+      // blurred copy of the image: a blurred backdrop is decoration standing
+      // in for content, and it invents detail at the exact edge a reader is
+      // trying to judge.
+      fit: BoxFit.contain,
       // The image is the content, so a failure to load it is worth seeing
       // rather than worth hiding behind an empty box.
       errorBuilder: (context, error, stackTrace) => ColoredBox(

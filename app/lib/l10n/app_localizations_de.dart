@@ -923,4 +923,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get noReleasedCaseText =>
       'Es ist noch kein Fall freigegeben.\nSobald ein Fall ärztlich geprüft ist, erscheint er hier.';
+
+  @override
+  String get unclearedRightsRowText => 'Rechte ungeprüft';
 }

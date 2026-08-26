@@ -85,6 +85,125 @@
         "attributionText": "Platzhalter des gi-daily-app Team – kein Patientenbild, keine Datensatzquelle"
       },
       "addedAt": "2026-08-25T22:30:06+00:00"
+    },
+    {
+      "id": "test-trichobezoar-001",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "trichobezoar",
+      "assetPath": "assets/images/test-trichobezoar-001.jpg",
+      "width": 1400,
+      "height": 1081,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
+    },
+    {
+      "id": "test-trichobezoar-002",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "trichobezoar-bergung",
+      "assetPath": "assets/images/test-trichobezoar-002.jpg",
+      "width": 1400,
+      "height": 1081,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
+    },
+    {
+      "id": "test-trichobezoar-003",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "trichobezoar-praeparat",
+      "assetPath": "assets/images/test-trichobezoar-003.jpg",
+      "width": 1356,
+      "height": 520,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
+    },
+    {
+      "id": "test-ulkusperforation-001",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "ulkusperforation",
+      "assetPath": "assets/images/test-ulkusperforation-001.jpg",
+      "width": 484,
+      "height": 387,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
+    },
+    {
+      "id": "test-ulkusperforation-002",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "ulkusperforation-clip",
+      "assetPath": "assets/images/test-ulkusperforation-002.jpg",
+      "width": 484,
+      "height": 387,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
+    },
+    {
+      "id": "test-ulkusperforation-003",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "ulkusperforation-omentum",
+      "assetPath": "assets/images/test-ulkusperforation-003.jpg",
+      "width": 531,
+      "height": 578,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
+    },
+    {
+      "id": "test-ulkusperforation-004",
+      "source": "test",
+      "sourceId": "local/aspect-ratio-test",
+      "className": "ulkusperforation-kontrolle",
+      "assetPath": "assets/images/test-ulkusperforation-004.jpg",
+      "width": 527,
+      "height": 675,
+      "licence": {
+        "spdx": "UNVERIFIED",
+        "holder": "unbekannt",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Technisches Testbild – Rechte nicht geprüft, nicht veröffentlichungsfähig"
+      },
+      "addedAt": "2026-08-26T00:00:00+00:00"
     }
   ]
 }

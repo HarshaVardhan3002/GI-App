@@ -8,18 +8,22 @@ import 'package:intl/intl.dart';
 /// {@template tageskarte}
 /// One case, one screen.
 ///
-/// **The image is top-anchored and the text block is bottom-anchored, and
-/// neither knows the other exists.** That is what makes overlap structurally
-/// impossible rather than something to check by eye: anchored to opposite
-/// edges, neither can push the other off screen. Where they meet, they meet
-/// inside the dissolve.
+/// **The image field takes what the text block leaves, and overlap is
+/// structurally impossible rather than arithmetically survivable.**
 ///
-/// The arithmetic is in `docs/SCREENS.md`. Worst case is 96dp of overlap on a
-/// 360x640, against a [dissolveHeight] of 150. **That makes the dissolve the
-/// collision-absorption mechanism rather than decoration**, and shortening it
-/// below 96 breaks the smallest device we target.
+/// The card was a Stack with the image pinned to the top at a
+/// fixed 1.25 aspect and the text pinned to the bottom, and `docs/SCREENS.md`
+/// carries the collision arithmetic that made that safe. It was only ever safe
+/// for one image shape: a 1356x520 strip left two thirds of the screen as dead
+/// black, and a tall portrait would have eaten the question.
+///
+/// It is a Column now. The text block takes its natural height, the image
+/// field takes everything else, and the two cannot reach each other because
+/// they are siblings rather than layers. The dissolve stops being a
+/// collision-absorption mechanism and becomes what it looks like: the bottom
+/// of the image dissolving into the ground.
 /// {@endtemplate}
-class Tageskarte extends StatelessWidget {
+class Tageskarte extends StatefulWidget {
   /// {@macro tageskarte}
   const Tageskarte({required this.giCase, required this.isLast, super.key});
 
@@ -29,10 +33,20 @@ class Tageskarte extends StatelessWidget {
   /// Whether another case sits below this one. Drives the peek.
   final bool isLast;
 
-  /// The image never gets cropped by layout, so its height follows its width.
-  static const double imageAspect = 1.25;
+  @override
+  State<Tageskarte> createState() => _TageskarteState();
+}
 
-  /// See the class doc: this number is a constraint, not a taste.
+class _TageskarteState extends State<Tageskarte> {
+  /// Which image the carousel is on.
+  ///
+  /// **It lives here rather than in the carousel** because the dots that
+  /// report it live in the text block, which is the carousel's sibling. The
+  /// first pass left it at a hardcoded zero, so the carousel moved and the
+  /// dots said it had not.
+  int _imageIndex = 0;
+
+  /// How far the bottom of the image field dissolves into the ground.
   static const double dissolveHeight = 150;
 
   /// How much of the next card shows above the bottom bar.
@@ -40,8 +54,6 @@ class Tageskarte extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.sizeOf(context).width;
-    final imageHeight = width * imageAspect;
     // The tab bar is a material and the card runs underneath it, so the bar no
     // longer shortens the body. The text block and the peek have to clear it
     // themselves, or they render behind the labels.
@@ -52,55 +64,79 @@ class Tageskarte extends StatelessWidget {
     // `BottomNavBar.barHeight` on top counted the bar twice and left the peek
     // floating 49dp above the bar.
     final barInset = MediaQuery.paddingOf(context).bottom;
+    final giCase = widget.giCase;
 
     return ColoredBox(
       color: context.gi.surface,
-      child: Stack(
+      child: Column(
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: imageHeight,
-            child: TageskarteImages(images: giCase.images),
-          ),
-          // The image does not end, it stops being the image. No hairline, no
-          // edge, nothing to notice.
-          Positioned(
-            top: imageHeight - dissolveHeight,
-            left: 0,
-            right: 0,
-            height: dissolveHeight,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    context.gi.surface.withValues(alpha: 0),
-                    context.gi.surface,
-                  ],
-                  // Weighted late so the fade reads as the image dissolving
-                  // rather than as a grey band laid over it.
-                  stops: const [0, .85],
+          // **The image field takes everything the text does not.** It was a
+          // fixed 1.25 aspect, which was true of exactly one image shape; a
+          // 1356x520 strip left two thirds of the screen as dead black under
+          // it. The field is now whatever is left, and the image is contained
+          // inside it, so every aspect fills the same screen and none of them
+          // is cropped, stretched, or floated in a hole.
+          Expanded(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                TageskarteImages(
+                  images: giCase.images,
+                  onIndexChanged: (index) =>
+                      setState(() => _imageIndex = index),
                 ),
+                // The image does not end, it stops being the image. No
+                // hairline, no edge, nothing to notice.
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  height: dissolveHeight,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          context.gi.surface.withValues(alpha: 0),
+                          context.gi.surface,
+                        ],
+                        // Weighted late so the fade reads as the image
+                        // dissolving rather than as a grey band laid over it.
+                        stops: const [0, .85],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              0,
+              AppSpacing.lg,
+              AppSpacing.lg,
+            ),
+            child: TageskarteText(
+              giCase: giCase,
+              imageIndex: _imageIndex,
+            ),
+          ),
+          if (!widget.isLast)
+            Padding(
+              padding: EdgeInsets.only(
+                left: AppSpacing.sm,
+                right: AppSpacing.sm,
+                bottom: barInset,
               ),
-            ),
-          ),
-          Positioned(
-            left: AppSpacing.lg,
-            right: AppSpacing.lg,
-            bottom: barInset + peekHeight + AppSpacing.lg,
-            child: TageskarteText(giCase: giCase),
-          ),
-          if (!isLast)
-            Positioned(
-              left: AppSpacing.sm,
-              right: AppSpacing.sm,
-              bottom: barInset,
-              height: peekHeight,
-              child: const TageskartePeek(),
-            ),
+              child: const SizedBox(
+                height: peekHeight,
+                child: TageskartePeek(),
+              ),
+            )
+          else
+            SizedBox(height: barInset + peekHeight),
         ],
       ),
     );
@@ -110,17 +146,25 @@ class Tageskarte extends StatelessWidget {
 /// {@template tageskarte_text}
 /// Everything under the image, as one bottom-anchored block.
 ///
-/// Its height is **bounded**, because the question is capped at two lines. An
+/// Its height is **bounded**, because the question is one rolling line. An
 /// uncapped headline would make the block unbounded and collision undecidable
 /// at design time, which is why the cap is a layout decision rather than a
-/// typographic one.
+/// typographic one. It was two ellipsised lines; a rolling line is shorter, so
+/// the block only ever gained clearance from the image.
 /// {@endtemplate}
 class TageskarteText extends StatelessWidget {
   /// {@macro tageskarte_text}
-  const TageskarteText({required this.giCase, super.key});
+  const TageskarteText({
+    required this.giCase,
+    this.imageIndex = 0,
+    super.key,
+  });
 
   /// The case being described.
   final GiCase giCase;
+
+  /// Which image the carousel above is showing.
+  final int imageIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +177,10 @@ class TageskarteText extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (giCase.images.length > 1) ...[
-          TageskarteDots(count: giCase.images.length),
+          TageskarteDots(
+            count: giCase.images.length,
+            active: imageIndex,
+          ),
           const Gap.v(AppSpacing.md),
         ],
         Text(
@@ -142,10 +189,12 @@ class TageskarteText extends StatelessWidget {
           style: GiText.caption.copyWith(color: colors.labelSecondary),
         ),
         const Gap.v(AppSpacing.sm),
-        Text(
+        // One line that rolls, not two that stop at an ellipsis. German
+        // clinical headings do not fit on a phone, and the reader should not
+        // have to open the case to find out what the case is about. See
+        // `GiRollingText`.
+        GiRollingText(
           giCase.question(languageCode),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
           style: GiText.question.copyWith(color: colors.label),
         ),
         const Gap.v(AppSpacing.lg),
@@ -160,7 +209,15 @@ class TageskarteText extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: GiText.footnote.copyWith(
-            color: giCase.isPlaceholder ? colors.warning : colors.labelTertiary,
+            // Orange whenever the reader is owed a warning about what they are
+            // looking at: a stand-in, or a real photograph whose rights are
+            // not cleared. Both are things this app must never let pass as
+            // ordinary content.
+            color:
+                giCase.isPlaceholder ||
+                    !giCase.images.first.isRightsCleared
+                ? colors.warning
+                : colors.labelTertiary,
           ),
         ),
       ],

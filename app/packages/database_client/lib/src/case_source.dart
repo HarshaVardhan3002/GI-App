@@ -50,6 +50,14 @@ abstract interface class GiContentStatus {
   /// {@macro gi_content_status}
   int get placeholderImageCount;
 
+  /// Images in the set whose rights are not cleared: placeholders, and any
+  /// image pulled in for a technical reason without a licence behind it.
+  ///
+  /// **Constraint 1 is the reason this number exists.** A status screen that
+  /// counted only placeholders would report a clean set while uncleared
+  /// photographs were rendering in it.
+  int get unclearedImageCount;
+
   /// Recommendations in the set, and how many are stand-ins.
   int get recommendationCount;
 
@@ -143,6 +151,28 @@ abstract interface class GiImage {
 
   /// True when this image is standing in for a real one.
   bool get isPlaceholder;
+
+  /// True when the licence on this image satisfies constraint 1: an open,
+  /// de-identified dataset with attribution.
+  ///
+  /// **Separate from [isPlaceholder] on purpose.** A placeholder has nothing
+  /// to show. An image can equally have something to show and no cleared
+  /// right to show it - a technical test image, a frame pulled in to check a
+  /// layout. Screens must be able to tell those apart, because they are shown
+  /// differently and only one of them can ever ship.
+  bool get isRightsCleared;
+
+  /// The image's own pixel width, as the dataset published it.
+  int get pixelWidth;
+
+  /// The image's own pixel height.
+  int get pixelHeight;
+
+  /// Width over height. **Layout follows this rather than the other way
+  /// round.** An endoscopic image arrives at whatever shape the scope and the
+  /// publication left it in, from a tall portrait frame to a wide three-panel
+  /// strip, and a frame that assumes one shape warps or crops every other one.
+  double get aspectRatio;
 }
 
 /// One numbered recommendation, quoted rather than reproduced.

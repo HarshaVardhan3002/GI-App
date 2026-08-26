@@ -73,7 +73,7 @@ stacked on each other.
 
 | Semantic | Light | Dark |
 |---|---|---|
-| `label` | `#0B1620` | `#FFFFFF` |
+| `label` | `#0B1620` | `#E4EBF2` |
 | `labelSecondary` | `#485A69` | `#9BAAB6` |
 | `labelTertiary` | `#7A8B99` | `#6B7A86` |
 | `tint` | `#0B6BB5` | `#3FA9F5` |
@@ -81,8 +81,15 @@ stacked on each other.
 | `incorrect` | `#C0392B` | `#FF453A` |
 | `warning` | `#B26A00` | `#FF9F0A` |
 
-Text holds 12.55:1 or better at every depth. Green and red never appear on
-anything that is not a verdict.
+Text holds 12.29:1 or better against every depth a surface is actually painted
+at. Green and red never appear on anything that is not a verdict.
+
+**Dark `label` is not pure white, and that is deliberate.** It was `#FFFFFF`
+until the owner called the result cream. At the sizes the Newsreader wordmark
+and question are set, pure white on a near-black ground blooms and reads warm,
+which is the one thing this ground exists to avoid. `#E4EBF2` carries the same
+blue trace as the ramp, so text and ground read as one material rather than as
+white laid on top of something.
 
 Both appearances ship, following the system.
 

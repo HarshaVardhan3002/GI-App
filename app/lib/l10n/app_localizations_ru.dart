@@ -939,4 +939,7 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get noReleasedCaseText =>
       'No case has been released yet.\nOnce a physician has reviewed one, it appears here.';
+
+  @override
+  String get unclearedRightsRowText => 'Rights not cleared';
 }

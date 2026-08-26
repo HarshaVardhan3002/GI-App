@@ -101,6 +101,13 @@ class LocalContentSource {
                 'PLACEHOLDER',
           )
           .length,
+      unclearedImageCount: images
+          .where(
+            (image) => const {'PLACEHOLDER', 'UNVERIFIED'}.contains(
+              (image['licence'] as Map<String, dynamic>)['spdx'],
+            ),
+          )
+          .length,
       recommendationCount: recommendations.length,
       placeholderRecommendationCount: recommendations
           .where(
@@ -316,6 +323,22 @@ class LocalImage implements GiImage {
 
   @override
   bool get isPlaceholder => licenceSpdx == 'PLACEHOLDER';
+
+  // Anything that is not a real SPDX identifier is not a cleared right.
+  // `UNVERIFIED` is the marker a technical test image carries.
+  @override
+  bool get isRightsCleared =>
+      licenceSpdx != 'PLACEHOLDER' && licenceSpdx != 'UNVERIFIED';
+
+  @override
+  int get pixelWidth => _raw['width'] as int;
+
+  @override
+  int get pixelHeight => _raw['height'] as int;
+
+  @override
+  double get aspectRatio =>
+      pixelHeight == 0 ? 1 : pixelWidth / pixelHeight;
 }
 
 class LocalRecommendation implements GiRecommendation {
@@ -395,6 +418,7 @@ class _LocalContentStatus implements GiContentStatus {
     this.rejectedCount = 0,
     this.imageCount = 0,
     this.placeholderImageCount = 0,
+    this.unclearedImageCount = 0,
     this.recommendationCount = 0,
     this.placeholderRecommendationCount = 0,
   });
@@ -413,6 +437,9 @@ class _LocalContentStatus implements GiContentStatus {
 
   @override
   final int placeholderImageCount;
+
+  @override
+  final int unclearedImageCount;
 
   @override
   final int recommendationCount;

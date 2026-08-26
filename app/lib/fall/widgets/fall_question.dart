@@ -8,10 +8,12 @@ import 'package:intl/intl.dart';
 /// {@template fall_question}
 /// The case before it is answered.
 ///
-/// The image takes 40% of the screen rather than Heute's full 1.25 aspect,
+/// The image takes at most 40% of the screen rather than Heute's full frame,
 /// **because this screen is for reading rather than for looking**. The reader
 /// has already seen the image at its largest on the card; here it is context
-/// for a question, and the question is what has to fit.
+/// for a question, and the question is what has to fit. Below that ceiling the
+/// frame follows the image's own aspect, so nothing is cropped or padded into
+/// a shape it does not have.
 /// {@endtemplate}
 class FallQuestion extends StatelessWidget {
   /// {@macro fall_question}
@@ -35,8 +37,25 @@ class FallQuestion extends StatelessWidget {
   /// Called when the reader commits to their answer.
   final VoidCallback onConfirm;
 
-  /// Section 8's proportion for this screen.
+  /// Section 8's proportion for this screen, and the frame's ceiling.
   static const double imageFraction = .40;
+
+  /// The floor. A wide strip would otherwise collapse to a band with the
+  /// question sitting under a sliver of image.
+  static const double minImageFraction = .24;
+
+  /// How tall the frame is on this screen, as a fraction of screen height.
+  ///
+  /// Same rule as Heute: **the frame follows the image**, bounded at both
+  /// ends. A 1356x520 strip gets a short frame instead of a tall one with the
+  /// image floating in the middle of it, and a 527x675 portrait gets the full
+  /// 40% instead of being letterboxed inside a landscape hole.
+  static double frameFraction(GiImage image, Size size) {
+    final aspect = image.aspectRatio;
+    if (aspect <= 0) return imageFraction;
+    final natural = size.width / aspect / size.height;
+    return natural.clamp(minImageFraction, imageFraction);
+  }
 
   /// Shorter than Heute's 150: less image to dissolve into, and the content
   /// below it starts sooner.
@@ -46,7 +65,8 @@ class FallQuestion extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.gi;
     final size = MediaQuery.sizeOf(context);
-    final imageHeight = size.height * imageFraction;
+    final imageHeight =
+        size.height * frameFraction(giCase.images.first, size);
     final languageCode = Localizations.localeOf(context).languageCode;
 
     return ColoredBox(

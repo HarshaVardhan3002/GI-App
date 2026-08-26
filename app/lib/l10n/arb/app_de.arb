@@ -84,5 +84,9 @@
   "aboutAppBodyText": "GI Daily zeigt einen endoskopischen Fall pro Tag mit einer Frage auf Facharztniveau und einer Auflösung, die auf eine nummerierte Empfehlung der zuständigen Leitlinie verweist.",
   "contentPendingNoticeText": "Dieser Text ist ein Entwurf. Die endgültige Fassung wird von den Projektbeteiligten verfasst und ärztlich geprüft, bevor die Anwendung veröffentlicht wird.",
   "imprintPendingNoticeText": "Der Impressumstext liegt noch nicht vor. Er ist für eine Veröffentlichung in Deutschland gesetzlich vorgeschrieben und muss von den Projektbeteiligten eingetragen werden.",
-  "noReleasedCaseText": "Es ist noch kein Fall freigegeben.\nSobald ein Fall ärztlich geprüft ist, erscheint er hier."
+  "noReleasedCaseText": "Es ist noch kein Fall freigegeben.\nSobald ein Fall ärztlich geprüft ist, erscheint er hier.",
+  "unclearedRightsRowText": "Rechte ungeprüft",
+  "@unclearedRightsRowText": {
+    "description": "Inhaltsstatus row: images whose licence is not cleared."
+  }
 }

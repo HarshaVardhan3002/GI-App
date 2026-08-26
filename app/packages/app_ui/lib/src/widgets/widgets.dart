@@ -10,4 +10,5 @@ export 'app_snackbar.dart';
 export 'app_text_field.dart';
 export 'gap.dart';
 export 'gi_group.dart';
+export 'gi_rolling_text.dart';
 export 'tappable.dart';

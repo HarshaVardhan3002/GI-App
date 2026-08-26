@@ -648,5 +648,9 @@
         "type": "int"
       }
     }
+  },
+  "unclearedRightsRowText": "Rights not cleared",
+  "@unclearedRightsRowText": {
+    "description": "Inhaltsstatus row: images whose licence is not cleared."
   }
 }

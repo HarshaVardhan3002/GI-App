@@ -61,12 +61,14 @@ class BildquellenPage extends StatelessWidget {
               GiRow(
                 label: image.attributionText,
                 labelStyle: GiText.footnote.copyWith(
-                  color: image.isPlaceholder
-                      ? colors.warning
-                      : colors.labelTertiary,
+                  color: image.isRightsCleared
+                      ? colors.labelTertiary
+                      : colors.warning,
                 ),
               ),
-              if (!image.isPlaceholder)
+              // An uncleared image's sourceUrl is a filler value like a
+              // placeholder's, so the same rule covers both.
+              if (image.isRightsCleared)
                 GiRow(
                   label: l10n.sourceText,
                   labelColor: colors.tint,

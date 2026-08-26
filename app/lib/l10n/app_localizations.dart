@@ -1570,6 +1570,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No case has been released yet.\nOnce a physician has reviewed one, it appears here.'**
   String get noReleasedCaseText;
+
+  /// Inhaltsstatus row: images whose licence is not cleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Rights not cleared'**
+  String get unclearedRightsRowText;
 }
 
 class _AppLocalizationsDelegate

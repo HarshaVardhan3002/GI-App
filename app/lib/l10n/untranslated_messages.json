@@ -234,6 +234,7 @@
     "aboutAppBodyText",
     "contentPendingNoticeText",
     "imprintPendingNoticeText",
-    "noReleasedCaseText"
+    "noReleasedCaseText",
+    "unclearedRightsRowText"
   ]
 }

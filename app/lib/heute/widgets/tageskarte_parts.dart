@@ -10,17 +10,25 @@ import 'package:go_router/go_router.dart';
 /// {@template tageskarte_images}
 /// The image, or the images, filling the width.
 ///
-/// Never cropped by layout: the frame follows the image's aspect rather than
-/// the image being cut to fit a frame. In an endoscopic image the edge of the
-/// lumen is often the finding, and a layout that trims it is a clinical
-/// mistake dressed as a design one.
+/// Never cropped by layout: the field takes the space the text leaves and each
+/// image is contained inside it, whatever shape it arrived in. In an
+/// endoscopic image the edge of the lumen is often the finding, and a layout
+/// that trims it is a clinical mistake dressed as a design one.
 /// {@endtemplate}
 class TageskarteImages extends StatefulWidget {
   /// {@macro tageskarte_images}
-  const TageskarteImages({required this.images, super.key});
+  const TageskarteImages({
+    required this.images,
+    this.onIndexChanged,
+    super.key,
+  });
 
   /// In carousel order.
   final List<GiImage> images;
+
+  /// Called with the index the carousel settled on. The dots that report it
+  /// are not inside this widget.
+  final ValueChanged<int>? onIndexChanged;
 
   @override
   State<TageskarteImages> createState() => _TageskarteImagesState();
@@ -40,6 +48,10 @@ class _TageskarteImagesState extends State<TageskarteImages> {
     return PageView.builder(
       controller: _controller,
       itemCount: widget.images.length,
+      onPageChanged: (index) {
+        GiHaptics.selection(context);
+        widget.onIndexChanged?.call(index);
+      },
       itemBuilder: (context, index) =>
           GiImageView(image: widget.images[index]),
     );

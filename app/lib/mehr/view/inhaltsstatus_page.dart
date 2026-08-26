@@ -71,6 +71,14 @@ class InhaltsstatusPage extends StatelessWidget {
               part: status.placeholderRecommendationCount,
               total: status.recommendationCount,
             ),
+            // Wider than the placeholder count and deliberately so: a set can
+            // hold no placeholders at all and still hold photographs nobody
+            // has cleared the rights to.
+            _PlaceholderRow(
+              label: l10n.unclearedRightsRowText,
+              part: status.unclearedImageCount,
+              total: status.imageCount,
+            ),
           ],
         ),
         MehrNote(l10n.contentStatusNoteText),

@@ -83,7 +83,13 @@ class GiColors {
   /// endoscopic images are read against black.
   const GiColors.dark()
     : brightness = Brightness.dark,
-      label = const Color(0xFFFFFFFF),
+      // Not pure white. At the sizes the Newsreader question and the wordmark
+      // are set, #FFFFFF on a near-black ground blooms and reads warm - the
+      // ivory-on-black look a reader will call cream, which is the opposite of
+      // what this ground is for. This paper carries the same blue trace as the
+      // ramp, so text and ground read as one material rather than as white
+      // laid on top of something.
+      label = const Color(0xFFE4EBF2),
       labelSecondary = const Color(0xFF9BAAB6),
       labelTertiary = const Color(0xFF6B7A86),
       tint = const Color(0xFF3FA9F5),
@@ -105,7 +111,8 @@ class GiColors {
   /// Which appearance this is. Drives [depth].
   final Brightness brightness;
 
-  /// Primary text. Holds 12.55:1 or better at every depth.
+  /// Primary text. Holds 12.29:1 or better against every depth a surface is
+  /// actually painted at, in both appearances.
   final Color label;
 
   /// Supporting text: metadata, dates, citations.
