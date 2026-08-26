@@ -2,7 +2,7 @@
 
 Name, analogy, palette candidates and wordmark for GI Daily.
 
-Palette choice is **open**. Everything else here is decided. The comparison board
+Palette is **decided: Gletscherspalte**. Typeface selection is open. The comparison board
 with live swatches is at
 <https://claude.ai/code/artifact/741addc8-8f7b-4baa-8d6f-3a001a5bb29b>.
 
@@ -58,7 +58,7 @@ of `#C1524E`, `#D97B72`, `#A8342F`, `#E39B92`.
 | **Moorlandgewitter** | Wet heather as the light drops | `#9A96E0` | 243 | 119 | 108 |
 | **Tiefsee** | Water below the light | `#35C6D4` | 185 | 177 | 50 |
 
-### Recommendation: Gletscherspalte
+### Chosen: Gletscherspalte
 
 Ice reads blue because water absorbs the red end of the spectrum before the
 light returns. The medium removes red, which is exactly what this interface is
@@ -98,9 +98,24 @@ hues for its accent. Their scarcity is what makes them readable.
 | Nicht richtig | `#FF453A` | Verdict only |
 | Platzhalter | `#FF9F0A` | Placeholder marking only |
 
-## 5. Wordmark
+## 5. Typeface
 
-**GI Daily**, set in Inter 700, tracking -0.02em, sentence case. Not all-caps,
+Six candidates, each rendering the same real German screen on Gletscherspalte:
+<https://claude.ai/code/artifact/a06fbbed-3fe0-4496-aa4d-5c16e5d49bcd>
+
+The test is not how a face looks in a headline. It is whether
+`Zylinderepithelmetaplasie` fits on a 360dp phone, which leaves 328dp of line.
+German does not break compounds and Flutter does not hyphenate, so the word fits
+or it hangs off the screen.
+
+Recommendation: **Fira Sans**, narrower than the alternatives, drawn for small
+screens by someone solving for German, and it ships a matching mono for AWMF
+register numbers. IBM Plex Sans is the close second. Inter is free and not wrong,
+only anonymous.
+
+## 6. Wordmark
+
+**GI Daily**, 700 weight, tracking -0.02em, sentence case. Not all-caps,
 and not a logotype pretending to be a signature.
 
 It replaces `AppLogo` at the optical weight the Instagram wordmark held, so the
@@ -110,7 +125,7 @@ app bar's rhythm survives the swap. Four call sites pick it up unchanged.
 the word wins. The app icon is a separate problem and is not solved by shrinking
 the wordmark into a square.
 
-## 6. Voice
+## 7. Voice
 
 German, Fachsprache, plain. The reader is a specialist between cases, not a
 learner being encouraged.
@@ -121,9 +136,9 @@ learner being encouraged.
   says so on screen.
 - English exists only as a developer debug locale.
 
-## 7. Open
+## 8. Open
 
-- **Palette.** Blocks Phase 1 of the build plan.
+- **Typeface.** Blocks Phase 1 together with the wordmark.
 - **App icon.** Not designed. A wordmark does not shrink into an icon, and the
   obvious move, a stylised lumen or scope circle, risks reading as a generic
   medical roundel. Worth a separate pass.

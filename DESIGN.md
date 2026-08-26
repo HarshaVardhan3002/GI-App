@@ -52,12 +52,12 @@ correctly in both. Any widget that hardcodes a hex value is a defect.
 | Token | Light | Dark | Role |
 |---|---|---|---|
 | `surface` | `#FFFFFF` | `#000000` | Page ground. Dark is true black - the image floats and OLED disappears |
-| `surfaceRaised` | `#F5F5F7` | `#1C1C1E` | Cards, grouped containers, sheets |
-| `surfacePressed` | `#EBEBEF` | `#2C2C2E` | Selected and pressed rows |
-| `separator` | `#DCDCE0` | `#38383A` | Hairlines |
-| `label` | `#000000` | `#FFFFFF` | Primary text |
-| `labelSecondary` | `#5C5C61` | `rgba(235,235,245,.60)` | Supporting text |
-| `labelTertiary` | `#8E8E93` | `rgba(235,235,245,.30)` | Metadata, timestamps |
+| `surfaceRaised` | `#F1F5F9` | `#101A22` | Cards, grouped containers, sheets |
+| `surfacePressed` | `#E4EBF2` | `#18242E` | Selected and pressed rows |
+| `separator` | `#D5DDE6` | `#26333D` | Hairlines |
+| `label` | `#0B1620` | `#FFFFFF` | Primary text |
+| `labelSecondary` | `#485A69` | `#9BAAB6` | Supporting text |
+| `labelTertiary` | `#7A8B99` | `#6B7A86` | Metadata, timestamps |
 | `tint` | `#0A6FD8` | `#0A84FF` | **Every** interactive element |
 | `correct` | `#2E7D4F` | `#30D158` | Verdict only |
 | `incorrect` | `#C0392B` | `#FF453A` | Verdict only |
@@ -90,7 +90,7 @@ is not used that way here.
 
 ## 5. Type
 
-**Inter**, already bundled in `app_ui`. Apple's text-style metrics, because they
+**Pending selection**, then bundled into `app_ui` the way Inter already is. Six candidates at `docs/BRANDING.md`; Fira Sans recommended on the German argument. Apple's text-style metrics, because they
 are tuned for exactly this reading distance.
 
 | Style | Size / line | Weight | Use |
