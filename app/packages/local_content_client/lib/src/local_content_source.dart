@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:database_client/database_client.dart';
 import 'package:flutter/services.dart';
 import 'package:shared/shared.dart';
 import 'package:user_repository/user_repository.dart';
@@ -75,14 +76,14 @@ class LocalContentSource {
       if (review['status'] != 'approved') continue;
 
       final media = <Media>[];
-      final imageMeta = <Map<String, dynamic>>[];
+      final imageMeta = <GiImage>[];
 
       for (final imageId in (post['imageIds'] as List).cast<String>()) {
         final image = imagesById[imageId];
         if (image == null) {
           throw StateError('post ${post['id']} references missing $imageId');
         }
-        imageMeta.add(image);
+        imageMeta.add(LocalImage(image));
 
         final bytes = await _bundle.load(image['assetPath'] as String);
         media.add(
@@ -116,8 +117,8 @@ class LocalContentSource {
           ),
           raw: post,
           images: imageMeta,
-          recommendation: recommendation,
-          guideline: guideline,
+          recommendation: LocalRecommendation(recommendation),
+          guideline: LocalGuideline(guideline),
         ),
       );
     }
@@ -147,7 +148,10 @@ class LocalContentSource {
 }
 
 /// One approved case, with everything it points at already resolved.
-class LocalCase {
+///
+/// Implements [GiCase], so every screen above it talks to the seam rather than
+/// to this class or to the JSON underneath it.
+class LocalCase implements GiCase {
   const LocalCase({
     required this.post,
     required this.raw,
@@ -157,40 +161,163 @@ class LocalCase {
   });
 
   /// The post as the existing feed expects it.
+  @override
   final Post post;
 
   /// The original JSON, for the quiz and provenance the feed does not model.
   final Map<String, dynamic> raw;
 
-  final List<Map<String, dynamic>> images;
-  final Map<String, dynamic> recommendation;
-  final Map<String, dynamic> guideline;
+  @override
+  final List<GiImage> images;
+
+  @override
+  final GiRecommendation recommendation;
+
+  @override
+  final GiGuideline guideline;
 
   /// The day this case is the case for.
+  @override
   DateTime get date => post.createdAt;
 
-  List<Map<String, dynamic>> get options =>
-      (raw['options'] as List).cast<Map<String, dynamic>>();
+  @override
+  List<GiOption> get options => (raw['options'] as List)
+      .cast<Map<String, dynamic>>()
+      .map(_LocalOption.new)
+      .toList(growable: false);
 
-  Map<String, dynamic> get correctOption =>
-      options.firstWhere((option) => option['correct'] == true);
+  /// The one option marked correct. A case without exactly one is a content
+  /// error, and it throws here rather than rendering a quiz with no answer.
+  GiOption get correctOption =>
+      options.firstWhere((option) => option.isCorrect);
 
+  @override
   String get questionType => raw['questionType'] as String;
 
+  @override
   String explanation(String languageCode) =>
       _localized(raw['explanation'] as Map<String, dynamic>, languageCode);
 
+  @override
   String question(String languageCode) =>
       _localized(raw['question'] as Map<String, dynamic>, languageCode);
 
   /// True when any part of this case is standing in for the real thing.
+  @override
   bool get isPlaceholder =>
-      images.any(
-        (image) =>
-            (image['licence'] as Map<String, dynamic>)['spdx'] == 'PLACEHOLDER',
-      ) ||
-      (recommendation['quote'] as String).startsWith('PLATZHALTER');
+      images.any((image) => image.isPlaceholder) ||
+      recommendation.quote.startsWith('PLATZHALTER');
 
   static String _localized(Map<String, dynamic> value, String languageCode) =>
       (languageCode == 'en' ? value['en'] : value['de']) as String;
+}
+
+class _LocalOption implements GiOption {
+  const _LocalOption(this._raw);
+
+  final Map<String, dynamic> _raw;
+
+  @override
+  String get id => _raw['id'] as String;
+
+  @override
+  bool get isCorrect => _raw['correct'] == true;
+
+  @override
+  String text(String languageCode) => LocalCase._localized(
+    _raw['text'] as Map<String, dynamic>,
+    languageCode,
+  );
+}
+
+class LocalImage implements GiImage {
+  const LocalImage(this._raw);
+
+  final Map<String, dynamic> _raw;
+
+  Map<String, dynamic> get _licence => _raw['licence'] as Map<String, dynamic>;
+
+  @override
+  String get id => _raw['id'] as String;
+
+  @override
+  String get assetPath => _raw['assetPath'] as String;
+
+  @override
+  String get source => _raw['source'] as String;
+
+  @override
+  String get className => _raw['className'] as String;
+
+  @override
+  String get licenceSpdx => _licence['spdx'] as String;
+
+  @override
+  String get licenceHolder => _licence['holder'] as String;
+
+  @override
+  String get attributionText => _licence['attributionText'] as String;
+
+  @override
+  String get sourceUrl => _licence['sourceUrl'] as String;
+
+  @override
+  String get licenceUrl => _licence['licenceUrl'] as String;
+
+  @override
+  bool get isPlaceholder => licenceSpdx == 'PLACEHOLDER';
+}
+
+class LocalRecommendation implements GiRecommendation {
+  const LocalRecommendation(this._raw);
+
+  final Map<String, dynamic> _raw;
+
+  @override
+  String get number => _raw['number'] as String;
+
+  @override
+  String get strength => _raw['strength'] as String;
+
+  @override
+  String get consensus => _raw['consensus'] as String;
+
+  @override
+  String get levelOfEvidence => _raw['levelOfEvidence'] as String;
+
+  @override
+  String get quote => _raw['quote'] as String;
+
+  @override
+  String get citation => _raw['citation'] as String;
+
+  @override
+  String get url => _raw['url'] as String;
+}
+
+class LocalGuideline implements GiGuideline {
+  const LocalGuideline(this._raw);
+
+  final Map<String, dynamic> _raw;
+
+  @override
+  String get awmfRegisterNumber => _raw['awmfRegisterNumber'] as String;
+
+  @override
+  String get title => _raw['title'] as String;
+
+  @override
+  String get publisher => _raw['publisher'] as String;
+
+  @override
+  String get level => _raw['level'] as String;
+
+  @override
+  String get version => _raw['version'] as String;
+
+  @override
+  String get rightsNote => _raw['rightsNote'] as String;
+
+  @override
+  String get url => _raw['url'] as String;
 }

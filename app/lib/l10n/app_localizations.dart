@@ -1156,6 +1156,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'More'**
   String get moreNavBarItemLabel;
+
+  /// Shown on Today when the content set holds nothing approved.
+  ///
+  /// In en, this message translates to:
+  /// **'No case has been released yet.'**
+  String get heuteEmptyText;
+
+  /// The single next action on a case card.
+  ///
+  /// In en, this message translates to:
+  /// **'Open case'**
+  String get openCaseText;
+
+  /// Shown in place of an image that failed to load.
+  ///
+  /// In en, this message translates to:
+  /// **'Image unavailable'**
+  String get imageMissingText;
+
+  /// Question type label: what is this.
+  ///
+  /// In en, this message translates to:
+  /// **'FINDING'**
+  String get questionTypeFindingText;
+
+  /// Question type label: what is this called.
+  ///
+  /// In en, this message translates to:
+  /// **'DIAGNOSIS'**
+  String get questionTypeDiagnosisText;
+
+  /// Question type label: what would you do.
+  ///
+  /// In en, this message translates to:
+  /// **'TREATMENT'**
+  String get questionTypeTreatmentText;
 }
 
 class _AppLocalizationsDelegate

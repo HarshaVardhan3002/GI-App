@@ -20,17 +20,19 @@ import 'package:user_repository/user_repository.dart';
 /// building and an exception would take the feed down; the ones that would
 /// *write* something throw, because silently accepting a write nobody stores
 /// is worse than a stack trace.
-class LocalDatabaseClient extends DatabaseClient {
+class LocalDatabaseClient extends DatabaseClient implements CaseSource {
   LocalDatabaseClient({required LocalContentSource source}) : _source = source;
 
   final LocalContentSource _source;
 
   /// Every approved case, newest first.
-  List<LocalCase> get cases => _source.cases;
+  @override
+  List<GiCase> get cases => _source.cases;
 
   /// Looks a case up by its post id, for screens that need the quiz and the
   /// provenance the feed's own models do not carry.
-  LocalCase? caseOf(String postId) {
+  @override
+  GiCase? caseOf(String postId) {
     for (final entry in _source.cases) {
       if (entry.post.id == postId) return entry;
     }

@@ -693,4 +693,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get moreNavBarItemLabel => 'More';
+
+  @override
+  String get heuteEmptyText => 'No case has been released yet.';
+
+  @override
+  String get openCaseText => 'Open case';
+
+  @override
+  String get imageMissingText => 'Image unavailable';
+
+  @override
+  String get questionTypeFindingText => 'FINDING';
+
+  @override
+  String get questionTypeDiagnosisText => 'DIAGNOSIS';
+
+  @override
+  String get questionTypeTreatmentText => 'TREATMENT';
 }

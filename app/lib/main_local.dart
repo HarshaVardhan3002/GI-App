@@ -1,4 +1,6 @@
 import 'package:chats_repository/chats_repository.dart';
+import 'package:database_client/database_client.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
 import 'package:flutter_instagram_offline_first_clone/bootstrap_local.dart';
 import 'package:local_content_client/local_content_client.dart';
@@ -33,18 +35,23 @@ void main() {
       authenticationClient: authenticationClient,
     );
 
-    return App(
-      userRepository: userRepository,
-      postsRepository: PostsRepository(databaseClient: databaseClient),
-      chatsRepository: ChatsRepository(databaseClient: databaseClient),
-      storiesRepository: StoriesRepository(
-        databaseClient: databaseClient,
-        storage: const _NoStoriesStorage(),
+    // The case seam sits above the router rather than inside a screen, so any
+    // route can read it and none of them knows it is backed by four JSON files.
+    return RepositoryProvider<CaseSource>.value(
+      value: databaseClient,
+      child: App(
+        userRepository: userRepository,
+        postsRepository: PostsRepository(databaseClient: databaseClient),
+        chatsRepository: ChatsRepository(databaseClient: databaseClient),
+        storiesRepository: StoriesRepository(
+          databaseClient: databaseClient,
+          storage: const _NoStoriesStorage(),
+        ),
+        searchRepository: SearchRepository(databaseClient: databaseClient),
+        notificationsRepository: const LocalNotificationsRepository(),
+        firebaseRemoteConfigRepository: const LocalRemoteConfigRepository(),
+        user: await userRepository.user.first,
       ),
-      searchRepository: SearchRepository(databaseClient: databaseClient),
-      notificationsRepository: const LocalNotificationsRepository(),
-      firebaseRemoteConfigRepository: const LocalRemoteConfigRepository(),
-      user: await userRepository.user.first,
     );
   });
 }

@@ -693,4 +693,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get moreNavBarItemLabel => 'Mehr';
+
+  @override
+  String get heuteEmptyText => 'Noch ist kein Fall freigegeben.';
+
+  @override
+  String get openCaseText => 'Fall öffnen';
+
+  @override
+  String get imageMissingText => 'Bild nicht verfügbar';
+
+  @override
+  String get questionTypeFindingText => 'BEFUND';
+
+  @override
+  String get questionTypeDiagnosisText => 'DIAGNOSE';
+
+  @override
+  String get questionTypeTreatmentText => 'THERAPIE';
 }

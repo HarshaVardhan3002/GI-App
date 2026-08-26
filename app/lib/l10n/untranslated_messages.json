@@ -167,6 +167,12 @@
   "ru": [
     "todayNavBarItemLabel",
     "archiveNavBarItemLabel",
-    "moreNavBarItemLabel"
+    "moreNavBarItemLabel",
+    "heuteEmptyText",
+    "openCaseText",
+    "imageMissingText",
+    "questionTypeFindingText",
+    "questionTypeDiagnosisText",
+    "questionTypeTreatmentText"
   ]
 }

@@ -10,6 +10,9 @@ import 'package:flutter_instagram_offline_first_clone/app/app.dart';
 import 'package:flutter_instagram_offline_first_clone/auth/auth.dart';
 import 'package:flutter_instagram_offline_first_clone/chats/chat/chat.dart';
 import 'package:flutter_instagram_offline_first_clone/feed/post/post.dart';
+import 'package:flutter_instagram_offline_first_clone/heute/heute.dart';
+// FeedPage is commented out at branch 0 below and stays wired.
+// ignore: unused_import, directives_ordering
 import 'package:flutter_instagram_offline_first_clone/feed/view/feed_page.dart';
 import 'package:flutter_instagram_offline_first_clone/home/home.dart';
 import 'package:flutter_instagram_offline_first_clone/reels/reels.dart';
@@ -163,7 +166,11 @@ class AppRouter {
                 pageBuilder: (context, state) {
                   return CustomTransitionPage(
                     key: state.pageKey,
-                    child: const FeedPage(),
+                    // The feed is the fork's. Heute is this product's home:
+                    // one case per screen rather than a scroll of cards.
+                    // `FeedPage` and its bloc stay wired and unrendered.
+                    child: const HeutePage(),
+                    // child: const FeedPage(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                           return SharedAxisTransition(

@@ -13,5 +13,11 @@
   "noPostFoundText": "Fall nicht gefunden",
   "noMediaFound": "Kein Bild vorhanden",
   "blockText": "Blockieren",
-  "viewProfileText": "Profil ansehen"
+  "viewProfileText": "Profil ansehen",
+  "heuteEmptyText": "Noch ist kein Fall freigegeben.",
+  "openCaseText": "Fall öffnen",
+  "imageMissingText": "Bild nicht verfügbar",
+  "questionTypeFindingText": "BEFUND",
+  "questionTypeDiagnosisText": "DIAGNOSE",
+  "questionTypeTreatmentText": "THERAPIE"
 }

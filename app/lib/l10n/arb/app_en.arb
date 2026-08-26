@@ -511,5 +511,29 @@
   "moreNavBarItemLabel": "More",
   "@moreNavBarItemLabel": {
     "description": "More tab tooltip. Settings and provenance."
+  },
+  "heuteEmptyText": "No case has been released yet.",
+  "@heuteEmptyText": {
+    "description": "Shown on Today when the content set holds nothing approved."
+  },
+  "openCaseText": "Open case",
+  "@openCaseText": {
+    "description": "The single next action on a case card."
+  },
+  "imageMissingText": "Image unavailable",
+  "@imageMissingText": {
+    "description": "Shown in place of an image that failed to load."
+  },
+  "questionTypeFindingText": "FINDING",
+  "@questionTypeFindingText": {
+    "description": "Question type label: what is this."
+  },
+  "questionTypeDiagnosisText": "DIAGNOSIS",
+  "@questionTypeDiagnosisText": {
+    "description": "Question type label: what is this called."
+  },
+  "questionTypeTreatmentText": "TREATMENT",
+  "@questionTypeTreatmentText": {
+    "description": "Question type label: what would you do."
   }
 }
