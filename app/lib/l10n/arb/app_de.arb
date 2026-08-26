@@ -1,0 +1,17 @@
+{
+  "@@locale": "de",
+  "todayNavBarItemLabel": "Heute",
+  "archiveNavBarItemLabel": "Archiv",
+  "moreNavBarItemLabel": "Mehr",
+  "cancelText": "Abbrechen",
+  "doneText": "Fertig",
+  "deleteText": "Löschen",
+  "editText": "Bearbeiten",
+  "optionsText": "Optionen",
+  "errorText": "Fehler",
+  "noPostsText": "Noch keine Fälle",
+  "noPostFoundText": "Fall nicht gefunden",
+  "noMediaFound": "Kein Bild vorhanden",
+  "blockText": "Blockieren",
+  "viewProfileText": "Profil ansehen"
+}

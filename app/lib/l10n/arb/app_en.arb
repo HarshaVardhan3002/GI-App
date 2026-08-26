@@ -499,5 +499,17 @@
         "example": "1"
       }
     }
+  },
+  "todayNavBarItemLabel": "Today",
+  "@todayNavBarItemLabel": {
+    "description": "Today tab tooltip. The day's case."
+  },
+  "archiveNavBarItemLabel": "Archive",
+  "@archiveNavBarItemLabel": {
+    "description": "Archive tab tooltip. Earlier cases."
+  },
+  "moreNavBarItemLabel": "More",
+  "@moreNavBarItemLabel": {
+    "description": "More tab tooltip. Settings and provenance."
   }
 }

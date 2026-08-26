@@ -142,7 +142,7 @@ class RuCustomShortMessages extends timeago.RuShortMessages
 /// {@endtemplate}
 extension TimeAgoExtension on DateTime {
   static const _defaultLocale = 'en';
-  static const _supportedLocales = <String>['ru', 'en'];
+  static const _supportedLocales = <String>['ru', 'en', 'de'];
 
   static String _getLocaleString(String? value, {required bool short}) {
     final value$ = value ?? _defaultLocale;
@@ -161,6 +161,9 @@ extension TimeAgoExtension on DateTime {
 
       return switch (locale) {
         'ru' => short ? RuCustomShortMessages() : RuCustomMessages(),
+        // The product's own language. `timeago` ships both, so there is no
+        // reason to write German date phrasing by hand.
+        'de' => short ? timeago.DeShortMessages() : timeago.DeMessages(),
         _ => defaultLookupMessages,
       };
     }

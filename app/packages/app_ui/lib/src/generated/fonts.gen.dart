@@ -9,6 +9,9 @@
 // ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
 abstract final class FontFamily {
+  /// Font family: FiraSans
+  static const String firaSans = 'FiraSans';
+
   /// Font family: Inter
   static const String inter = 'Inter';
 

@@ -48,25 +48,9 @@ class AppLogo extends StatelessWidget {
       wordmark,
       maxLines: 1,
       softWrap: false,
-      style: TextStyle(
-        // The font ships inside this package, so it is registered as
-        // `packages/app_ui/Newsreader`. `package` adds that prefix. Without it
-        // the family resolves to nothing and the wordmark is drawn in the
-        // platform default - silently, because a missing font never fails a
-        // build. Same reason `UITextStyle` passes it.
-        package: 'app_ui',
-        fontFamily: FontFamily.newsreader,
-        // Newsreader carries an optical-size axis. Left at its default of 18 a
-        // 20pt setting is drawn with slightly too much contrast, so `opsz` is
-        // pinned to the rendered size.
-        fontVariations: const [
-          FontVariation('wght', 400),
-          FontVariation('opsz', 20),
-        ],
-        fontSize: 20,
-        height: 24 / 20,
-        letterSpacing: -0.2,
-        color: color ?? context.adaptiveColor,
+      // The wordmark's type is one of the eight roles, not a local decision.
+      style: GiText.wordmark.copyWith(
+        color: color ?? context.gi.label,
       ),
     );
 

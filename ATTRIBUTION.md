@@ -55,5 +55,9 @@ Both are bundled in `app/packages/app_ui/assets/fonts`.
 - **Newsreader** - Production Type. SIL Open Font License 1.1; the licence text
   ships beside the font as `Newsreader-OFL.txt`. Variable, `wght` 200-800 and
   `opsz` 6-72. The wordmark, the question and the guideline quote are set in it.
+- **Fira Sans** - Mozilla Foundation and Telefonica S.A. SIL Open Font License
+  1.1; the licence text ships beside the font as `FiraSans-OFL.txt`. Three
+  static cuts, 400, 500 and 600. It carries everything that is scanned or
+  operated.
 - **Inter** - SIL Open Font License 1.1. Carried over from the fork. It is not
   part of this product's type system and goes when the last call site does.

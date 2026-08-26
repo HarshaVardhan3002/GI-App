@@ -6,9 +6,9 @@ import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
 
-/// The translations for English (`en`).
-class AppLocalizationsEn extends AppLocalizations {
-  AppLocalizationsEn([String locale = 'en']) : super(locale);
+/// The translations for German (`de`).
+class AppLocalizationsDe extends AppLocalizations {
+  AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
   String get feedAppBarTitle => 'Feed';
@@ -74,13 +74,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get discardText => 'Discard';
 
   @override
-  String get doneText => 'Done';
+  String get doneText => 'Fertig';
 
   @override
   String get draftEmpty => 'Draft empty';
 
   @override
-  String get errorText => 'Error';
+  String get errorText => 'Fehler';
 
   @override
   String get uploadText => 'Upload';
@@ -99,10 +99,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tapToTypeText => 'Tap to type...';
 
   @override
-  String get noPostsText => 'No Posts Yet!';
+  String get noPostsText => 'Noch keine Fälle';
 
   @override
-  String get noPostFoundText => 'No post found!';
+  String get noPostFoundText => 'Fall nicht gefunden';
 
   @override
   String get addCommentText => 'Add a comment';
@@ -238,10 +238,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get optionsText => 'Options';
+  String get optionsText => 'Optionen';
 
   @override
-  String get viewProfileText => 'View profile';
+  String get viewProfileText => 'Profil ansehen';
 
   @override
   String get editProfileText => 'Edit profile';
@@ -342,7 +342,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to block this author?';
 
   @override
-  String get blockText => 'Block';
+  String get blockText => 'Blockieren';
 
   @override
   String get refreshText => 'Refresh';
@@ -463,7 +463,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Are you sure you want to delete this post?';
 
   @override
-  String get cancelText => 'Cancel';
+  String get cancelText => 'Abbrechen';
 
   @override
   String get captionText => 'Caption';
@@ -493,7 +493,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get holdButtonText => 'Press and hold to record';
 
   @override
-  String get noMediaFound => 'There is no media';
+  String get noMediaFound => 'Kein Bild vorhanden';
 
   @override
   String get acceptAllPermissionsText =>
@@ -559,13 +559,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get postUnavailableDescriptionText => 'This post is unavailable';
 
   @override
-  String get editText => 'Edit';
+  String get editText => 'Bearbeiten';
 
   @override
   String get editedText => 'edited';
 
   @override
-  String get deleteText => 'Delete';
+  String get deleteText => 'Löschen';
 
   @override
   String get replyText => 'Reply';
@@ -686,11 +686,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get todayNavBarItemLabel => 'Today';
+  String get todayNavBarItemLabel => 'Heute';
 
   @override
-  String get archiveNavBarItemLabel => 'Archive';
+  String get archiveNavBarItemLabel => 'Archiv';
 
   @override
-  String get moreNavBarItemLabel => 'More';
+  String get moreNavBarItemLabel => 'Mehr';
 }

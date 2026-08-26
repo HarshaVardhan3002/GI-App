@@ -13,6 +13,14 @@ extension BuildContextX on BuildContext {
   /// Whether current theme [Brightness] is dark.
   bool get isDark => !isLight;
 
+  /// The Gletscherspalte palette for the current appearance.
+  ///
+  /// Resolved from the theme's brightness rather than carried in an inherited
+  /// widget, so it cannot drift out of step with the theme and costs nothing to
+  /// read. `context.gi.depth(0.3)` is a position on the ramp;
+  /// `context.gi.tint` is a semantic colour that does not live on it.
+  GiColors get gi => isDark ? const GiColors.dark() : const GiColors.light();
+
   /// Defines an adaptive [Color], depending on current theme brightness.
   Color get adaptiveColor => isDark ? AppColors.white : AppColors.black;
 

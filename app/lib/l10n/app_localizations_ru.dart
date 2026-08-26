@@ -700,4 +700,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String likedByLabel(String userName, String and, String count) {
     return 'Нравится <username>$userName</username>$and<count>$count</count>';
   }
+
+  @override
+  String get todayNavBarItemLabel => 'Today';
+
+  @override
+  String get archiveNavBarItemLabel => 'Archive';
+
+  @override
+  String get moreNavBarItemLabel => 'More';
 }

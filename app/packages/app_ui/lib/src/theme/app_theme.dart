@@ -44,10 +44,10 @@ class AppTheme {
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
         ),
-        bottomSheetTheme: const BottomSheetThemeData(
+        bottomSheetTheme: BottomSheetThemeData(
           showDragHandle: true,
-          surfaceTintColor: AppColors.white,
-          backgroundColor: AppColors.white,
+          surfaceTintColor: GiRamp.of(.15, brightness: Brightness.light),
+          backgroundColor: GiRamp.of(.15, brightness: Brightness.light),
         ),
       );
 
@@ -162,10 +162,13 @@ class AppDarkTheme extends AppTheme {
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
         ),
-        bottomSheetTheme: const BottomSheetThemeData(
-          surfaceTintColor: AppColors.background,
-          backgroundColor: AppColors.background,
-          modalBackgroundColor: AppColors.background,
+        // `AppColors.background` is ARGB(255, 32, 30, 30): a warm neutral
+        // grey, and DESIGN.md section 3 says no surface in this app is one.
+        // Sheets sit at depth 0.15.
+        bottomSheetTheme: BottomSheetThemeData(
+          surfaceTintColor: GiRamp.of(.15, brightness: Brightness.dark),
+          backgroundColor: GiRamp.of(.15, brightness: Brightness.dark),
+          modalBackgroundColor: GiRamp.of(.15, brightness: Brightness.dark),
         ),
       );
 }

@@ -49,19 +49,21 @@ class BottomNavBar extends StatelessWidget {
 
     // The upstream five-item builder is left alone; these three are built here
     // so nothing in `app_ui` had to change. Labels are tooltips only, since
-    // both label rows are hidden; Phase 3 gives them German names.
+    // both label rows are hidden, and they have their own keys rather than
+    // borrowing Instagram's: calling Archiv `searchNavBarItemLabel` would have
+    // been a lie in the source even with nothing drawn.
     final navigationBarItems = <NavBarItem>[
       NavBarItem(
         icon: Icons.home_filled,
-        label: context.l10n.homeNavBarItemLabel,
+        label: context.l10n.todayNavBarItemLabel,
       ),
       NavBarItem(
         icon: Icons.grid_on_outlined,
-        label: context.l10n.searchNavBarItemLabel,
+        label: context.l10n.archiveNavBarItemLabel,
       ),
       NavBarItem(
         icon: Icons.more_horiz,
-        label: context.l10n.profileNavBarItemLabel,
+        label: context.l10n.moreNavBarItemLabel,
       ),
     ];
     // final navigationBarItems = mainNavigationBarItems(
@@ -116,10 +118,10 @@ class BottomNavBar extends StatelessWidget {
       showSelectedLabels: false,
       showUnselectedLabels: false,
       // With both label rows hidden, colour is the only thing saying which tab
-      // you are on, and upstream left selected and unselected the same. Phase 3
-      // replaces these two with ramp tokens.
-      selectedItemColor: context.adaptiveColor,
-      unselectedItemColor: context.adaptiveColor.withValues(alpha: 0.4),
+      // you are on, and upstream left selected and unselected the same.
+      backgroundColor: context.gi.surface,
+      selectedItemColor: context.gi.label,
+      unselectedItemColor: context.gi.labelTertiary,
       items: navigationBarItems
           .map(
             (e) => BottomNavigationBarItem(

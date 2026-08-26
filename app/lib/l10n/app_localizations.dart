@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_ru.dart';
 
@@ -95,6 +96,7 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
     Locale('en'),
     Locale('ru'),
   ];
@@ -1136,6 +1138,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Liked by <username>{userName}</username>{and}<count>{count}</count>'**
   String likedByLabel(String userName, String and, String count);
+
+  /// Today tab tooltip. The day's case.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get todayNavBarItemLabel;
+
+  /// Archive tab tooltip. Earlier cases.
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archiveNavBarItemLabel;
+
+  /// More tab tooltip. Settings and provenance.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get moreNavBarItemLabel;
 }
 
 class _AppLocalizationsDelegate
@@ -1149,7 +1169,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en', 'ru'].contains(locale.languageCode);
+      <String>['de', 'en', 'ru'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1158,6 +1178,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
     case 'en':
       return AppLocalizationsEn();
     case 'ru':
