@@ -177,50 +177,67 @@ Fix: add `drawable-night/launch_background.xml`.
 **No animated splash.** Content loads from the bundle in under a frame budget,
 so animation would pad a wait that does not exist.
 
-## 6. Feed
+## 6. Home: the Tageskarte
 
-**App bar.** *GI Daily* in Newsreader at 20, left. Nothing on the right; the
-chat icon is commented out. The bar is Normal material, and **it is transparent
-at rest**, gaining its tint as content scrolls beneath it, interpolated against
-scroll offset rather than switched at a threshold. At the top of the feed there
-is no bar, only the wordmark floating over the ground.
+**Final: Tageskarte with diffused edges.** Today's case fills the viewport, its
+lower edge dissolves, and there is nothing below it.
 
-**No story row.** Commented out at `feed_page.dart:135`.
+Zones on a 390x844 reference, top to bottom:
 
-**The case.** Full-bleed 4:5 media, edge to edge, the widest thing on screen.
+| Zone | Height | What |
+|---|---|---|
+| Status bar | 38 | System. Material passes under it, content does not |
+| Top bar | 94 incl. safe area | Wordmark left, day right. Normal material, transparent at rest |
+| Image | 66% of height | Full bleed, both edges, running under the status bar |
+| Dissolve | 150 | Transparent to depth 0.00. Text sits **on** the dissolve |
+| Meta and question | auto | 12 caps, then Newsreader 26, two lines maximum |
+| Action | 44 target | *Fall öffnen*, the only tinted element on the screen |
+| Peek | 10 | The top edge of yesterday, static |
+| Bottom bar | 70 incl. safe area | Heute, Archiv, Profil. Normal material |
 
-Above it, one line at depth 0.00: `25. August · Therapiestrategie` in
-`labelTertiary` at 13. No avatar, no username, no verified tick. There is one
-publisher and putting its face on every post is noise.
+**The image has no bottom edge.** That is the whole diffused decision: image and
+page are one surface, and nothing announces where the case stops.
 
-**The media's lower edge dissolves.** A gradient scrim from transparent to depth
-0.00 over the bottom 96dp, so the image does not stop at a line, it becomes the
-ground. This is the single most important detail for "flows rather than hard
-boundaries": the case has no bottom edge.
+**The attribution sits on the image**, white at 60% over the dissolve, never
+collapsed or scrolled away, because it is a licence obligation rather than a
+caption.
 
-Over that scrim, bottom-left: the attribution at 13, white at 70%. If the image
-is a placeholder, the badge sits above it in Ultradünn material with `warning`
-text rather than a solid fill, so the warning reads as a label on the image
-rather than a sticker over it.
+**Vertical swipe moves one day, snapped.** Native `PageView` with
+`scrollDirection: Axis.vertical`; no package needed. It stops at today even when
+tomorrow is approved and sitting in the bundle.
 
-**Carousel.** Where a case has several views, dots sit centred below the media,
-active `tint`, inactive `labelTertiary` at 40%. A counter pill top-right in
-Ultradünn material.
+### Teaching the swipe without baiting it
 
-**Caption.** The question in Newsreader at 17, `label`, two lines then ellipsis.
-Truncation is deliberate: a truncated question invites opening, a full one
-replaces it.
+1. **The peek**: 10dp of yesterday, permanent and static. Evidence, not
+   invitation.
+2. **One drift, once**: first launch only, the card rises 12dp and settles back
+   over 600ms. Shown physically one time, then never.
+3. **Archiv** reaches everything with no gesture at all.
 
-**No action row.** No like, comment, share, bookmark, counts. Commented out in
-`post_footer.dart`. The largest single visual difference from the fork.
+No bouncing arrow, no "scroll" label, no pulsing chevron.
 
-**Then the next case, a day earlier.** Between cases, 40dp of ground and no
-divider. The fork's `DividerBlock` is commented out: two cases separated by
-space read as two moments, separated by a line they read as two rows.
+### Answered state
 
-**Bottom navigation.** Three items, Normal material, fading in the same way as
-the top bar. Active `label`, inactive `labelTertiary`. **No tint on the nav**:
-tint means "you can act on this", and the tab you are on is not an action.
+`hydrated_bloc`, already wired in the fork's bootstrap. One fact per case:
+answered or not. No score, no streak, no history, nothing leaving the device. An
+answered card reads *Auflösung ansehen* and opens straight to the reveal.
+
+### Every tappable element
+
+| Element | Gesture | Result |
+|---|---|---|
+| Anywhere on the card | tap | Detail, container transform from the image |
+| *Fall öffnen* | tap | The same. It labels the gesture, it is not a second route |
+| The image | swipe sideways | Next view of the same case. Opens nothing |
+| The card | swipe up | Previous day, snapped |
+| The card | swipe down | Later day, never past today |
+| Wordmark | none | Identity, not a control |
+| Heute | tap | Returns to today from any day |
+| Archiv | tap | Contact sheet of every published day |
+| Profil | tap | Appearance, language, attribution, rights, content status |
+
+**One tinted thing per screen.** On the card it is *Fall öffnen*, and the tap
+target is the whole lower half rather than the words.
 
 ## 7. Detail screen
 
@@ -340,8 +357,10 @@ Measured against the real font files:
 | Scroll awareness | `visibility_detector`, `inview_notifier_list` | `FeedBody` |
 | Archive grid | `flutter_staggered_grid_view`, `sliver_tools` | `timeline` |
 | Press feedback | `Tappable` | `app_ui` |
-| Material | `dart:ui` `ImageFilter.compose` | native |
+| Material | `dart:ui` `ImageFilter.compose`, `BackdropGroup` | native |
 | Haptics | `HapticFeedback` | native |
+| Day paging | `PageView(scrollDirection: Axis.vertical)` | native |
+| Answered state | `hydrated_bloc` | already in `bootstrap_local` |
 
 **Nothing new is installed.**
 
@@ -350,7 +369,7 @@ Measured against the real font files:
 | Surface | Source |
 |---|---|
 | Splash | Existing Android splash, recoloured, plus a night drawable |
-| Feed | `FeedPage`, three render sites commented |
+| Home | `FeedPage` restructured to a vertical `PageView`, three render sites commented |
 | Post | `PostLarge` kept whole; header content changed, footer hidden |
 | Media, carousel, zoom | Existing widgets, re-pointed |
 | Detail screen | **New composition** of existing widgets on the fork's post route |

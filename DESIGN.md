@@ -206,18 +206,48 @@ The fork's `PostLarge` anatomy is kept. Its content changes.
 
 ## 8. Structure
 
-**Three tabs.** Feed, Archive, Profile.
+**Tageskarte, diffused.** Final.
 
-- **Feed** - today's case, and earlier cases below it. The scroll is the product.
-- **Archive** - the grid the fork uses for search results, reused as earlier
- cases. Proves the content set has depth.
-- **Profile** - not a social profile. Settings, language, and the licence,
- attribution and rights screens that constraints 1 and 2 oblige us to show.
+Today's case fills the viewport and its lower edge dissolves into the ground over
+150dp, so there is no card: there is an image that becomes the page. Bars float
+over it as material with the image visible beneath, which is how navigation
+survives a layout whose point is that content swallows the screen.
 
-**Answering happens on a pushed detail screen.** Tapping a post opens it: image,
-question, four answers, reveal, guideline. The feed stays a feed; the payoff gets
-room. The fork already has a post route, so this is the existing navigation, not
-a new one.
+Nothing sits below the case. A vertical swipe moves one day, snapped, and stops
+at today even when tomorrow is approved and waiting in the bundle. **The reader
+chooses to go back; the scroll is never baited.** This is the one-case-a-day
+brief enforced by the layout rather than by a rule.
+
+**Three destinations**, in a bottom bar over the content: Heute, Archiv, Profil.
+Nothing is more than two steps from today.
+
+**Answering happens on a pushed detail screen**, reached by tapping the card,
+entering through a container transform from the image so the reader never loses
+what they tapped. The card is the invitation; the detail is the work.
+
+### Teaching the swipe without baiting it
+
+A full-screen layout hides the fact that there is more, and the usual fix is a
+bouncing arrow, which is the bait this product refuses. Three things instead:
+
+1. **The peek.** 10dp of yesterday's card above the bottom bar, permanently and
+   statically. Evidence, not invitation. It never pulses.
+2. **One drift, once.** On first launch only, the card rises 12dp and settles
+   back over 600ms. The gesture is shown physically one time, then never again.
+3. **Archiv reaches everything without a gesture at all.** The swipe is a
+   shortcut for adjacent days, never the only route to anything.
+
+### Answered state
+
+Stored locally through `hydrated_bloc`, already wired in the fork's bootstrap.
+One fact per case: answered or not. **No score, no streak, no history, nothing
+that leaves the device.** An answered card reads *Auflösung ansehen* and opens
+straight to the revealed state.
+
+### One tinted thing per screen
+
+The tint marks the single next action and nothing else. On the card that is
+*Fall öffnen*; on the detail, *Antwort bestätigen*; after the reveal, *Quelle*.
 
 ## 9. Motion
 
@@ -225,7 +255,7 @@ a new one.
 response are the quality bar. Anything that feels slower than the fork did is a
 regression.
 
-Everything eases; nothing snaps. **No bounce anywhere** — an overshoot reads as
+Everything eases; nothing snaps. **No bounce anywhere**, an overshoot reads as
 playful and nothing here is playful.
 
 | Moment | Curve | Duration |
