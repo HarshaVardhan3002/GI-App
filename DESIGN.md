@@ -90,22 +90,74 @@ is not used that way here.
 
 ## 5. Type
 
-**Pending selection**, then bundled into `app_ui` the way Inter already is. Six candidates at `docs/BRANDING.md`; Fira Sans recommended on the German argument. Apple's text-style metrics, because they
-are tuned for exactly this reading distance.
+**Fira Sans and Newsreader.** Two families, one boundary.
 
-| Style | Size / line | Weight | Use |
-|---|---|---|---|
-| Large title | 34 / 41 | 700 | Screen titles |
-| Title | 22 / 28 | 700 | The question |
-| Headline | 17 / 22 | 600 | Card titles, verdict |
-| Body | 17 / 24 | 400 | Explanation, answers |
-| Callout | 16 / 21 | 400 | Quoted guideline text |
-| Subhead | 15 / 20 | 400 | Supporting |
-| Footnote | 13 / 18 | 400 | Attribution, citation |
-| Caption | 12 / 16 | 500 | Group headers, metadata |
+### The boundary: read against operate
 
-Tracking tightens as size grows: −0.4 at large title, −0.2 at title, 0 at body.
-Group headers are the only uppercase in the app.
+Newsreader appears at the two moments the reader stops and reads deliberately,
+plus the identity. Fira Sans carries everything that is scanned or operated.
+That line is the whole discipline of the pairing, and mixing the faces outside
+it is what turns an editorial idea into decoration.
+
+| Newsreader, three uses only | Fira Sans, everything else |
+|---|---|
+| The wordmark | Answers, buttons, controls |
+| The question | The explanation |
+| The guideline quote | Labels, metadata, dates, citations, navigation |
+
+The quote earns the serif honestly: it is matter published elsewhere, set in a
+serif at its source, and the change of face marks where our prose stops and the
+guideline's begins. The explanation stays in Fira because it is our own writing
+and the longest text on screen, and a serif at that length on a phone costs
+legibility for nothing.
+
+### Sizes, bounded by measurement
+
+The compound test was run against the real font files rather than estimated.
+On a 360dp phone with 16dp gutters there are 328dp of line, and the widest
+compound in the content is `Argon-Plasma-Koagulation`.
+
+| Face | Widest compound at 22 | Largest size that still fits |
+|---|---|---|
+| Newsreader | 256px | **29** |
+| Fira Sans | 268px | 26 |
+| Fira Sans Bold | 276px | 26 |
+
+Newsreader is the narrower of the two, which inverts the usual assumption about
+serifs and is the practical argument for this pairing: **it buys three points of
+question size.** The question runs at 26 with headroom rather than being pinned
+at 22.
+
+| Style | Face | Size / line | Weight | Use |
+|---|---|---|---|---|
+| Wordmark | Newsreader | 20 / 24 | 400 | App bar |
+| Question | Newsreader | 26 / 32 | 400 | Detail screen |
+| Quote | Newsreader | 17 / 26 | 400 | Guideline recommendation |
+| Headline | Fira Sans | 17 / 22 | 600 | Verdict, card titles |
+| Body | Fira Sans | 17 / 24 | 400 | Explanation, answers |
+| Subhead | Fira Sans | 15 / 20 | 400 | Supporting |
+| Footnote | Fira Sans | 13 / 18 | 400 | Attribution, citation |
+| Caption | Fira Sans | 12 / 16 | 500 | Group headers, metadata |
+
+**Newsreader is a variable font with an optical-size axis.** Set `opsz` to the
+rendered size through `FontVariation`, or the 26 question is drawn with the
+contrast of a 12 caption and looks thin and brittle.
+
+Tracking tightens as size grows: -0.02em at the question, 0 at body. No text is
+centred; ragged-right on long compounds is legible and centred compounds produce
+visibly uneven rag.
+
+### Bundle
+
+Fira Sans at four weights (400/500/600/700) plus Newsreader as a single variable
+file. Inter and Montserrat come out: three Inter weights are never called and
+Montserrat is referenced only by its own generated constant.
+
+Net change is **-0.07 MB**, so the second family is free. Bundled into `app_ui`
+the way Inter is today, never fetched at runtime, because the app has no network.
+
+Newsreader Italic is a separate 0.44 MB file. It would suit the quote, and it is
+not worth that weight for one use unless the team asks.
 
 ## 6. Space and shape
 

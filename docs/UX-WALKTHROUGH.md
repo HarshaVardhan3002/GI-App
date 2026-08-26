@@ -221,14 +221,22 @@ The content is full of compounds: `Zylinderepithelmetaplasie` at 25 characters,
 `Los-Angeles-Klassifikation` at 26, `Argon-Plasma-Koagulation` at 24.
 
 **That sets a ceiling on display type, and it is arithmetic rather than taste.**
-On a 360dp screen with 16dp gutters there are 328dp of line. A 26-character
-unbroken word at roughly 0.52em average advance needs `328 / 26 / 0.52`, which is
-**24pt maximum** before it overflows the line.
+On a 360dp screen with 16dp gutters there are 328dp of line.
+
+Measured against the real font files, not estimated from an average advance:
+
+| Face | `Argon-Plasma-Koagulation` at 22 | Ceiling |
+|---|---|---|
+| Newsreader | 256px | **29** |
+| Fira Sans | 268px | 26 |
+
+Newsreader is the narrower of the two, which is why the question is set in it at
+**26** rather than pinned at 22.
 
 Consequences:
 
-- **The question is set at 22pt, not 34.** The large-title treatment that suits
-  an English product breaks on `Refluxösophagitis`.
+- **The question is set at 26, not 34.** The large-title treatment that suits an
+  English product breaks on `Argon-Plasma-Koagulation`.
 - **No text is centred.** Ragged-right on long compounds is legible; centred
   compounds produce visibly uneven rag.
 - **Answer rows wrap to two lines and are sized for it.** The longest current
@@ -287,7 +295,4 @@ Everything else is re-pointing something that already works.
 
 ## 11. Open
 
-- **Fonts.** Selection board pending; the 24pt ceiling above applies whichever
-  face is chosen, and the average advance width differs enough between faces to
-  move that number by a point or two.
 - **App icon.** Still unsolved.

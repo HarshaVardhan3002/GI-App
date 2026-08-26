@@ -2,7 +2,8 @@
 
 Name, analogy, palette candidates and wordmark for GI Daily.
 
-Palette is **decided: Gletscherspalte**. Typeface selection is open. The comparison board
+Palette and typeface are **decided**: Gletscherspalte, set in Fira Sans with
+Newsreader. The comparison board
 with live swatches is at
 <https://claude.ai/code/artifact/741addc8-8f7b-4baa-8d6f-3a001a5bb29b>.
 
@@ -108,10 +109,20 @@ The test is not how a face looks in a headline. It is whether
 German does not break compounds and Flutter does not hyphenate, so the word fits
 or it hangs off the screen.
 
-Recommendation: **Fira Sans**, narrower than the alternatives, drawn for small
-screens by someone solving for German, and it ships a matching mono for AWMF
-register numbers. IBM Plex Sans is the close second. Inter is free and not wrong,
-only anonymous.
+**Chosen: Fira Sans with Newsreader.** Fira carries everything operated or
+scanned; Newsreader appears at three moments only, the wordmark, the question and
+the guideline quote. The full boundary is in `DESIGN.md` section 5.
+
+Measured against the real font files rather than estimated: Newsreader is
+*narrower* than Fira Sans, 256px against 268px for the widest compound at 22.
+That inverts the usual assumption about serifs and is the practical argument for
+the pairing, because it lifts the question from 22 to 26 while still fitting a
+360dp line. The second family is also free: dropping three never-called Inter
+weights and unused Montserrat makes the swap -0.07 MB.
+
+The quote earns its serif rather than borrowing it: guideline text is published
+matter, set in a serif at its source, and the change of face marks where our
+prose stops and the guideline's begins.
 
 ## 6. Wordmark
 
@@ -138,7 +149,6 @@ learner being encouraged.
 
 ## 8. Open
 
-- **Typeface.** Blocks Phase 1 together with the wordmark.
 - **App icon.** Not designed. A wordmark does not shrink into an icon, and the
   obvious move, a stylised lumen or scope circle, risks reading as a generic
   medical roundel. Worth a separate pass.
