@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "recommendations": [
+    {
+      "id": "platzhalter-r-1.1",
+      "guidelineId": "platzhalter-leitlinie",
+      "number": "1.1",
+      "strength": "A",
+      "consensus": "starker Konsens",
+      "levelOfEvidence": "LoE 1a (Platzhalter)",
+      "quote": "PLATZHALTER – hier steht später ein kurzes wörtliches Zitat aus der Leitlinie, maximal 400 Zeichen, mit vollständiger Quellenangabe.",
+      "citation": "PLATZHALTER-Zitat, keine echte Quelle. Ersetzen durch: Autorenkollektiv, Leitlinientitel, AWMF-Registernummer, Version, Empfehlung 1.1.",
+      "page": 1,
+      "url": "https://register.awmf.org/de/leitlinien/aktuelle-leitlinien"
+    },
+    {
+      "id": "platzhalter-r-2.4",
+      "guidelineId": "platzhalter-leitlinie",
+      "number": "2.4",
+      "strength": "B",
+      "consensus": "Konsens",
+      "levelOfEvidence": "LoE 2b (Platzhalter)",
+      "quote": "PLATZHALTER – Empfehlung zur endoskopischen Befundbeschreibung. Wird durch den extrahierten Leitlinientext ersetzt.",
+      "citation": "PLATZHALTER-Zitat, keine echte Quelle. Ersetzen durch die tatsächliche Empfehlung 2.4.",
+      "page": 2,
+      "url": "https://register.awmf.org/de/leitlinien/aktuelle-leitlinien"
+    },
+    {
+      "id": "platzhalter-r-6.12",
+      "guidelineId": "platzhalter-leitlinie",
+      "number": "6.12",
+      "strength": "EK",
+      "consensus": "starker Konsens",
+      "quote": "PLATZHALTER – Empfehlung zum weiteren therapeutischen Vorgehen. Wird durch den extrahierten Leitlinientext ersetzt.",
+      "citation": "PLATZHALTER-Zitat, keine echte Quelle. Ersetzen durch die tatsächliche Empfehlung 6.12.",
+      "page": 6,
+      "url": "https://register.awmf.org/de/leitlinien/aktuelle-leitlinien"
+    }
+  ]
+}

@@ -1,0 +1,248 @@
+{
+  "version": 1,
+  "posts": [
+    {
+      "id": "post-2026-08-23",
+      "date": "2026-08-23",
+      "imageIds": [
+        "placeholder-normal-z-line-001"
+      ],
+      "recommendationId": "platzhalter-r-2.4",
+      "questionType": "finding",
+      "question": {
+        "de": "Der Übergang von Plattenepithel zu Zylinderepithel stellt sich zirkulär und auf Höhe des proximalen Endes der Magenfalten dar. Was beschreiben Sie endoskopisch?",
+        "en": "The squamocolumnar junction appears circumferential and at the level of the proximal end of the gastric folds. What are you describing endoscopically?"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "de": "Regelrechte Z-Linie ohne Hinweis auf Zylinderepithelmetaplasie",
+            "en": "Normal Z-line with no sign of columnar metaplasia"
+          },
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "de": "Zungenförmige Ausläufer im Sinne eines Barrett-Ösophagus",
+            "en": "Tongue-shaped extensions indicating Barrett's oesophagus"
+          },
+          "correct": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "de": "Axiale Hiatushernie mit verschobenem Übergang",
+            "en": "Axial hiatal hernia with a displaced junction"
+          },
+          "correct": false
+        },
+        {
+          "id": "d",
+          "text": {
+            "de": "Narbige Stenose nach Refluxösophagitis",
+            "en": "Scarred stricture after reflux oesophagitis"
+          },
+          "correct": false
+        }
+      ],
+      "explanation": {
+        "de": "PLATZHALTER-Erläuterung. Die Z-Linie markiert den Übergang von Platten- zu Zylinderepithel. Liegt sie zirkulär auf Höhe des proximalen Endes der Magenfalten, ist der Befund regelrecht. Erst eine Verschiebung nach proximal oder zungenförmige Ausläufer begründen den Verdacht auf eine Zylinderepithelmetaplasie. Die tatsächliche Begründung wird durch den Bezug auf die extrahierte Empfehlung ersetzt.",
+        "en": "PLACEHOLDER explanation. The Z-line marks the squamocolumnar junction. Sitting circumferentially at the proximal end of the gastric folds, the finding is normal. Only proximal displacement or tongue-shaped extensions raise suspicion of columnar metaplasia. The real reasoning will be replaced once the recommendation is extracted."
+      },
+      "review": {
+        "status": "approved",
+        "reviewedBy": "PLATZHALTER – nicht ärztlich geprüft",
+        "reviewedAt": "2026-08-20T09:10:00+02:00",
+        "note": "Demo-Inhalt für den Prototyp."
+      },
+      "provenance": {
+        "generator": "manual",
+        "generatedAt": "2026-08-20T08:10:00+02:00"
+      }
+    },
+    {
+      "id": "post-2026-08-24",
+      "date": "2026-08-24",
+      "imageIds": [
+        "placeholder-oesophagitis-a-001"
+      ],
+      "recommendationId": "platzhalter-r-1.1",
+      "questionType": "diagnosis",
+      "question": {
+        "de": "Ein Patient mit seit Monaten bestehendem Sodbrennen. Der distale Ösophagus zeigt einzelne Schleimhautläsionen von unter 5 mm Länge, die sich nicht zwischen zwei Faltenkuppen erstrecken. Wie lautet die Diagnose?",
+        "en": "A patient with months of heartburn. The distal oesophagus shows isolated mucosal breaks under 5 mm that do not extend between two mucosal fold tops. What is the diagnosis?"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "de": "Refluxösophagitis Los-Angeles-Grad A",
+            "en": "Reflux oesophagitis, LA grade A"
+          },
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "de": "Refluxösophagitis Los-Angeles-Grad C",
+            "en": "Reflux oesophagitis, LA grade C"
+          },
+          "correct": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "de": "Eosinophile Ösophagitis",
+            "en": "Eosinophilic oesophagitis"
+          },
+          "correct": false
+        },
+        {
+          "id": "d",
+          "text": {
+            "de": "Barrett-Ösophagus, Short-Segment",
+            "en": "Barrett's oesophagus, short segment"
+          },
+          "correct": false
+        }
+      ],
+      "explanation": {
+        "de": "PLATZHALTER-Erläuterung. Die Los-Angeles-Klassifikation richtet sich nach Länge und Ausdehnung der Schleimhautläsionen: Grad A umfasst Läsionen unter 5 mm, die sich nicht zwischen zwei Faltenkuppen erstrecken. Grad C setzt konfluierende Läsionen über mindestens zwei Falten voraus. Die tatsächliche Begründung wird durch den Bezug auf die extrahierte Empfehlung ersetzt.",
+        "en": "PLACEHOLDER explanation. The Los Angeles classification grades by length and extent of mucosal breaks: grade A covers breaks under 5 mm that do not extend between two fold tops. Grade C requires confluent breaks across at least two folds. The real reasoning will be replaced once the recommendation is extracted."
+      },
+      "review": {
+        "status": "approved",
+        "reviewedBy": "PLATZHALTER – nicht ärztlich geprüft",
+        "reviewedAt": "2026-08-20T09:05:00+02:00",
+        "note": "Demo-Inhalt für den Prototyp."
+      },
+      "provenance": {
+        "generator": "manual",
+        "generatedAt": "2026-08-20T08:05:00+02:00"
+      }
+    },
+    {
+      "id": "post-2026-08-25",
+      "date": "2026-08-25",
+      "imageIds": [
+        "placeholder-polyp-001",
+        "placeholder-dyed-lifted-polyps-001",
+        "placeholder-dyed-resection-margins-001"
+      ],
+      "recommendationId": "platzhalter-r-6.12",
+      "questionType": "treatment",
+      "question": {
+        "de": "Sie sehen im Colon descendens eine flach erhabene Läsion von etwa 12 mm, Paris 0-IIa, mit regelrechtem Pit-Pattern. Welches Vorgehen ist leitliniengerecht?",
+        "en": "A flat elevated lesion of about 12 mm, Paris 0-IIa, with a regular pit pattern in the descending colon. Which approach follows the guideline?"
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "de": "Biopsie zur Histologiesicherung, Resektion erst im Verlauf",
+            "en": "Biopsy first, resect at a later session"
+          },
+          "correct": false
+        },
+        {
+          "id": "b",
+          "text": {
+            "de": "Endoskopische Mukosaresektion in gleicher Sitzung",
+            "en": "Endoscopic mucosal resection in the same session"
+          },
+          "correct": true
+        },
+        {
+          "id": "c",
+          "text": {
+            "de": "Argon-Plasma-Koagulation ohne vorherige Resektion",
+            "en": "Argon plasma coagulation without prior resection"
+          },
+          "correct": false
+        },
+        {
+          "id": "d",
+          "text": {
+            "de": "Laparoskopische Segmentresektion",
+            "en": "Laparoscopic segmental resection"
+          },
+          "correct": false
+        }
+      ],
+      "explanation": {
+        "de": "PLATZHALTER-Erläuterung. Eine flach erhabene Läsion dieser Größe mit regelrechtem Pit-Pattern spricht gegen eine tiefe Submukosainfiltration, sodass die endoskopische Resektion in gleicher Sitzung angestrebt wird. Eine vorherige Biopsie kann eine Vernarbung verursachen und die spätere Resektion erschweren. Die tatsächliche Begründung wird durch den Bezug auf die extrahierte Empfehlung ersetzt.",
+        "en": "PLACEHOLDER explanation. A flat elevated lesion of this size with a regular pit pattern argues against deep submucosal invasion, so endoscopic resection in the same session is preferred. A prior biopsy can cause scarring and make later resection harder. The real reasoning will be replaced once the recommendation is extracted."
+      },
+      "review": {
+        "status": "approved",
+        "reviewedBy": "PLATZHALTER – nicht ärztlich geprüft",
+        "reviewedAt": "2026-08-20T09:00:00+02:00",
+        "note": "Demo-Inhalt für den Prototyp. Vor jeder Vorführung ausserhalb des Teams durch echte Freigabe ersetzen."
+      },
+      "provenance": {
+        "generator": "manual",
+        "generatedAt": "2026-08-20T08:00:00+02:00"
+      }
+    },
+    {
+      "id": "post-2026-08-26",
+      "date": "2026-08-26",
+      "imageIds": [
+        "placeholder-normal-z-line-001"
+      ],
+      "recommendationId": "platzhalter-r-2.4",
+      "questionType": "finding",
+      "question": {
+        "de": "TODO Frage zum endoskopischen Befund. Bilddatensatzklasse: normal-z-line.",
+        "en": "TODO endoscopic finding question. Dataset class: normal-z-line."
+      },
+      "options": [
+        {
+          "id": "a",
+          "text": {
+            "de": "TODO Antwortoption A",
+            "en": "TODO answer option A"
+          },
+          "correct": true
+        },
+        {
+          "id": "b",
+          "text": {
+            "de": "TODO Antwortoption B",
+            "en": "TODO answer option B"
+          },
+          "correct": false
+        },
+        {
+          "id": "c",
+          "text": {
+            "de": "TODO Antwortoption C",
+            "en": "TODO answer option C"
+          },
+          "correct": false
+        },
+        {
+          "id": "d",
+          "text": {
+            "de": "TODO Antwortoption D",
+            "en": "TODO answer option D"
+          },
+          "correct": false
+        }
+      ],
+      "explanation": {
+        "de": "TODO Begründung, die auf Empfehlung 2.4 zurückführt.",
+        "en": "TODO reasoning that traces back to recommendation 2.4."
+      },
+      "review": {
+        "status": "draft"
+      },
+      "provenance": {
+        "generator": "manual",
+        "generatedAt": "2026-08-25T22:05:30.501Z"
+      }
+    }
+  ]
+}

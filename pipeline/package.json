@@ -1,0 +1,21 @@
+{
+  "name": "gi-daily-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Content pipeline for gi-daily-app: image bank, guideline recommendations, post generation, validation gate.",
+  "scripts": {
+    "validate": "tsx src/validate-content.ts",
+    "generate": "tsx src/generate-posts.ts",
+    "typecheck": "tsc --noEmit",
+    "review": "tsx src/review-server.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

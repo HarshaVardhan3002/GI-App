@@ -1,0 +1,43 @@
+# --- Build output and tooling caches -----------------------------------------
+**/build/
+**/.dart_tool/
+**/.gradle/
+**/.fvm/
+**/node_modules/
+**/coverage/
+*.iml
+.idea/
+.vscode/*
+!.vscode/launch.json
+
+# --- Local reference material, not part of this project ----------------------
+# Read-only clone of the upstream Instagram app, kept on disk for diffing.
+upstream-ref/
+# Abandoned first attempt: screens rebuilt beside the clone instead of using it.
+gi_daily_app/
+
+# --- Upstream demo media -----------------------------------------------------
+# The clone shipped ~370 MB of its author's own screen recordings and demo GIFs.
+# They document a product this one is not, and they would sit in our history
+# forever. Excluded rather than carried.
+app/screenshots/
+**/packages/*/screenshots/
+**/stories editor screenshots/
+*.mov
+*.mp4
+
+# --- Secrets -----------------------------------------------------------------
+# There are none today (the app has no backend), but the rule goes in before
+# someone adds one.
+.env
+.env.*
+!.env.example
+**/google-services.json
+**/GoogleService-Info.plist
+**/android/key.properties
+**/*.jks
+**/*.keystore
+
+# --- OS ----------------------------------------------------------------------
+.DS_Store
+Thumbs.db

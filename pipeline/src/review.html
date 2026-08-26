@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Freigabe · GI Daily</title>
+    <style>
+      :root {
+        --bg: #121316;
+        --surface: #1b1d21;
+        --raised: #24272c;
+        --border: #32363c;
+        --ink: #e8eaed;
+        --muted: #9ba1a9;
+        --faint: #6c727a;
+        --accent: #c08a4e;
+        --correct: #6fa07a;
+        --incorrect: #b5726a;
+        --warning: #d4a03c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 15px/1.55 "Inter", -apple-system, "Segoe UI", system-ui, sans-serif;
+      }
+      header {
+        border-bottom: 1px solid var(--border);
+        padding: 18px 28px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        z-index: 2;
+      }
+      h1 { font-size: 17px; font-weight: 600; margin: 0; letter-spacing: -0.2px; }
+      .counts { color: var(--faint); font-size: 12.5px; letter-spacing: 0.3px; }
+      .reviewer { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+      label { color: var(--faint); font-size: 12px; letter-spacing: 0.4px; text-transform: uppercase; }
+      input, textarea, select {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--ink);
+        padding: 9px 11px;
+        font: inherit;
+      }
+      input:focus, textarea:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+      main { max-width: 1180px; margin: 0 auto; padding: 28px; display: grid; gap: 26px; }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: 320px 1fr;
+      }
+      @media (max-width: 860px) { .card { grid-template-columns: 1fr; } }
+      .card figure { margin: 0; background: #000; position: relative; }
+      .card img { width: 100%; height: 100%; object-fit: cover; display: block; aspect-ratio: 4 / 5; }
+      .attribution {
+        position: absolute; left: 0; right: 0; bottom: 0;
+        padding: 10px 12px; font-size: 11.5px; color: #c8ccd2;
+        background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      }
+      .body { padding: 22px 24px 20px; }
+      .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+      .tag {
+        font-size: 11px; letter-spacing: 0.7px; text-transform: uppercase;
+        font-weight: 700; padding: 4px 9px; border-radius: 5px;
+        background: var(--raised); color: var(--accent);
+      }
+      .status { border: 1px solid currentColor; background: none; }
+      .status.draft { color: var(--warning); }
+      .status.approved { color: var(--correct); }
+      .status.rejected { color: var(--incorrect); }
+      .date { color: var(--faint); font-size: 12.5px; margin-left: auto; }
+      .question { font-size: 18px; font-weight: 600; line-height: 1.35; margin: 16px 0 14px; }
+      ol { list-style: none; margin: 0 0 18px; padding: 0; display: grid; gap: 7px; }
+      ol li {
+        border: 1px solid var(--border); border-radius: 9px;
+        padding: 9px 12px; font-size: 14.5px; color: var(--muted);
+        display: flex; gap: 10px;
+      }
+      ol li.correct { border-color: var(--correct); color: var(--ink); }
+      ol li .key { color: var(--faint); font-weight: 700; font-size: 12px; padding-top: 2px; }
+      ol li.correct .key { color: var(--correct); }
+      .section-label {
+        font-size: 11.5px; letter-spacing: 0.7px; text-transform: uppercase;
+        color: var(--faint); margin: 0 0 7px;
+      }
+      .explanation { font-size: 14.5px; margin: 0 0 18px; }
+      .quote {
+        border-left: 2px solid var(--accent); padding: 2px 0 2px 13px;
+        font-style: italic; color: var(--muted); font-size: 14px; margin: 0 0 8px;
+      }
+      .citation { font-size: 12px; color: var(--faint); margin: 0 0 20px; }
+      .actions { display: flex; gap: 9px; align-items: center; border-top: 1px solid var(--border); padding-top: 16px; }
+      button {
+        font: inherit; font-weight: 600; font-size: 14px;
+        border-radius: 9px; padding: 10px 16px; cursor: pointer;
+        border: 1px solid var(--border); background: var(--raised); color: var(--ink);
+      }
+      button.approve { background: var(--correct); border-color: var(--correct); color: #10130f; }
+      button.reject { background: none; border-color: var(--incorrect); color: var(--incorrect); }
+      button:disabled { opacity: 0.4; cursor: not-allowed; }
+      .actions input { flex: 1; min-width: 120px; }
+      .empty { color: var(--faint); text-align: center; padding: 80px 20px; }
+      .flash { color: var(--warning); font-size: 12.5px; min-height: 16px; padding: 8px 24px 0; }
+      .placeholder-flag {
+        position: absolute; top: 12px; left: 12px;
+        background: var(--warning); color: #121316;
+        font-size: 10.5px; font-weight: 700; letter-spacing: 0.8px;
+        padding: 4px 8px; border-radius: 5px; text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Freigabe</h1>
+      <span class="counts" id="counts"></span>
+      <div class="reviewer">
+        <label for="reviewer">Prüfende Person</label>
+        <input id="reviewer" placeholder="Name" autocomplete="name" />
+      </div>
+    </header>
+
+    <main id="list"><p class="empty">Wird geladen …</p></main>
+
+    <script type="module">
+      const list = document.getElementById('list');
+      const counts = document.getElementById('counts');
+      const reviewerInput = document.getElementById('reviewer');
+
+      // The reviewer's name is the one piece of state worth keeping between
+      // reloads; everything else lives in posts.json.
+      reviewerInput.value = localStorage.getItem('gi-reviewer') ?? '';
+      reviewerInput.addEventListener('input', () =>
+        localStorage.setItem('gi-reviewer', reviewerInput.value),
+      );
+
+      const escapeHtml = (value) =>
+        String(value).replace(/[&<>"']/g, (character) => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;',
+          '"': '&quot;', "'": '&#39;',
+        })[character]);
+
+      async function load() {
+        const response = await fetch('/api/content');
+        if (!response.ok) {
+          list.innerHTML = '<p class="empty">Inhalte konnten nicht geladen werden.</p>';
+          return;
+        }
+        const { posts, images, recommendations } = await response.json();
+
+        const imageById = Object.fromEntries(images.map((i) => [i.id, i]));
+        const recById = Object.fromEntries(recommendations.map((r) => [r.id, r]));
+
+        const drafts = posts.filter((p) => p.review.status === 'draft');
+        const decided = posts.filter((p) => p.review.status !== 'draft');
+        counts.textContent =
+          `${drafts.length} offen · ${posts.filter((p) => p.review.status === 'approved').length} freigegeben · ` +
+          `${posts.filter((p) => p.review.status === 'rejected').length} abgelehnt`;
+
+        // Drafts first: they are the work. Decided posts stay visible so a
+        // rejection can be reconsidered and an approval can be withdrawn.
+        const ordered = [...drafts, ...decided];
+
+        if (ordered.length === 0) {
+          list.innerHTML = '<p class="empty">Keine Beiträge vorhanden.</p>';
+          return;
+        }
+
+        list.innerHTML = ordered
+          .map((post) => card(post, post.imageIds.map((id) => imageById[id]).filter(Boolean), recById[post.recommendationId]))
+          .join('');
+      }
+
+      function card(post, images, recommendation) {
+        const image = images[0];
+        const typeLabel = { diagnosis: 'Diagnose', finding: 'Befund', treatment: 'Therapie' }[post.questionType];
+        const isPlaceholder = image?.licence?.spdx === 'PLACEHOLDER';
+
+        return `
+          <article class="card" data-id="${escapeHtml(post.id)}">
+            <figure>
+              ${image ? `<img src="/${escapeHtml(image.assetPath)}" alt="" />` : ''}
+              ${images.length > 1 ? `<span class="image-count">1 / ${images.length}</span>` : ''}
+              ${isPlaceholder ? '<span class="placeholder-flag">Platzhalter</span>' : ''}
+              ${image ? `<figcaption class="attribution">${escapeHtml(image.licence.attributionText)}</figcaption>` : ''}
+            </figure>
+            <div class="body">
+              <div class="row">
+                <span class="tag">${escapeHtml(typeLabel)}</span>
+                <span class="tag status ${escapeHtml(post.review.status)}">${escapeHtml(post.review.status)}</span>
+                <span class="date">${escapeHtml(post.date)}</span>
+              </div>
+
+              <p class="question">${escapeHtml(post.question.de)}</p>
+
+              <ol>
+                ${post.options.map((option) => `
+                  <li class="${option.correct ? 'correct' : ''}">
+                    <span class="key">${escapeHtml(option.id.toUpperCase())}</span>
+                    <span>${escapeHtml(option.text.de)}</span>
+                  </li>`).join('')}
+              </ol>
+
+              <p class="section-label">Begründung</p>
+              <p class="explanation">${escapeHtml(post.explanation.de)}</p>
+
+              ${recommendation ? `
+                <p class="section-label">Empfehlung ${escapeHtml(recommendation.number)} · Grad ${escapeHtml(recommendation.strength)}</p>
+                <p class="quote">${escapeHtml(recommendation.quote)}</p>
+                <p class="citation">${escapeHtml(recommendation.citation)}</p>` : ''}
+
+              <div class="actions">
+                <input class="note" placeholder="Anmerkung (optional)" value="${escapeHtml(post.review.note ?? '')}" />
+                <button class="reject" data-action="rejected">Ablehnen</button>
+                <button class="approve" data-action="approved">Freigeben</button>
+              </div>
+              <p class="flash"></p>
+            </div>
+          </article>`;
+      }
+
+      list.addEventListener('click', async (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+
+        const card = button.closest('.card');
+        const flash = card.querySelector('.flash');
+        const status = button.dataset.action;
+
+        if (status === 'approved' && !reviewerInput.value.trim()) {
+          flash.textContent = 'Name der prüfenden Person fehlt.';
+          reviewerInput.focus();
+          return;
+        }
+
+        card.querySelectorAll('button').forEach((b) => (b.disabled = true));
+
+        const response = await fetch('/api/review', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            id: card.dataset.id,
+            status,
+            reviewedBy: reviewerInput.value,
+            note: card.querySelector('.note').value,
+          }),
+        });
+
+        if (!response.ok) {
+          const { error } = await response.json();
+          flash.textContent = error;
+          card.querySelectorAll('button').forEach((b) => (b.disabled = false));
+          return;
+        }
+
+        await load();
+      });
+
+      load();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "guidelines": [
+    {
+      "id": "platzhalter-leitlinie",
+      "awmfRegisterNumber": "000-000",
+      "title": "PLATZHALTER – noch keine echte Leitlinie hinterlegt",
+      "publisher": "gi-daily-app Team",
+      "level": "S3",
+      "version": "0.0-platzhalter",
+      "publishedAt": "2026-01-01",
+      "url": "https://register.awmf.org/de/leitlinien/aktuelle-leitlinien",
+      "rightsNote": "Platzhalter-Eintrag zu Entwicklungszwecken. Enthält keinen Leitlinientext. Echte Leitlinieninhalte gehören dem AWMF-Autorenkollektiv; die App zitiert nur kurze Auszüge mit vollständiger Quellenangabe und benötigt eine eigene Rechtevereinbarung."
+    }
+  ]
+}

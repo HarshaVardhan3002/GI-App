@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "images": [
+    {
+      "id": "placeholder-dyed-lifted-polyps-001",
+      "source": "placeholder",
+      "sourceId": "generated/dyed-lifted-polyps",
+      "className": "dyed-lifted-polyps",
+      "assetPath": "assets/images/placeholder-dyed-lifted-polyps-001.webp",
+      "width": 1080,
+      "height": 1350,
+      "licence": {
+        "spdx": "PLACEHOLDER",
+        "holder": "gi-daily-app Team",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Platzhalter des gi-daily-app Team – kein Patientenbild, keine Datensatzquelle"
+      },
+      "addedAt": "2026-08-25T22:30:06+00:00"
+    },
+    {
+      "id": "placeholder-dyed-resection-margins-001",
+      "source": "placeholder",
+      "sourceId": "generated/dyed-resection-margins",
+      "className": "dyed-resection-margins",
+      "assetPath": "assets/images/placeholder-dyed-resection-margins-001.webp",
+      "width": 1080,
+      "height": 1350,
+      "licence": {
+        "spdx": "PLACEHOLDER",
+        "holder": "gi-daily-app Team",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Platzhalter des gi-daily-app Team – kein Patientenbild, keine Datensatzquelle"
+      },
+      "addedAt": "2026-08-25T22:30:06+00:00"
+    },
+    {
+      "id": "placeholder-normal-z-line-001",
+      "source": "placeholder",
+      "sourceId": "generated/normal-z-line",
+      "className": "normal-z-line",
+      "assetPath": "assets/images/placeholder-normal-z-line-001.webp",
+      "width": 1080,
+      "height": 1350,
+      "licence": {
+        "spdx": "PLACEHOLDER",
+        "holder": "gi-daily-app Team",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Platzhalter des gi-daily-app Team – kein Patientenbild, keine Datensatzquelle"
+      },
+      "addedAt": "2026-08-25T22:30:06+00:00"
+    },
+    {
+      "id": "placeholder-oesophagitis-a-001",
+      "source": "placeholder",
+      "sourceId": "generated/oesophagitis-a",
+      "className": "oesophagitis-a",
+      "assetPath": "assets/images/placeholder-oesophagitis-a-001.webp",
+      "width": 1080,
+      "height": 1350,
+      "licence": {
+        "spdx": "PLACEHOLDER",
+        "holder": "gi-daily-app Team",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Platzhalter des gi-daily-app Team – kein Patientenbild, keine Datensatzquelle"
+      },
+      "addedAt": "2026-08-25T22:30:06+00:00"
+    },
+    {
+      "id": "placeholder-polyp-001",
+      "source": "placeholder",
+      "sourceId": "generated/polyp",
+      "className": "polyp",
+      "assetPath": "assets/images/placeholder-polyp-001.webp",
+      "width": 1080,
+      "height": 1350,
+      "licence": {
+        "spdx": "PLACEHOLDER",
+        "holder": "gi-daily-app Team",
+        "sourceUrl": "https://github.com/",
+        "licenceUrl": "https://github.com/",
+        "attributionText": "Platzhalter des gi-daily-app Team – kein Patientenbild, keine Datensatzquelle"
+      },
+      "addedAt": "2026-08-25T22:30:06+00:00"
+    }
+  ]
+}

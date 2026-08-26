@@ -1,0 +1,31 @@
+name: local_content_client
+description: >-
+  Backs the app with the bundled JSON content set instead of Supabase and
+  PowerSync. Implements the same DatabaseClient and AuthenticationClient
+  interfaces, so every existing screen keeps working unchanged.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.9.0"
+
+dependencies:
+  authentication_client:
+    path: ../authentication_client/authentication_client
+  database_client:
+    path: ../database_client
+  firebase_remote_config_repository:
+    path: ../firebase_remote_config_repository
+  flutter:
+    sdk: flutter
+  notifications_repository:
+    path: ../notifications_repository
+  shared:
+    path: ../shared
+  user_repository:
+    path: ../user_repository
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  flutter_test:
+    sdk: flutter
