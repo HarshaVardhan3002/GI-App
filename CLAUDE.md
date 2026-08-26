@@ -141,7 +141,50 @@ the gap is not stylistic.
 medium-agnostic tells are adopted above. Layout, stack and design-system rules
 come from `impeccable` and from platform convention, not from that skill.
 
-## 9. Report honestly
+## 9. Every phase lands on its own branch
+
+**Nothing is committed to `main` while the owner is away.**
+
+- Each phase is implemented on `phase-N-<name>`, branched from `main`.
+- The phase is committed and pushed on that branch and nowhere else.
+- `main` moves only when the owner has read the branch and says so. Merging is
+ their call, not a step in the work.
+- A branch that is not finished honestly stays unmerged and says why in its own
+ report.
+
+**Why:** an unattended run that pushes straight to `main` gives the owner a
+single pile to accept or reject. Branches give them a phase they can take and a
+phase they can leave.
+
+## 10. The goal does not bend. The route does.
+
+The plan will meet things it assumed wrong. That is expected and it is not a
+reason to reduce what the app does.
+
+**When an assumption fails, find another way to the same outcome.** The route is
+disposable; the outcome is not. This work is not limited to what is already in
+this repository: pub.dev, the Flutter source, GitHub, and the wider community
+are all in scope. A missing package, an API that turned out different, a widget
+that will not do what was assumed - each is a research problem, never a licence
+to ship less.
+
+**An alternative is not a pivot.** The distinction is the whole rule:
+
+| | |
+|---|---|
+| **Alternative** *(proceed, and record it)* | Same outcome, different means. A different package, a different widget, a different layout mechanism, a hand-written version of something a library refused to do, an extra dependency, a different order of work |
+| **Pivot** *(stop, do not proceed)* | The outcome itself changes. A screen dropped, a feature reduced, a constraint loosened, a design decision from `DESIGN.md` reversed, a product decision from `PRODUCT.md` reversed, the plan's shape altered |
+
+**On a pivot: stop immediately and ask.** Do not implement a reduced version
+first and raise it afterwards. Do not leave a placeholder standing in for the
+thing. Do not decide alone that a smaller scope was what was meant. Stop, say
+exactly what blocked the route and what the options are, and wait.
+
+The one thing that is neither: work that cannot be done honestly on this
+machine, or without a physician, or without a dataset that is not here. That is
+left undone, named as undone, and the rest of the phase finishes around it.
+
+## 11. Report honestly
 
 State what was verified and how. If something was not tested, say so. If a
 screenshot shows a defect, name it before the user has to. Never describe work
