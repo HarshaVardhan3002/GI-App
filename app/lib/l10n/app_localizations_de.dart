@@ -816,4 +816,111 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get viewRevealText => 'Auflösung ansehen';
+
+  @override
+  String get displayHeaderText => 'Darstellung';
+
+  @override
+  String get appearanceRowText => 'Erscheinungsbild';
+
+  @override
+  String get languageRowText => 'Sprache';
+
+  @override
+  String get appearanceSystemText => 'System';
+
+  @override
+  String get appearanceLightText => 'Hell';
+
+  @override
+  String get appearanceDarkText => 'Dunkel';
+
+  @override
+  String get appearanceNoteText =>
+      'Dunkel ist für die Betrachtung endoskopischer Bilder ausgelegt. Hell steht zur Verfügung, ist aber nicht die Voreinstellung.';
+
+  @override
+  String get languageGermanText => 'Deutsch';
+
+  @override
+  String get languageEnglishText => 'English (Entwicklung)';
+
+  @override
+  String get languageNoteText =>
+      'Die Anwendung ist auf Deutsch. Englisch dient der Entwicklung und ist nicht für den klinischen Gebrauch gedacht.';
+
+  @override
+  String get contentOriginHeaderText => 'Herkunft der Inhalte';
+
+  @override
+  String get imageSourcesRowText => 'Bildquellen';
+
+  @override
+  String get guidelinesRightsRowText => 'Leitlinien und Rechte';
+
+  @override
+  String get contentStatusRowText => 'Inhaltsstatus';
+
+  @override
+  String approvedCountText(int count) {
+    return '$count freigegeben';
+  }
+
+  @override
+  String get aboutHeaderText => 'Über';
+
+  @override
+  String get aboutAppRowText => 'Über GI Daily';
+
+  @override
+  String get imprintRowText => 'Impressum';
+
+  @override
+  String get versionRowText => 'Version';
+
+  @override
+  String get releaseGroupHeaderText => 'Freigabe';
+
+  @override
+  String get approvedRowText => 'Freigegeben';
+
+  @override
+  String get draftRowText => 'Entwurf';
+
+  @override
+  String get rejectedRowText => 'Abgelehnt';
+
+  @override
+  String get placeholderGroupHeaderText => 'Platzhalter';
+
+  @override
+  String get imagesRowText => 'Bilder';
+
+  @override
+  String get recommendationsRowText => 'Empfehlungen';
+
+  @override
+  String outOfText(int part, int total) {
+    return '$part von $total';
+  }
+
+  @override
+  String get contentStatusNoteText =>
+      'Nur freigegebene Fälle werden angezeigt. Platzhalter sind im Fall selbst gekennzeichnet.';
+
+  @override
+  String get aboutAppBodyText =>
+      'GI Daily zeigt einen endoskopischen Fall pro Tag mit einer Frage auf Facharztniveau und einer Auflösung, die auf eine nummerierte Empfehlung der zuständigen Leitlinie verweist.';
+
+  @override
+  String get contentPendingNoticeText =>
+      'Dieser Text ist ein Entwurf. Die endgültige Fassung wird von den Projektbeteiligten verfasst und ärztlich geprüft, bevor die Anwendung veröffentlicht wird.';
+
+  @override
+  String get imprintPendingNoticeText =>
+      'Der Impressumstext liegt noch nicht vor. Er ist für eine Veröffentlichung in Deutschland gesetzlich vorgeschrieben und muss von den Projektbeteiligten eingetragen werden.';
+
+  @override
+  String get noReleasedCaseText =>
+      'Es ist noch kein Fall freigegeben.\nSobald ein Fall ärztlich geprüft ist, erscheint er hier.';
 }

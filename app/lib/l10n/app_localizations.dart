@@ -1378,6 +1378,198 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'See the answer'**
   String get viewRevealText;
+
+  /// No description provided for @displayHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Display'**
+  String get displayHeaderText;
+
+  /// No description provided for @appearanceRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearanceRowText;
+
+  /// No description provided for @languageRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get languageRowText;
+
+  /// No description provided for @appearanceSystemText.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get appearanceSystemText;
+
+  /// No description provided for @appearanceLightText.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get appearanceLightText;
+
+  /// No description provided for @appearanceDarkText.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get appearanceDarkText;
+
+  /// No description provided for @appearanceNoteText.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark is built for reading endoscopic images. Light is available and is not the default.'**
+  String get appearanceNoteText;
+
+  /// No description provided for @languageGermanText.
+  ///
+  /// In en, this message translates to:
+  /// **'Deutsch'**
+  String get languageGermanText;
+
+  /// No description provided for @languageEnglishText.
+  ///
+  /// In en, this message translates to:
+  /// **'English (development)'**
+  String get languageEnglishText;
+
+  /// No description provided for @languageNoteText.
+  ///
+  /// In en, this message translates to:
+  /// **'The app is in German. English is for development and is not meant for clinical use.'**
+  String get languageNoteText;
+
+  /// No description provided for @contentOriginHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Where the content comes from'**
+  String get contentOriginHeaderText;
+
+  /// No description provided for @imageSourcesRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Image sources'**
+  String get imageSourcesRowText;
+
+  /// No description provided for @guidelinesRightsRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Guidelines and rights'**
+  String get guidelinesRightsRowText;
+
+  /// No description provided for @contentStatusRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Content status'**
+  String get contentStatusRowText;
+
+  /// Value on the Inhaltsstatus row in Mehr.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} approved'**
+  String approvedCountText(int count);
+
+  /// No description provided for @aboutHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get aboutHeaderText;
+
+  /// No description provided for @aboutAppRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'About GI Daily'**
+  String get aboutAppRowText;
+
+  /// No description provided for @imprintRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Imprint'**
+  String get imprintRowText;
+
+  /// No description provided for @versionRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get versionRowText;
+
+  /// No description provided for @releaseGroupHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval'**
+  String get releaseGroupHeaderText;
+
+  /// No description provided for @approvedRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved'**
+  String get approvedRowText;
+
+  /// No description provided for @draftRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft'**
+  String get draftRowText;
+
+  /// No description provided for @rejectedRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejectedRowText;
+
+  /// No description provided for @placeholderGroupHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Placeholders'**
+  String get placeholderGroupHeaderText;
+
+  /// No description provided for @imagesRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Images'**
+  String get imagesRowText;
+
+  /// No description provided for @recommendationsRowText.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations'**
+  String get recommendationsRowText;
+
+  /// How many of a total are placeholders.
+  ///
+  /// In en, this message translates to:
+  /// **'{part} of {total}'**
+  String outOfText(int part, int total);
+
+  /// No description provided for @contentStatusNoteText.
+  ///
+  /// In en, this message translates to:
+  /// **'Only approved cases are shown. Placeholders are marked inside the case itself.'**
+  String get contentStatusNoteText;
+
+  /// No description provided for @aboutAppBodyText.
+  ///
+  /// In en, this message translates to:
+  /// **'GI Daily shows one endoscopic case a day with a question at Facharzt level and an answer that traces to a numbered recommendation in the relevant guideline.'**
+  String get aboutAppBodyText;
+
+  /// No description provided for @contentPendingNoticeText.
+  ///
+  /// In en, this message translates to:
+  /// **'This text is a draft. The project team writes the final version and a physician reviews it before the app ships.'**
+  String get contentPendingNoticeText;
+
+  /// No description provided for @imprintPendingNoticeText.
+  ///
+  /// In en, this message translates to:
+  /// **'The imprint has not been supplied. It is a legal requirement for publishing in Germany and has to be entered by the project team.'**
+  String get imprintPendingNoticeText;
+
+  /// No description provided for @noReleasedCaseText.
+  ///
+  /// In en, this message translates to:
+  /// **'No case has been released yet.\nOnce a physician has reviewed one, it appears here.'**
+  String get noReleasedCaseText;
 }
 
 class _AppLocalizationsDelegate

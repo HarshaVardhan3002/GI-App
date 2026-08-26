@@ -17,7 +17,17 @@ enum AppRoutes {
   userPosts('/user-posts'),
   postEdit('/post-edit', path: '/posts/:post_id/edit'),
   post('/post', path: '/posts/:id'),
-  stories('/stories', path: '/stories/:user_id');
+  stories('/stories', path: '/stories/:user_id'),
+
+  // The Mehr tree. Each one is a leaf under the Mehr tab: settings that push
+  // and pop, not destinations the tab bar can reach.
+  appearance('/appearance'),
+  language('/language'),
+  imageSources('/image-sources'),
+  guidelineRights('/guideline-rights'),
+  contentStatus('/content-status'),
+  aboutApp('/about-app'),
+  imprint('/imprint');
 
   const AppRoutes(this.route, {this.path});
 

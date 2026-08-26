@@ -17,6 +17,7 @@ import 'package:flutter_instagram_offline_first_clone/heute/heute.dart';
 // ignore: unused_import, directives_ordering
 import 'package:flutter_instagram_offline_first_clone/feed/view/feed_page.dart';
 import 'package:flutter_instagram_offline_first_clone/home/home.dart';
+import 'package:flutter_instagram_offline_first_clone/mehr/mehr.dart';
 import 'package:flutter_instagram_offline_first_clone/reels/reels.dart';
 import 'package:flutter_instagram_offline_first_clone/search/search.dart';
 import 'package:flutter_instagram_offline_first_clone/stories/stories.dart';
@@ -272,13 +273,18 @@ class AppRouter {
               GoRoute(
                 path: AppRoutes.user.route,
                 pageBuilder: (context, state) {
+                  // ignore: unused_local_variable
                   final user = context.select(
                     (AppBloc bloc) => bloc.state.user,
                   );
 
                   return CustomTransitionPage(
                     key: state.pageKey,
-                    child: UserProfilePage(userId: user.id),
+                    // There is no account in this product, so there is no
+                    // profile. Mehr holds settings and where the content came
+                    // from. `UserProfilePage` stays wired.
+                    child: const MehrPage(),
+                    // child: UserProfilePage(userId: user.id),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                           return SharedAxisTransition(
@@ -291,6 +297,53 @@ class AppRouter {
                   );
                 },
                 routes: [
+                  // The Mehr tree. Every one of these pushes onto the Mehr
+                  // tab rather than the root navigator, so the tab bar stays
+                  // put and the back label always names where it came from.
+                  GoRoute(
+                    path: AppRoutes.appearance.name,
+                    name: AppRoutes.appearance.name,
+                    pageBuilder: (context, state) => _mehrPage(
+                      state,
+                      const ErscheinungsbildPage(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.language.name,
+                    name: AppRoutes.language.name,
+                    pageBuilder: (context, state) =>
+                        _mehrPage(state, const SprachePage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.imageSources.name,
+                    name: AppRoutes.imageSources.name,
+                    pageBuilder: (context, state) =>
+                        _mehrPage(state, const BildquellenPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.guidelineRights.name,
+                    name: AppRoutes.guidelineRights.name,
+                    pageBuilder: (context, state) =>
+                        _mehrPage(state, const LeitlinienPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.contentStatus.name,
+                    name: AppRoutes.contentStatus.name,
+                    pageBuilder: (context, state) =>
+                        _mehrPage(state, const InhaltsstatusPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.aboutApp.name,
+                    name: AppRoutes.aboutApp.name,
+                    pageBuilder: (context, state) =>
+                        _mehrPage(state, const UeberPage()),
+                  ),
+                  GoRoute(
+                    path: AppRoutes.imprint.name,
+                    name: AppRoutes.imprint.name,
+                    pageBuilder: (context, state) =>
+                        _mehrPage(state, const ImpressumPage()),
+                  ),
                   GoRoute(
                     path: AppRoutes.createPost.name,
                     name: AppRoutes.createPost.name,
@@ -513,6 +566,25 @@ class AppRouter {
       return null;
     },
     refreshListenable: GoRouterAppBlocRefreshStream(appBloc.stream),
+  );
+}
+
+/// One push transition for the whole Mehr tree.
+///
+/// A settings tree that animated three different ways would read as three
+/// different apps. Horizontal is the direction a hierarchy moves in.
+CustomTransitionPage<void> _mehrPage(GoRouterState state, Widget child) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return SharedAxisTransition(
+        animation: animation,
+        secondaryAnimation: secondaryAnimation,
+        transitionType: SharedAxisTransitionType.horizontal,
+        child: child,
+      );
+    },
   );
 }
 

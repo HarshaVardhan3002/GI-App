@@ -29,6 +29,9 @@ class LocalDatabaseClient extends DatabaseClient implements CaseSource {
   @override
   List<GiCase> get cases => _source.cases;
 
+  @override
+  GiContentStatus get contentStatus => _source.contentStatus;
+
   /// Looks a case up by its post id, for screens that need the quiz and the
   /// provenance the feed's own models do not carry.
   @override

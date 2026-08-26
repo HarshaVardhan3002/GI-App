@@ -94,6 +94,10 @@ class _HeuteViewState extends State<HeuteView> {
 /// No illustration, no retry, no button. There is nothing for them to do, and
 /// pretending otherwise would be the screen apologising. The tab bar stays, so
 /// they are not stranded.
+///
+/// **The wordmark stays too.** An empty screen with the chrome stripped off
+/// reads as a screen that failed to load rather than a screen with nothing in
+/// it, and the reader should be able to see they are still in the app.
 /// {@endtemplate}
 class HeuteEmpty extends StatelessWidget {
   /// {@macro heute_empty}
@@ -101,15 +105,25 @@ class HeuteEmpty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xlg),
-        child: Text(
-          context.l10n.heuteEmptyText,
-          textAlign: TextAlign.center,
-          style: GiText.subhead.copyWith(color: context.gi.labelSecondary),
+    return Stack(
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xlg),
+            child: Text(
+              context.l10n.heuteEmptyText,
+              textAlign: TextAlign.center,
+              style: GiText.subhead.copyWith(color: context.gi.labelSecondary),
+            ),
+          ),
         ),
-      ),
+        const Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: HeuteHeader(),
+        ),
+      ],
     );
   }
 }

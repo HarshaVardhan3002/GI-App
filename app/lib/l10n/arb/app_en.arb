@@ -597,5 +597,56 @@
   "viewRevealText": "See the answer",
   "@viewRevealText": {
     "description": "Replaces \"Fall öffnen\" on a card whose case has been answered."
+  },
+  "displayHeaderText": "Display",
+  "appearanceRowText": "Appearance",
+  "languageRowText": "Language",
+  "appearanceSystemText": "System",
+  "appearanceLightText": "Light",
+  "appearanceDarkText": "Dark",
+  "appearanceNoteText": "Dark is built for reading endoscopic images. Light is available and is not the default.",
+  "languageGermanText": "Deutsch",
+  "languageEnglishText": "English (development)",
+  "languageNoteText": "The app is in German. English is for development and is not meant for clinical use.",
+  "contentOriginHeaderText": "Where the content comes from",
+  "imageSourcesRowText": "Image sources",
+  "guidelinesRightsRowText": "Guidelines and rights",
+  "contentStatusRowText": "Content status",
+  "approvedCountText": "{count} approved",
+  "aboutHeaderText": "About",
+  "aboutAppRowText": "About GI Daily",
+  "imprintRowText": "Imprint",
+  "versionRowText": "Version",
+  "releaseGroupHeaderText": "Approval",
+  "approvedRowText": "Approved",
+  "draftRowText": "Draft",
+  "rejectedRowText": "Rejected",
+  "placeholderGroupHeaderText": "Placeholders",
+  "imagesRowText": "Images",
+  "recommendationsRowText": "Recommendations",
+  "outOfText": "{part} of {total}",
+  "contentStatusNoteText": "Only approved cases are shown. Placeholders are marked inside the case itself.",
+  "aboutAppBodyText": "GI Daily shows one endoscopic case a day with a question at Facharzt level and an answer that traces to a numbered recommendation in the relevant guideline.",
+  "contentPendingNoticeText": "This text is a draft. The project team writes the final version and a physician reviews it before the app ships.",
+  "imprintPendingNoticeText": "The imprint has not been supplied. It is a legal requirement for publishing in Germany and has to be entered by the project team.",
+  "noReleasedCaseText": "No case has been released yet.\nOnce a physician has reviewed one, it appears here.",
+  "@approvedCountText": {
+    "description": "Value on the Inhaltsstatus row in Mehr.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@outOfText": {
+    "description": "How many of a total are placeholders.",
+    "placeholders": {
+      "part": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -42,9 +42,13 @@ class LocalContentSource {
 
   List<LocalCase> _cases = const [];
   bool _loaded = false;
+  _LocalContentStatus _status = const _LocalContentStatus();
 
   /// Every approved case, newest first.
   List<LocalCase> get cases => _cases;
+
+  /// What the whole set contains, drafts and rejections included.
+  GiContentStatus get contentStatus => _status;
 
   /// Reads and joins the content set. Safe to call more than once.
   Future<void> load() async {
@@ -66,6 +70,45 @@ class LocalContentSource {
       for (final recommendation in recommendations)
         recommendation['id'] as String: recommendation,
     };
+
+    // Counted over the *whole* set, before the approval filter below removes
+    // anything. That is the point: a status screen that only counted what it
+    // could already see would be counting nothing.
+    var approved = 0;
+    var draft = 0;
+    var rejected = 0;
+    for (final post in posts) {
+      switch ((post['review'] as Map<String, dynamic>)['status']) {
+        case 'approved':
+          approved++;
+        case 'rejected':
+          rejected++;
+        // Anything that is not explicitly approved or rejected is a draft,
+        // including a status nobody has set. Unknown means unreviewed.
+        default:
+          draft++;
+      }
+    }
+    _status = _LocalContentStatus(
+      approvedCount: approved,
+      draftCount: draft,
+      rejectedCount: rejected,
+      imageCount: images.length,
+      placeholderImageCount: images
+          .where(
+            (image) =>
+                (image['licence'] as Map<String, dynamic>)['spdx'] ==
+                'PLACEHOLDER',
+          )
+          .length,
+      recommendationCount: recommendations.length,
+      placeholderRecommendationCount: recommendations
+          .where(
+            (recommendation) =>
+                (recommendation['quote'] as String).startsWith('PLATZHALTER'),
+          )
+          .length,
+    );
 
     final built = <LocalCase>[];
 
@@ -336,4 +379,44 @@ class LocalGuideline implements GiGuideline {
 
   @override
   String get url => _raw['url'] as String;
+
+  // Same marker the recommendation quotes carry, so one convention covers
+  // both rather than two ways of saying the same thing.
+  @override
+  bool get isPlaceholder => title.startsWith('PLATZHALTER');
+}
+
+
+/// {@macro gi_content_status}
+class _LocalContentStatus implements GiContentStatus {
+  const _LocalContentStatus({
+    this.approvedCount = 0,
+    this.draftCount = 0,
+    this.rejectedCount = 0,
+    this.imageCount = 0,
+    this.placeholderImageCount = 0,
+    this.recommendationCount = 0,
+    this.placeholderRecommendationCount = 0,
+  });
+
+  @override
+  final int approvedCount;
+
+  @override
+  final int draftCount;
+
+  @override
+  final int rejectedCount;
+
+  @override
+  final int imageCount;
+
+  @override
+  final int placeholderImageCount;
+
+  @override
+  final int recommendationCount;
+
+  @override
+  final int placeholderRecommendationCount;
 }

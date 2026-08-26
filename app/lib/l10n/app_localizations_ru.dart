@@ -832,4 +832,111 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get viewRevealText => 'See the answer';
+
+  @override
+  String get displayHeaderText => 'Display';
+
+  @override
+  String get appearanceRowText => 'Appearance';
+
+  @override
+  String get languageRowText => 'Language';
+
+  @override
+  String get appearanceSystemText => 'System';
+
+  @override
+  String get appearanceLightText => 'Light';
+
+  @override
+  String get appearanceDarkText => 'Dark';
+
+  @override
+  String get appearanceNoteText =>
+      'Dark is built for reading endoscopic images. Light is available and is not the default.';
+
+  @override
+  String get languageGermanText => 'Deutsch';
+
+  @override
+  String get languageEnglishText => 'English (development)';
+
+  @override
+  String get languageNoteText =>
+      'The app is in German. English is for development and is not meant for clinical use.';
+
+  @override
+  String get contentOriginHeaderText => 'Where the content comes from';
+
+  @override
+  String get imageSourcesRowText => 'Image sources';
+
+  @override
+  String get guidelinesRightsRowText => 'Guidelines and rights';
+
+  @override
+  String get contentStatusRowText => 'Content status';
+
+  @override
+  String approvedCountText(int count) {
+    return '$count approved';
+  }
+
+  @override
+  String get aboutHeaderText => 'About';
+
+  @override
+  String get aboutAppRowText => 'About GI Daily';
+
+  @override
+  String get imprintRowText => 'Imprint';
+
+  @override
+  String get versionRowText => 'Version';
+
+  @override
+  String get releaseGroupHeaderText => 'Approval';
+
+  @override
+  String get approvedRowText => 'Approved';
+
+  @override
+  String get draftRowText => 'Draft';
+
+  @override
+  String get rejectedRowText => 'Rejected';
+
+  @override
+  String get placeholderGroupHeaderText => 'Placeholders';
+
+  @override
+  String get imagesRowText => 'Images';
+
+  @override
+  String get recommendationsRowText => 'Recommendations';
+
+  @override
+  String outOfText(int part, int total) {
+    return '$part of $total';
+  }
+
+  @override
+  String get contentStatusNoteText =>
+      'Only approved cases are shown. Placeholders are marked inside the case itself.';
+
+  @override
+  String get aboutAppBodyText =>
+      'GI Daily shows one endoscopic case a day with a question at Facharzt level and an answer that traces to a numbered recommendation in the relevant guideline.';
+
+  @override
+  String get contentPendingNoticeText =>
+      'This text is a draft. The project team writes the final version and a physician reviews it before the app ships.';
+
+  @override
+  String get imprintPendingNoticeText =>
+      'The imprint has not been supplied. It is a legal requirement for publishing in Germany and has to be entered by the project team.';
+
+  @override
+  String get noReleasedCaseText =>
+      'No case has been released yet.\nOnce a physician has reviewed one, it appears here.';
 }

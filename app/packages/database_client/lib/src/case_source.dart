@@ -19,6 +19,42 @@ abstract interface class CaseSource {
 
   /// The case behind a post, or null when the id is not one.
   GiCase? caseOf(String postId);
+
+  /// What the content set contains, including what it is not showing.
+  GiContentStatus get contentStatus;
+}
+
+/// {@template gi_content_status}
+/// The content set, counted - including the parts of it a reader never sees.
+///
+/// **This is constraint 3 made checkable.** The app renders approved cases and
+/// nothing else, and a claim like that is worth nothing if there is no way to
+/// see how many were withheld. The same goes for constraint 1: a count of how
+/// many images are still stand-ins is the difference between a prototype that
+/// says so and one that hopes nobody asks.
+/// {@endtemplate}
+abstract interface class GiContentStatus {
+  /// Cases a physician has approved. These are the ones that render.
+  int get approvedCount;
+
+  /// Cases written but not yet approved. **Never rendered.**
+  int get draftCount;
+
+  /// Cases a physician rejected. Never rendered, and kept so the rejection is
+  /// visible rather than silent.
+  int get rejectedCount;
+
+  /// Images in the set, and how many of them are stand-ins.
+  int get imageCount;
+
+  /// {@macro gi_content_status}
+  int get placeholderImageCount;
+
+  /// Recommendations in the set, and how many are stand-ins.
+  int get recommendationCount;
+
+  /// {@macro gi_content_status}
+  int get placeholderRecommendationCount;
 }
 
 /// {@template gi_case}
@@ -158,4 +194,11 @@ abstract interface class GiGuideline {
 
   /// Where to read it.
   String get url;
+
+  /// True when this is a development stand-in rather than a real guideline.
+  ///
+  /// A placeholder entry has no register number that resolves and no URL that
+  /// leads anywhere. Screens ask this before they offer to open it, because a
+  /// link that goes nowhere is worse than no link.
+  bool get isPlaceholder;
 }
