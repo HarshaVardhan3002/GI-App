@@ -1204,6 +1204,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No endoscopic image on file'**
   String get placeholderImageBodyText;
+
+  /// No description provided for @backToHeuteText.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get backToHeuteText;
+
+  /// No description provided for @confirmAnswerText.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm answer'**
+  String get confirmAnswerText;
+
+  /// No description provided for @verdictCorrectText.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get verdictCorrectText;
+
+  /// No description provided for @verdictIncorrectText.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect'**
+  String get verdictIncorrectText;
+
+  /// No description provided for @reasoningHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Reasoning'**
+  String get reasoningHeaderText;
+
+  /// Group header above the guideline quote.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendation {number} · Grade {strength}'**
+  String recommendationHeaderText(String number, String strength);
+
+  /// No description provided for @consensusLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Consensus'**
+  String get consensusLabelText;
+
+  /// No description provided for @evidenceLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Level of evidence'**
+  String get evidenceLabelText;
+
+  /// No description provided for @sourceText.
+  ///
+  /// In en, this message translates to:
+  /// **'Source'**
+  String get sourceText;
+
+  /// No description provided for @provenanceTitleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Provenance'**
+  String get provenanceTitleText;
+
+  /// No description provided for @placeholderNoticeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Placeholder content. Not a patient image, not an approved recommendation.'**
+  String get placeholderNoticeText;
+
+  /// No description provided for @imageCreditHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Image credit'**
+  String get imageCreditHeaderText;
+
+  /// No description provided for @datasetLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Dataset'**
+  String get datasetLabelText;
+
+  /// No description provided for @imageClassLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Class'**
+  String get imageClassLabelText;
+
+  /// No description provided for @licenceLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Licence'**
+  String get licenceLabelText;
+
+  /// No description provided for @rightsLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Rights'**
+  String get rightsLabelText;
+
+  /// No description provided for @guidelineHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Guideline'**
+  String get guidelineHeaderText;
+
+  /// No description provided for @awmfLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'AWMF'**
+  String get awmfLabelText;
+
+  /// No description provided for @recommendationNumberLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendation'**
+  String get recommendationNumberLabelText;
+
+  /// No description provided for @openGuidelineText.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the guideline'**
+  String get openGuidelineText;
+
+  /// No description provided for @leavesAppNoticeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens the guideline in the browser.'**
+  String get leavesAppNoticeText;
+
+  /// No description provided for @releaseHeaderText.
+  ///
+  /// In en, this message translates to:
+  /// **'Approval'**
+  String get releaseHeaderText;
+
+  /// No description provided for @reviewedByLabelText.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviewed by'**
+  String get reviewedByLabelText;
+
+  /// No description provided for @notReviewedText.
+  ///
+  /// In en, this message translates to:
+  /// **'not reviewed'**
+  String get notReviewedText;
+
+  /// No description provided for @caseNotFoundText.
+  ///
+  /// In en, this message translates to:
+  /// **'This case is not on file.'**
+  String get caseNotFoundText;
+
+  /// No description provided for @emptyValueText.
+  ///
+  /// In en, this message translates to:
+  /// **'–'**
+  String get emptyValueText;
 }
 
 class _AppLocalizationsDelegate

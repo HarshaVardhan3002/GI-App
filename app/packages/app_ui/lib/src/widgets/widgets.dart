@@ -9,4 +9,5 @@ export 'app_scaffold.dart';
 export 'app_snackbar.dart';
 export 'app_text_field.dart';
 export 'gap.dart';
+export 'gi_group.dart';
 export 'tappable.dart';

@@ -717,4 +717,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get placeholderImageBodyText => 'No endoscopic image on file';
+
+  @override
+  String get backToHeuteText => 'Today';
+
+  @override
+  String get confirmAnswerText => 'Confirm answer';
+
+  @override
+  String get verdictCorrectText => 'Correct';
+
+  @override
+  String get verdictIncorrectText => 'Incorrect';
+
+  @override
+  String get reasoningHeaderText => 'Reasoning';
+
+  @override
+  String recommendationHeaderText(String number, String strength) {
+    return 'Recommendation $number · Grade $strength';
+  }
+
+  @override
+  String get consensusLabelText => 'Consensus';
+
+  @override
+  String get evidenceLabelText => 'Level of evidence';
+
+  @override
+  String get sourceText => 'Source';
+
+  @override
+  String get provenanceTitleText => 'Provenance';
+
+  @override
+  String get placeholderNoticeText =>
+      'Placeholder content. Not a patient image, not an approved recommendation.';
+
+  @override
+  String get imageCreditHeaderText => 'Image credit';
+
+  @override
+  String get datasetLabelText => 'Dataset';
+
+  @override
+  String get imageClassLabelText => 'Class';
+
+  @override
+  String get licenceLabelText => 'Licence';
+
+  @override
+  String get rightsLabelText => 'Rights';
+
+  @override
+  String get guidelineHeaderText => 'Guideline';
+
+  @override
+  String get awmfLabelText => 'AWMF';
+
+  @override
+  String get recommendationNumberLabelText => 'Recommendation';
+
+  @override
+  String get openGuidelineText => 'Open the guideline';
+
+  @override
+  String get leavesAppNoticeText => 'Opens the guideline in the browser.';
+
+  @override
+  String get releaseHeaderText => 'Approval';
+
+  @override
+  String get reviewedByLabelText => 'Reviewed by';
+
+  @override
+  String get notReviewedText => 'not reviewed';
+
+  @override
+  String get caseNotFoundText => 'This case is not on file.';
+
+  @override
+  String get emptyValueText => '–';
 }

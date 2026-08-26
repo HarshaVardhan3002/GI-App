@@ -75,7 +75,13 @@ class TageskarteDots extends StatelessWidget {
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: i == active ? colors.label : colors.labelTertiary,
+                  // The active dot is the tint. It is the one place on the
+                  // card where tint marks position rather than an action, and
+                  // the screen mockups set it that way: at 5dp it reads as a
+                  // mark, not as something to press.
+                  color: i == active
+                      ? colors.tint
+                      : colors.label.withValues(alpha: .3),
                 ),
               ),
             ),
@@ -101,7 +107,10 @@ class TageskartePeek extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: context.gi.depth(.30),
+        // Depth 0.45, not 0.30. The card under this one is not a raised
+        // surface, it is a further-away one, and the mockups place it a stop
+        // deeper than a sheet.
+        color: context.gi.depth(.45),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
       ),
     );

@@ -717,4 +717,85 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get placeholderImageBodyText => 'Kein endoskopisches Bild hinterlegt';
+
+  @override
+  String get backToHeuteText => 'Heute';
+
+  @override
+  String get confirmAnswerText => 'Antwort bestätigen';
+
+  @override
+  String get verdictCorrectText => 'Richtig';
+
+  @override
+  String get verdictIncorrectText => 'Falsch';
+
+  @override
+  String get reasoningHeaderText => 'Begründung';
+
+  @override
+  String recommendationHeaderText(String number, String strength) {
+    return 'Empfehlung $number · Grad $strength';
+  }
+
+  @override
+  String get consensusLabelText => 'Konsensstärke';
+
+  @override
+  String get evidenceLabelText => 'Evidenzgrad';
+
+  @override
+  String get sourceText => 'Quelle';
+
+  @override
+  String get provenanceTitleText => 'Herkunft';
+
+  @override
+  String get placeholderNoticeText =>
+      'Platzhalter-Inhalt. Kein Patientenbild, keine freigegebene Empfehlung.';
+
+  @override
+  String get imageCreditHeaderText => 'Bildnachweis';
+
+  @override
+  String get datasetLabelText => 'Datensatz';
+
+  @override
+  String get imageClassLabelText => 'Klasse';
+
+  @override
+  String get licenceLabelText => 'Lizenz';
+
+  @override
+  String get rightsLabelText => 'Rechte';
+
+  @override
+  String get guidelineHeaderText => 'Leitlinie';
+
+  @override
+  String get awmfLabelText => 'AWMF';
+
+  @override
+  String get recommendationNumberLabelText => 'Empfehlung';
+
+  @override
+  String get openGuidelineText => 'Leitlinie öffnen';
+
+  @override
+  String get leavesAppNoticeText => 'Öffnet die Leitlinie im Browser.';
+
+  @override
+  String get releaseHeaderText => 'Freigabe';
+
+  @override
+  String get reviewedByLabelText => 'Geprüft von';
+
+  @override
+  String get notReviewedText => 'nicht geprüft';
+
+  @override
+  String get caseNotFoundText => 'Dieser Fall ist nicht hinterlegt.';
+
+  @override
+  String get emptyValueText => '–';
 }

@@ -543,5 +543,42 @@
   },
   "@placeholderImageBodyText": {
     "description": "Body line on the stand-in shown where a real endoscopic image will go."
+  },
+  "backToHeuteText": "Today",
+  "confirmAnswerText": "Confirm answer",
+  "verdictCorrectText": "Correct",
+  "verdictIncorrectText": "Incorrect",
+  "reasoningHeaderText": "Reasoning",
+  "recommendationHeaderText": "Recommendation {number} · Grade {strength}",
+  "consensusLabelText": "Consensus",
+  "evidenceLabelText": "Level of evidence",
+  "sourceText": "Source",
+  "provenanceTitleText": "Provenance",
+  "placeholderNoticeText": "Placeholder content. Not a patient image, not an approved recommendation.",
+  "imageCreditHeaderText": "Image credit",
+  "datasetLabelText": "Dataset",
+  "imageClassLabelText": "Class",
+  "licenceLabelText": "Licence",
+  "rightsLabelText": "Rights",
+  "guidelineHeaderText": "Guideline",
+  "awmfLabelText": "AWMF",
+  "recommendationNumberLabelText": "Recommendation",
+  "openGuidelineText": "Open the guideline",
+  "leavesAppNoticeText": "Opens the guideline in the browser.",
+  "releaseHeaderText": "Approval",
+  "reviewedByLabelText": "Reviewed by",
+  "notReviewedText": "not reviewed",
+  "caseNotFoundText": "This case is not on file.",
+  "emptyValueText": "–",
+  "@recommendationHeaderText": {
+    "description": "Group header above the guideline quote.",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "strength": {
+        "type": "String"
+      }
+    }
   }
 }

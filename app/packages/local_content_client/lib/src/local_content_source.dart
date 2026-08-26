@@ -180,10 +180,17 @@ class LocalCase implements GiCase {
   @override
   DateTime get date => post.createdAt;
 
+  // `map<GiOption>` rather than a bare `map`: the tear-off infers
+  // `List<_LocalOption>`, and the declared return type accepts it by
+  // covariance while the *runtime* list stays the private one. Anything above
+  // the seam that passes a `GiOption` callback to it - `firstWhere`'s
+  // `orElse`, `fold`, `sort` - then fails at runtime with a type error about a
+  // class it cannot see. **The seam has to hand out the interface type, not a
+  // list that merely satisfies it.**
   @override
   List<GiOption> get options => (raw['options'] as List)
       .cast<Map<String, dynamic>>()
-      .map(_LocalOption.new)
+      .map<GiOption>(_LocalOption.new)
       .toList(growable: false);
 
   /// The one option marked correct. A case without exactly one is a content
@@ -282,8 +289,17 @@ class LocalRecommendation implements GiRecommendation {
   @override
   String get consensus => _raw['consensus'] as String;
 
+  // The one optional field on a recommendation: `GiRecommendation` says
+  // "where the guideline gives one", and an Expertenkonsens gives none.
+  // `platzhalter-r-6.12` omits it, and casting it as a required String threw
+  // on the reveal of today's case. Empty means absent, and the screen draws no
+  // row for it.
+  //
+  // Everything else here stays a hard cast on purpose. A recommendation with
+  // no quote or no citation is a constraint-2 violation, and failing loudly is
+  // the point.
   @override
-  String get levelOfEvidence => _raw['levelOfEvidence'] as String;
+  String get levelOfEvidence => (_raw['levelOfEvidence'] as String?) ?? '';
 
   @override
   String get quote => _raw['quote'] as String;

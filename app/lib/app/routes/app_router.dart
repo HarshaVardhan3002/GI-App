@@ -9,6 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
 import 'package:flutter_instagram_offline_first_clone/auth/auth.dart';
 import 'package:flutter_instagram_offline_first_clone/chats/chat/chat.dart';
+import 'package:flutter_instagram_offline_first_clone/fall/fall.dart';
 import 'package:flutter_instagram_offline_first_clone/feed/post/post.dart';
 import 'package:flutter_instagram_offline_first_clone/heute/heute.dart';
 // FeedPage is commented out at branch 0 below and stays wired.
@@ -108,7 +109,10 @@ class AppRouter {
 
           return CustomTransitionPage(
             key: state.pageKey,
-            child: PostPreviewPage(id: id ?? ''),
+            // The fork's post preview. Phase 5 replaces it with the case
+            // screen; it is one line from coming back.
+            // child: PostPreviewPage(id: id ?? ''),
+            child: FallPage(id: id ?? ''),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   return SharedAxisTransition(

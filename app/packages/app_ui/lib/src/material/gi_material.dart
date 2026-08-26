@@ -109,3 +109,59 @@ class GiMaterial extends StatelessWidget {
     );
   }
 }
+
+/// {@template gi_sheet_material}
+/// The Dick material, for sheets.
+///
+/// `DESIGN.md` section 4: blur 40, saturation 1.5, tint at depth 0.15 and 88%.
+/// Heavier and less transparent than a bar, because a sheet is a place you are
+/// in rather than chrome you are looking past.
+///
+/// Its top edge is a 1px inset highlight at 16% white. Section 4 rule 4:
+/// **edges are light, not shadow. No cast shadows anywhere in this app.**
+/// {@endtemplate}
+class GiSheetMaterial extends StatelessWidget {
+  /// {@macro gi_sheet_material}
+  const GiSheetMaterial({required this.child, super.key});
+
+  /// The sheet's content.
+  final Widget child;
+
+  /// Section 4, Dick.
+  static const double blurSigma = 40;
+
+  /// Section 4, Dick. Lower than a bar's: less of the screen shows through, so
+  /// less needs putting back.
+  static const double saturation = 1.5;
+
+  /// Section 6: sheets.
+  static const double radius = 20;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.gi;
+    const shape = BorderRadius.vertical(top: Radius.circular(radius));
+
+    return ClipRRect(
+      borderRadius: shape,
+      child: BackdropFilter(
+        filter: ui.ImageFilter.compose(
+          outer: GiMaterial.saturate(saturation),
+          inner: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
+        ),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: colors.depth(.15).withValues(alpha: .88),
+            borderRadius: shape,
+            border: Border(
+              top: BorderSide(
+                color: Colors.white.withValues(alpha: .16),
+              ),
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
