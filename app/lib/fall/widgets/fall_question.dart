@@ -78,7 +78,22 @@ class FallQuestion extends StatelessWidget {
             left: 0,
             right: 0,
             height: imageHeight,
-            child: GiImageView(image: giCase.images.first),
+            // The frame's own ground, lit by the frame. Where a clamped shape
+            // leaves a margin inside the field, that margin shows the image's
+            // light rather than flat ramp, which is the same language Heute
+            // speaks.
+            //
+            // **It stops at the frame here.** On Heute the light fills the
+            // card, because that screen is for looking; this one is for
+            // reading four options and a question, and coloured light under
+            // body text is a contrast problem dressed as atmosphere.
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                GiAmbient(image: giCase.images.first, focusEnd: 1),
+                GiImageView(image: giCase.images.first),
+              ],
+            ),
           ),
           Positioned(
             top: imageHeight - dissolveHeight,

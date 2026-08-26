@@ -2,6 +2,14 @@
 
 Branch `phase-8-material`, off `phase-7-mehr`.
 
+> **Superseded in part.** The shared backdrop pass described below draws the
+> wrong backdrop on Flutter 3.35.7: two grouped filters carrying the same filter
+> make the second paint the first's, so the tab bar showed the top bar's slice
+> of the image. `phase-8b-bleed` reverts all three materials to the plain
+> `BackdropFilter` and gives up this phase's measured saving. The measurement
+> and the kill switch below still stand; the grouping does not. See
+> `docs/PHASE-8B.md`.
+
 The materials were already drawn to `DESIGN.md` section 4's dimensions in
 Phase 4. This phase makes them cost what the design assumed they cost, and
 gives them the switch that turns them off without changing a pixel of layout.

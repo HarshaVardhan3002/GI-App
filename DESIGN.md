@@ -24,6 +24,8 @@ Three rules everything derives from:
  competes loses. No coloured cards, no gradients, no decorative fills. Colour
  appears in four places only: the tint on interactive elements, green and red
  on a verdict, orange on a placeholder warning, and the image itself.
+ **The image's own light spilling onto the ground around it is the image**,
+ not a fifth place: see section 4a.
 2. **Space is the luxury signal.** A Facharzt reading between cases needs one
  thing at a time. Sections separate by 32-40, not 16.
 3. **Nothing celebrates.** A correct answer at Facharzt level is the expected
@@ -105,7 +107,7 @@ Native, no package: `ColorFilter implements ImageFilter`, so
 
 | Material | Blur | Saturation | Tint | Where |
 |---|---|---|---|---|
-| Ultradünn | 18 | 1.8 | depth 0.30 at 24% | Over media |
+| Ultradünn | 18 | 1.8 | depth 0.30 at 24% | Over media: Heute's text pane |
 | Normal | 26 | 1.8 | depth 0.30, graded 58% to 16% | Bars |
 | Dick | 40 | 1.5 | depth 0.15 at 88% | Sheets |
 
@@ -123,11 +125,69 @@ Four rules keep it a material rather than decoration:
 Reduced transparency collapses each material to an opaque surface at the same
 depth.
 
-**Cost.** `BackdropFilter` forces a save-layer and reads the framebuffer back.
-Solved rather than rationed: `BackdropGroup` with `BackdropFilter.grouped` makes
-every material on a route share **one** backdrop pass, and the `enabled` flag
-turns the effect off without changing a single dimension. See
-`docs/MATERIAL-IMPLEMENTATION.md`. Never inside a list item.
+## 4a. Ambient: the ground is lit, not painted
+
+**An endoscopic frame is not the shape of a phone, and this app will not crop
+one.** So a frame leaves space, and the question is what that space is.
+
+It was flat ramp, and that was wrong. A 1356x520 strip in the middle of a black
+field reads as a photograph stamped onto a page: the same rectangle of chrome
+whatever the case is, and a screen that has decided its content does not matter.
+Black around a frame is not neutrality. It is a second design decision, made by
+default.
+
+The space is filled with the frame's own light. The asset is decoded at **48
+pixels wide**, scaled up past the box, saturated **1.2** and blurred **24**. At
+that size nothing survives but colour and where the colour sits.
+
+| | |
+|---|---|
+| Source decode | 48px wide |
+| Overscan | 1.4x, so the blur never reaches the texture's edge |
+| Blur / saturation | 24 / 1.2 |
+| Grade | 55% down to where the frame stops, 18% just past it, 8% at the card's foot |
+| Placeholder | draws nothing. A drawing has no light to spill |
+
+**Half strength at its strongest, and dimmest where the reading is.** The first
+build ran the light at full alpha and at saturation 1.5, and the card came back
+glowing: a ground as saturated as the endoscopic frame above it, the tint on
+*Fall öffnen* sitting on red, and a bright field behind the text. Light spills
+off a photograph at a fraction of the photograph. Rule 1 is not suspended here,
+it is the constraint the numbers are set against.
+
+**Three things this is not.**
+
+It is not decoration standing in for content: there is no palette, no accent and
+nothing chosen. It is not detail invented at an edge a reader is judging, which
+is the objection that kept it out of the first pass: at 48px there is no
+structure left to mistake for the image, and the light never overlaps the frame.
+And it is not expensive: the texture is smaller than an icon, and the upscale
+does the work a large blur would otherwise have to.
+
+**It fills a card, not a page.** Heute is for looking, so the light runs the
+whole card and the text reads off an Ultradünn pane laid over it. Fall is for
+reading four options, so the light stops at the frame; coloured light under body
+text is a contrast problem dressed as atmosphere.
+
+**The frame bleeds into it.** The image's bottom edge feathers over 32dp so the
+frame ends in its own light instead of at a cut. This is the one place in the
+app where image pixels are deliberately hidden, and it is defensible only
+because an endoscopic frame's bottom edge is the dark periphery of the lumen
+rather than the finding, and because Fall shows the same image whole.
+
+**Cost.** `BackdropFilter` forces a save-layer and reads the framebuffer back,
+once per material. The `enabled` flag turns the effect off without changing a
+single dimension. See `docs/MATERIAL-IMPLEMENTATION.md`. Never inside a list
+item.
+
+**Sharing one pass is off, and it is off because it was wrong.** Phase 8 put
+every material on a route inside a `BackdropGroup` using
+`BackdropFilter.grouped`, which is the documented way to pay for one backdrop
+instead of three. On Flutter 3.35.7 two grouped filters carrying the *same*
+filter make the second paint the first's backdrop: the tab bar came back
+showing the top bar's slice of the endoscopic image, 1400px away, in both
+appearances. It goes back on when it is correct. `docs/PHASE-8B.md` has the
+measurement.
 
 ## 5. Type
 

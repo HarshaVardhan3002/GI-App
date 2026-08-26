@@ -31,12 +31,17 @@ class GiImageView extends StatelessWidget {
       // edge of the lumen is often the finding. Cropping it is a clinical
       // mistake dressed as a design one, and stretching it to fit is worse.
       //
-      // The frame around this is already sized to the set's tallest image (see
-      // `Tageskarte.frameAspect`), so in the common case there is nothing to
-      // letterbox. What letterboxing remains sits on the ramp, not on a
-      // blurred copy of the image: a blurred backdrop is decoration standing
-      // in for content, and it invents detail at the exact edge a reader is
-      // trying to judge.
+      // **The frame is sized to this image**, so in the common case `contain`
+      // has nothing to letterbox: Heute gives the field the image's own aspect
+      // and Fall does the same. What space remains, when a shape is clamped,
+      // shows `GiAmbient` rather than flat ramp.
+      //
+      // An earlier pass refused that on the grounds that a blurred backdrop
+      // invents detail at the edge a reader is judging. It does not: the
+      // ambient is decoded at 48px and blurred past any structure, so there is
+      // no detail left in it to mistake for the image, and it never overlaps
+      // the frame. Black around a frame is not neutrality, it is a second
+      // design decision made by default.
       fit: BoxFit.contain,
       // The image is the content, so a failure to load it is worth seeing
       // rather than worth hiding behind an empty box.

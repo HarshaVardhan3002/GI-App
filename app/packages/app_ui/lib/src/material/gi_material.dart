@@ -17,8 +17,23 @@ import 'package:flutter/material.dart';
 /// graded 58% at the screen edge to 16% at the inner edge, and the inner
 /// [fadeExtent] masking to transparent so the bar has no edge to notice.
 ///
-/// It takes its blur from the route's shared [GiBackdropGroup] pass and its
-/// kill switch from [MaterialQuality]. With the switch off it paints the same
+/// **This does not use `BackdropFilter.grouped`, and Phase 8's claim that it
+/// does is withdrawn.** On Flutter 3.35.7, two grouped filters inside one
+/// [BackdropGroup] that carry the *same* filter make the second paint the
+/// first's backdrop. Measured on `emulator-5554`, same frame: with grouping the
+/// bottom bar sampled (123,40,28) against the top bar's (134,51,36), which is
+/// the endoscopic image 1400px above it; without grouping it sampled (19,10,10)
+/// against (27,8,9) directly beneath it. Both bars use Normal, so they are
+/// exactly the identical-filter case. It went unnoticed in Phase 8 because in
+/// dark, over a red image, a bar showing the wrong red still looks like a bar.
+///
+/// Grouping bought about 1.2ms of raster at p50. A bar that shows the wrong
+/// part of the screen is not worth 1.2ms. [GiBackdropGroup] stays in the tree
+/// because it also carries [MaterialQuality]; only the sharing is off, and it
+/// goes back on when the sharing is correct.
+///
+/// It takes its kill switch from [MaterialQuality]. With the switch off it
+/// paints the same
 /// tint opaque at the same depth, at the same size, in the same place. The
 /// screen is never missing a surface, only its transparency.
 /// {@endtemplate}
@@ -89,9 +104,7 @@ class GiMaterial extends StatelessWidget {
             stops: [0, fadeStart, 1],
           ).createShader(rect);
         },
-        child: BackdropFilter.grouped(
-          // `.grouped` rather than the default constructor: this bar shares
-          // the route's one backdrop pass with every other material on it.
+        child: BackdropFilter(
           filter: ui.ImageFilter.compose(
             outer: saturate(saturation),
             inner: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
@@ -158,7 +171,9 @@ class GiSheetMaterial extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: shape,
-      child: BackdropFilter.grouped(
+      // Plain, not `.grouped`, for the reason recorded on [GiMaterial]: on
+      // Flutter 3.35.7 a shared group draws the wrong backdrop.
+      child: BackdropFilter(
         filter: ui.ImageFilter.compose(
           outer: GiMaterial.saturate(saturation),
           inner: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
@@ -174,6 +189,79 @@ class GiSheetMaterial extends StatelessWidget {
               top: BorderSide(
                 color: Colors.white.withValues(alpha: .16),
               ),
+            ),
+          ),
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+/// {@template gi_thin_material}
+/// The Ultradünn material, for a surface that sits directly on media.
+///
+/// `DESIGN.md` section 4: blur 18, saturation 1.8, tint at depth 0.30 and 24%.
+/// **The thinnest of the three, and the only one whose site is "over media".**
+/// It was not built until a screen needed it, because a widget nothing calls
+/// is dead code; Heute's card now reads its text off a pane laid over the
+/// image's own ambient light, which is that site exactly.
+///
+/// Thin is the whole point. A sheet at 88% would put the light out, and the
+/// reason the pane is there is that the light should carry on underneath it.
+/// Section 4 rule 1 still holds: this floats over moving content, it is not a
+/// card on a flat ground.
+///
+/// Its top edge is a 1px inset highlight at 16% white. Rule 4: **edges are
+/// light, not shadow.**
+/// {@endtemplate}
+class GiThinMaterial extends StatelessWidget {
+  /// {@macro gi_thin_material}
+  const GiThinMaterial({required this.child, this.radius = 20, super.key});
+
+  /// What reads off the pane.
+  final Widget child;
+
+  /// The top corners. Square when a caller wants the pane to run to the edge.
+  final double radius;
+
+  /// Section 4, Ultradünn.
+  static const double blurSigma = 18;
+
+  /// Section 4, Ultradünn. The highest of the three: least of the surface is
+  /// tint, so most of what the reader sees is blurred image, and blurred image
+  /// is where the colour is lost.
+  static const double saturation = 1.8;
+
+  /// Section 4, Ultradünn.
+  static const double tintAlpha = .24;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.gi;
+    final shape = BorderRadius.vertical(top: Radius.circular(radius));
+
+    final blurEnabled = MaterialQuality.blurOf(context);
+    final tint = colors.depth(.30);
+
+    return ClipRRect(
+      borderRadius: shape,
+      // Plain, not `.grouped`, for the reason recorded on [GiMaterial].
+      child: BackdropFilter(
+        filter: ui.ImageFilter.compose(
+          outer: GiMaterial.saturate(saturation),
+          inner: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
+        ),
+        enabled: blurEnabled,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            // Section 4: reduced transparency collapses the material to an
+            // opaque surface at the same depth. Same depth, same place, same
+            // size; only the light behind it goes.
+            color: blurEnabled ? tint.withValues(alpha: tintAlpha) : tint,
+            borderRadius: shape,
+            border: Border(
+              top: BorderSide(color: Colors.white.withValues(alpha: .16)),
             ),
           ),
           child: child,
