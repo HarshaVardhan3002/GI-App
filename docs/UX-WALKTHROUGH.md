@@ -193,7 +193,7 @@ Zones on a 390x844 reference, top to bottom:
 | Meta and question | auto | 12 caps, then Newsreader 26, two lines maximum |
 | Action | 44 target | *Fall öffnen*, the only tinted element on the screen |
 | Peek | 10 | The top edge of yesterday, static |
-| Bottom bar | 70 incl. safe area | Heute, Archiv, Profil. Normal material |
+| Bottom bar | 70 incl. safe area | Heute, Archiv, Mehr. Normal material |
 
 **The image has no bottom edge.** That is the whole diffused decision: image and
 page are one surface, and nothing announces where the case stops.
@@ -234,7 +234,7 @@ answered card reads *Auflösung ansehen* and opens straight to the reveal.
 | Wordmark | none | Identity, not a control |
 | Heute | tap | Returns to today from any day |
 | Archiv | tap | Contact sheet of every published day |
-| Profil | tap | Appearance, language, attribution, rights, content status |
+| Mehr | tap | Appearance, language, attribution, rights, content status |
 
 **One tinted thing per screen.** On the card it is *Fall öffnen*, and the tap
 target is the whole lower half rather than the words.
@@ -307,7 +307,7 @@ and when.
 **This is where constraints 1 and 2 stop being claims.** A licence you cannot
 inspect is a licence nobody should believe.
 
-## 10. Archive and Profile
+## 10. Archiv and Mehr
 
 **Archive.** The `timeline` grid re-pointed at earlier cases, newest first,
 excluding today's. Cells are 4:5 crops at depth 0.00 with 2dp gutters, so the
@@ -378,7 +378,7 @@ Measured against the real font files:
 | Material | New, ~40 lines, `dart:ui` |
 | Source sheet | New composition, existing sheet mechanics |
 | Archive | `timeline` grid, re-pointed |
-| Profile | `user_profile` scaffold, content replaced |
+| Mehr | `user_profile` scaffold, content replaced |
 | Bottom nav | Existing, three items, indices mapped |
 | Theme | Two files edited |
 

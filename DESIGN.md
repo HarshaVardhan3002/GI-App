@@ -218,7 +218,7 @@ at today even when tomorrow is approved and waiting in the bundle. **The reader
 chooses to go back; the scroll is never baited.** This is the one-case-a-day
 brief enforced by the layout rather than by a rule.
 
-**Three destinations**, in a bottom bar over the content: Heute, Archiv, Profil.
+**Three destinations**, in a bottom bar over the content: Heute, Archiv, Mehr.
 Nothing is more than two steps from today.
 
 **Answering happens on a pushed detail screen**, reached by tapping the card,

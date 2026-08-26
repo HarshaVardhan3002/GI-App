@@ -126,11 +126,11 @@ consumes it.
 
 ---
 
-## Phase 4 - Archive and Profile
+## Phase 4 - Archiv and Mehr
 
 - **Archive:** reuse the timeline grid as earlier cases, newest first, excluding
  today's. Tapping a cell opens the same detail screen from Phase 3.
-- **Profile:** not social. Language, appearance, and the screens constraints 1
+- **Mehr:** not a profile. There is no account. Language, appearance, and the screens constraints 1
  and 2 oblige - dataset attribution, guideline rights note, review status of the
  content set. This is where `ATTRIBUTION.md` becomes visible in the product.
 
