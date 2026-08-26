@@ -1,126 +1,168 @@
-# DESIGN.md — gi-daily-app
+# DESIGN.md — GI Daily
 
-Durable visual decisions. Mode: **Operate** — the visitor completes a task
+Durable visual decisions. Mode: **Operate** — the reader completes a task
 (answer, understand, leave). Scanability and native expectation outrank
 expression; the brand lives in precision.
 
-## The world
+The chassis is the forked Instagram app. Its motion, scroll physics and polish
+are the quality bar and are **kept**. Its identity is **removed**. Those are two
+different jobs and neither substitutes for the other.
 
-**A clinical instrument, not a clinical app.** Near-black ground, one system
-tint, and the endoscopic image carrying every pixel of colour on the screen.
-The interface's job is to disappear the moment the image loads and to reappear,
-precisely, when there is something to read.
+---
 
-Two rules everything else derives from:
+## 1. The world
 
-1. **The image is the only saturated thing.** Endoscopy is red, wet and lit.
-   Any chrome that competes with it loses, so the chrome does not compete: no
-   coloured cards, no gradients, no decorative fills. Colour appears in exactly
-   three places — the tint on interactive elements, green and red on the verdict,
-   orange on a placeholder warning.
-2. **Space is the luxury signal.** A Facharzt reading between cases needs the
-   question to be the only thing in the viewport once the image is scrolled past.
-   Sections are separated by 32–40pt, not 16.
+**A clinical instrument that behaves like a social feed.**
 
-## Appearance
+The endoscopic image is the only saturated thing on screen. Everything else
+recedes so it can lead. The interface's job is to disappear while you look, and
+to be exact when you read.
 
-**Dark only.** Picked from the use scene — an endoscopy suite with the room
-lights down — not from category habit. A light mode would mean a second set of
-decisions about how images sit against chrome, for a screen nobody will read in
-daylight.
+Three rules everything derives from:
 
-## Colour
+1. **The image is the only colour.** Endoscopy is red, wet and lit. Chrome that
+   competes loses. No coloured cards, no gradients, no decorative fills. Colour
+   appears in four places only: the tint on interactive elements, green and red
+   on a verdict, orange on a placeholder warning, and the image itself.
+2. **Space is the luxury signal.** A Facharzt reading between cases needs one
+   thing at a time. Sections separate by 32–40, not 16.
+3. **Nothing celebrates.** A correct answer at Facharzt level is the expected
+   outcome, not an achievement. No confetti, no streaks, no score, no mascot.
 
-iOS semantic dark values, used as their semantic role and not as decoration.
+## 2. Name and wordmark
 
-| Token | Value | Role |
-|---|---|---|
-| `background` | `#000000` | systemBackground. True black; the image floats on it. |
-| `groupedSurface` | `#1C1C1E` | secondarySystemGroupedBackground. Inset list containers. |
-| `raisedSurface` | `#2C2C2E` | tertiarySystemBackground. Selected rows, pills. |
-| `separator` | `#38383A` | Hairlines inside grouped lists. |
-| `label` | `#FFFFFF` | Primary text. |
-| `secondaryLabel` | `rgba(235,235,245,.60)` | Supporting text. |
-| `tertiaryLabel` | `rgba(235,235,245,.30)` | Metadata, captions. |
-| `tint` | `#0A84FF` | systemBlue dark. **Every** interactive element. |
-| `correct` | `#30D158` | systemGreen dark. Verdict only. |
-| `incorrect` | `#FF453A` | systemRed dark. Verdict only. |
-| `warning` | `#FF9F0A` | systemOrange dark. Placeholder marking only. |
+**GI Daily.**
 
-One tint drives interaction; decoration is not its job. Green and red never
-appear on anything that is not a verdict — no green buttons, no red borders.
+Set in Inter, weight 700, tracking −0.02em, sentence case — *GI Daily*, never
+all-caps and never a logotype pretending to be a signature script. It replaces
+`AppLogo` at the same size and optical weight the Instagram wordmark had, so the
+app bar's rhythm survives the swap.
 
-## Type
+No icon-plus-name lockup. The name alone, because at 20pt in a header a mark and
+a word compete and the word wins.
 
-**Inter**, self-hosted, at Apple's text-style metrics. SF Pro cannot ship off
-Apple platforms, and the nearest installed system face would be a fallback
-rather than a choice; Inter is a real face with SF-adjacent proportions.
+## 3. Appearance — both, and both real
+
+The fork ships `AppTheme` (light) and `AppDarkTheme` (true black). Both stay, and
+both are decided rather than inherited.
+
+Tokens are named for **role**, never hue, so a screen is written once and reads
+correctly in both. Any widget that hardcodes a hex value is a defect.
+
+| Token | Light | Dark | Role |
+|---|---|---|---|
+| `surface` | `#FFFFFF` | `#000000` | Page ground. Dark is true black — the image floats and OLED disappears |
+| `surfaceRaised` | `#F5F5F7` | `#1C1C1E` | Cards, grouped containers, sheets |
+| `surfacePressed` | `#EBEBEF` | `#2C2C2E` | Selected and pressed rows |
+| `separator` | `#DCDCE0` | `#38383A` | Hairlines |
+| `label` | `#000000` | `#FFFFFF` | Primary text |
+| `labelSecondary` | `#5C5C61` | `rgba(235,235,245,.60)` | Supporting text |
+| `labelTertiary` | `#8E8E93` | `rgba(235,235,245,.30)` | Metadata, timestamps |
+| `tint` | `#0A6FD8` | `#0A84FF` | **Every** interactive element |
+| `correct` | `#2E7D4F` | `#30D158` | Verdict only |
+| `incorrect` | `#C0392B` | `#FF453A` | Verdict only |
+| `warning` | `#B26A00` | `#FF9F0A` | Placeholder marking only |
+
+Light values are darkened from their dark counterparts to hold 4.5:1 on white —
+the same token, contrast-correct in both, not the same hex twice.
+
+**Green and red never appear on anything that is not a verdict.** No green
+buttons, no red borders, no coloured badges. Their scarcity is what makes them
+readable.
+
+## 4. Glass — as a material, not a decoration
+
+Translucency is used where the chassis already earns it: **bars over moving
+content**. The app bar sits over a scrolling feed, and the reveal sheet sits over
+the case. In both, the blur communicates depth and keeps text legible over
+whatever scrolls beneath.
+
+Rendered with `liquid_glass_renderer` (shader-based refraction), falling back to
+`BackdropFilter` if the shader misbehaves on a device.
+
+**Where glass is allowed:** the feed app bar, the bottom navigation bar, the
+reveal sheet, the source sheet.
+
+**Where it is banned:** cards, list rows, buttons, badges, empty states, and
+anything that is not floating above something else. Frosted panels sitting on a
+flat background are the single most common way glass reads as decoration, and it
+is not used that way here.
+
+## 5. Type
+
+**Inter**, already bundled in `app_ui`. Apple's text-style metrics, because they
+are tuned for exactly this reading distance.
 
 | Style | Size / line | Weight | Use |
 |---|---|---|---|
-| Large Title | 34 / 41 | 700 | The collapsing screen title. |
-| Title 2 | 22 / 28 | 700 | The question. |
-| Headline | 17 / 22 | 600 | Card titles, verdict. |
-| Body | 17 / 24 | 400 | Explanation, answer options. |
-| Callout | 16 / 21 | 400 | Quoted guideline text. |
-| Subhead | 15 / 20 | 400 | Supporting. |
-| Footnote | 13 / 18 | 400 | Attribution, citation. |
-| Caption | 12 / 16 | 500 | Grouped-list headers, metadata. |
+| Large title | 34 / 41 | 700 | Screen titles |
+| Title | 22 / 28 | 700 | The question |
+| Headline | 17 / 22 | 600 | Card titles, verdict |
+| Body | 17 / 24 | 400 | Explanation, answers |
+| Callout | 16 / 21 | 400 | Quoted guideline text |
+| Subhead | 15 / 20 | 400 | Supporting |
+| Footnote | 13 / 18 | 400 | Attribution, citation |
+| Caption | 12 / 16 | 500 | Group headers, metadata |
 
-Tracking tightens as size grows: −0.4pt at Large Title, −0.2 at Title 2, 0 at
-Body. Grouped-list headers are uppercase at +0.5 tracking — the iOS convention,
-and the one place uppercase is allowed.
+Tracking tightens as size grows: −0.4 at large title, −0.2 at title, 0 at body.
+Group headers are the only uppercase in the app.
 
-## Shape
+## 6. Space and shape
 
-**Apple's squircle, not a rounded rectangle.** `ClipRSuperellipse` and
-`RSuperellipse` ship in Flutter 3.35 and produce the continuous curvature iOS
-actually uses; a circular `BorderRadius` at the same value reads subtly wrong
-next to system chrome.
+Base unit 4. Horizontal gutter **16** — the fork's own `AppSpacing.lg`, kept so
+the feed's rhythm is unchanged. Vertical: `8` within a group, `16` between
+blocks, `32` between sections, `40` before a new idea.
 
-Radii: `10` inset rows · `14` buttons and grouped containers · `20` sheets.
+Radii: `10` rows, `14` buttons and containers, `20` sheets. Touch targets never
+below 44×44; answer rows are 56.
 
-## Space
+## 7. What each part of the post becomes
 
-Base unit 4. Horizontal gutter **20**, which is iOS's inset-grouped margin and
-wider than Material's 16. Vertical rhythm: `8` inside a group, `16` between
-related blocks, `32` between sections, `40` before a section that starts a new
-idea. More space above a heading than below it.
+The fork's `PostLarge` anatomy is kept. Its content changes.
 
-Touch targets never below 44×44. Answer rows are 56 tall.
+| Part | Was | Becomes |
+|---|---|---|
+| `PostHeader` | avatar, username, verified tick, options | Date and question type — *25. August · Therapiestrategie*. No avatar: there is one publisher and showing its face on every post is noise |
+| `PostMedia` | media carousel + dots | Unchanged. The hook |
+| `PostFooter` | like, comment, share, bookmark, counts | **Hidden.** No engagement in this product |
+| `PostCaption` | author + caption | The question, truncated, as the tappable invitation to answer |
 
-## Structure
+## 8. Structure
 
-Single screen. No tab bar — there is one case a day and nothing to navigate to,
-and a tab bar with one tab is a lie about the product's depth.
+**Three tabs.** Feed, Archive, Profile.
 
-`CupertinoSliverNavigationBar` carries the large title "Heute", collapsing to
-inline with a system blur as the case scrolls up. The media is full-bleed under
-it. The source of a case opens in a `CupertinoSheetRoute` — the real stacked-card
-sheet, dismissible by swipe — never a modal.
+- **Feed** — today's case, and earlier cases below it. The scroll is the product.
+- **Archive** — the grid the fork uses for search results, reused as earlier
+  cases. Proves the content set has depth.
+- **Profile** — not a social profile. Settings, language, and the licence,
+  attribution and rights screens that constraints 1 and 2 oblige us to show.
 
-Answer options are an **inset grouped list**: one squircle container, hairline
-separators, a checkmark on the selected row. Not four cards. Cards are the lazy
-container and four of them stacked is the shape every AI quiz app produces.
+**Answering happens on a pushed detail screen.** Tapping a post opens it: image,
+question, four answers, reveal, guideline. The feed stays a feed; the payoff gets
+room. The fork already has a post route, so this is the existing navigation, not
+a new one.
 
-## Motion
+## 9. Motion
 
-**One authored moment: the reveal.** Everything else is state, not animation.
+**Inherited, not invented.** The fork's scroll physics, page transitions, image
+loading and tap response are the quality bar. Nothing replaces them.
 
-On confirm, the options settle out of interactive appearance and the reveal
-rises 24pt with an exponential ease-out over 420ms, the verdict leading. Nothing
-bounces, nothing pops, nothing celebrates — a correct answer at Facharzt level is
-the expected outcome, not an achievement. Reduce Motion crossfades instead.
+One authored moment is added: **the reveal**. Verdict first, then reasoning, then
+the recommendation, rising 24 with an exponential ease-out over ~420ms. Nothing
+bounces. Reduce Motion crossfades.
 
-## Iconography
+## 10. Content is provisional by design
 
-`CupertinoIcons` — Apple's own set, one consistent weight. No emoji, no mixed
-web icon set.
+Every string a physician might want to change lives in `assets/content/*.json`,
+never in a widget. Teammates edit JSON and rerun the gate; nobody edits Dart to
+fix a comma. The review UI in `pipeline/` is where approval happens.
 
-## What would make a polished result feel wrong
+## 11. What would make a polished result feel wrong
 
 - Any celebration on a correct answer.
-- A progress bar, streak counter, XP, or score.
-- The interface tinting the endoscopic image, or any colour near it.
+- A streak, score, XP, or progress ring.
+- Colour anywhere near the endoscopic image.
 - A quote rendered without its citation.
 - Placeholder content that does not announce itself.
+- Glass on something that is not floating over content.
+- An interface that feels slower or less smooth than the fork did.

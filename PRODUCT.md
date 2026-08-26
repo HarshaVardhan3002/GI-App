@@ -1,4 +1,4 @@
-# PRODUCT.md — gi-daily-app
+# PRODUCT.md — GI Daily
 
 ## What it is
 
@@ -50,10 +50,13 @@ number. Not a streak. Not a score.
 
 ## Platform
 
-Flutter, shipping to iOS and Android. **iOS is the design target** — HIG
-governs structure, navigation and interaction; brand lives in tint, type and
-motion. Development happens on Windows, so builds are verified on the Android
-emulator; posture and gesture feel on Apple hardware remain unverified.
+Flutter, shipping to Android and iOS, built on a fork of an existing Instagram
+client. The fork's motion, scroll physics and polish are the quality bar and are
+kept; its identity is removed. Development happens on Windows, so builds are
+verified on the Android emulator and anything about iOS gesture feel remains
+unverified until someone runs it on a Mac.
+
+Both light and dark appearances ship, following the system.
 
 ## Context
 
@@ -64,7 +67,11 @@ demoed to a jury in roughly ten minutes — not a shipped product.
 ## Architecture
 
 Content is data, not code. The app reads JSON from its own bundle; no widget
-knows what is in it. `pipeline/src/lib/schema.ts` is the contract.
+knows what is in it. `pipeline/src/lib/schema.ts` is the contract, and content is
+edited by physicians and teammates as JSON — never by editing Dart.
+
+There is no backend, and every seam where one would attach is a clean interface
+with a local implementation behind it. See `docs/COMPONENT-MAP.md` §5.
 
 ## Assumptions
 
