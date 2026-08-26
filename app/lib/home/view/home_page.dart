@@ -129,9 +129,15 @@ class _HomeViewState extends State<HomeView> {
             return PageView.builder(
               itemCount: 3,
               controller: _pageController,
-              physics: HomeProvider().enablePageView
-                  ? null
-                  : const NeverScrollableScrollPhysics(),
+              // The camera (page 0) and chats (page 2) are not part of this
+              // product, and both were reachable by a horizontal swipe from the
+              // feed even after their entry points were commented out. Pinning
+              // the physics is what actually removes them. `HomeProvider` and
+              // both pages stay in place.
+              physics: const NeverScrollableScrollPhysics(),
+              // physics: HomeProvider().enablePageView
+              //     ? null
+              //     : const NeverScrollableScrollPhysics(),
               onPageChanged: (page) {
                 if (page != 0 && page != 2 && page == 1) {
                   customImagePickerKey.currentState?.resetAll();

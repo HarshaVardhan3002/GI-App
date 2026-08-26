@@ -10,8 +10,8 @@ import 'package:user_repository/user_repository.dart';
 /// The whole app, backed by the bundled content set.
 ///
 /// [DatabaseClient] is an interface, and `PowerSyncDatabaseClient` is just one
-/// implementation of it. Swapping in this one means every existing screen —
-/// the feed, the post layout, the navigation shell — keeps working with no
+/// implementation of it. Swapping in this one means every existing screen
+/// (the feed, the post layout, the navigation shell) keeps working with no
 /// change to any of them, against JSON in the bundle instead of Postgres.
 ///
 /// The interface covers a whole social network: follows, likers, chats,
@@ -38,7 +38,7 @@ class LocalDatabaseClient extends DatabaseClient {
   }
 
   // ---------------------------------------------------------------------------
-  // Posts — the only part of this interface the product actually uses.
+  // Posts: the only part of this interface the product actually uses.
   // ---------------------------------------------------------------------------
 
   @override
@@ -79,7 +79,7 @@ class LocalDatabaseClient extends DatabaseClient {
       Stream.value(_source.cases.length);
 
   // ---------------------------------------------------------------------------
-  // Engagement — the product deliberately has none.
+  // Engagement: the product deliberately has none.
   //
   // No likes, no counts, no streaks. A daily case at Facharzt level is not
   // something to score, and a like button would be the first thing to make it
@@ -118,7 +118,7 @@ class LocalDatabaseClient extends DatabaseClient {
       Stream.value(false);
 
   // ---------------------------------------------------------------------------
-  // Authoring — content arrives through the pipeline and a physician's
+  // Authoring: content arrives through the pipeline and a physician's
   // approval, never from inside the app.
   // ---------------------------------------------------------------------------
 
@@ -150,7 +150,7 @@ class LocalDatabaseClient extends DatabaseClient {
       throw UnsupportedError('this build has no messaging');
 
   // ---------------------------------------------------------------------------
-  // Comments — a clinical claim is not a comment thread. Reading returns
+  // Comments: a clinical claim is not a comment thread. Reading returns
   // nothing; writing is refused.
   // ---------------------------------------------------------------------------
 
@@ -179,7 +179,7 @@ class LocalDatabaseClient extends DatabaseClient {
       throw UnsupportedError('this build has no comments');
 
   // ---------------------------------------------------------------------------
-  // Users and the social graph — there is one publisher and one reader.
+  // Users and the social graph: there is one publisher and one reader.
   // ---------------------------------------------------------------------------
 
   @override
@@ -251,7 +251,7 @@ class LocalDatabaseClient extends DatabaseClient {
       const [];
 
   // ---------------------------------------------------------------------------
-  // Chats and stories — not part of this product.
+  // Chats and stories: not part of this product.
   // ---------------------------------------------------------------------------
 
   @override

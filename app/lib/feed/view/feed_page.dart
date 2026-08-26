@@ -132,8 +132,11 @@ class FeedBody extends StatelessWidget {
           SliverOverlapInjector(
             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
           ),
-          const StoriesCarousel(),
-          const AppSliverDivider(),
+          // Stories are not part of this product. The carousel, its bloc and
+          // its repository all stay; only the render site is gone. The divider
+          // goes with it, since it separated the carousel from the feed.
+          // const StoriesCarousel(),
+          // const AppSliverDivider(),
           BlocBuilder<FeedBloc, FeedState>(
             buildWhen: (previous, current) {
               // Consider building when status is loading and the page is 0
@@ -257,35 +260,46 @@ class _FeedPageListViewState extends State<FeedPageListView> {
               ),
             ),
             const AppDivider(),
-            if (index + 1 == feedLength)
-              Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.md),
-                child: FeedLoaderItem(
-                  onPresented: () => context.read<FeedBloc>().add(
-                    const FeedRecommendedPostsPageRequested(),
-                  ),
-                ),
-              ),
+            // The loader that asked for upstream's demo posts once the real
+            // feed ran out. See `feed_bloc.dart`.
+            // if (index + 1 == feedLength)
+            //   Padding(
+            //     padding: const EdgeInsets.only(top: AppSpacing.md),
+            //     child: FeedLoaderItem(
+            //       onPresented: () => context.read<FeedBloc>().add(
+            //         const FeedRecommendedPostsPageRequested(),
+            //       ),
+            //     ),
+            //   ),
           ],
         ),
       };
     }
-    if (index + 1 == feedLength) {
-      // if (isFailure) {
-      // if (!hasMorePosts) return const SizedBox.shrink();
-      // return NetworkError(
-      // onRetry: () {
-      // context.read<FeedBloc>().add(const FeedPageRequested());
-      // },
-      // );
-      return Padding(
-        padding: EdgeInsets.only(top: feedLength == 0 ? AppSpacing.md : 0),
-        child: FeedLoaderItem(
-          onPresented: () =>
-              context.read<FeedBloc>().add(const FeedPageRequested()),
-        ),
-      );
-    }
+    // The trailing spinner, and a trap. This branch fires on the *last index*
+    // whatever the block is, and upstream got away with it because the last
+    // block was always the end-of-feed furniture, never a post. With that
+    // furniture commented out the last block is a real case, and returning
+    // anything here silently swallowed it: the feed showed two of the three
+    // approved cases and would not scroll past them.
+    //
+    // There is also nothing to fetch. `feedPageLimit` is 7 and the content set
+    // is smaller, so the first page is always the only page.
+    // if (index + 1 == feedLength) {
+    //   // if (isFailure) {
+    //   // if (!hasMorePosts) return const SizedBox.shrink();
+    //   // return NetworkError(
+    //   // onRetry: () {
+    //   // context.read<FeedBloc>().add(const FeedPageRequested());
+    //   // },
+    //   // );
+    //   return Padding(
+    //     padding: EdgeInsets.only(top: feedLength == 0 ? AppSpacing.md : 0),
+    //     child: FeedLoaderItem(
+    //       onPresented: () =>
+    //           context.read<FeedBloc>().add(const FeedPageRequested()),
+    //     ),
+    //   );
+    // }
     if (block is PostBlock) {
       // return TestPageItem(post: block);
       return PostView(

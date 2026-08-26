@@ -10,7 +10,7 @@ import 'package:user_repository/user_repository.dart';
 
 /// The entrypoint this product ships from.
 ///
-/// Same `App`, same router, same screens as upstream — the difference is
+/// Same `App`, same router, same screens as upstream: the difference is
 /// entirely in what is handed to them. `LocalDatabaseClient` replaces
 /// `PowerSyncDatabaseClient`, `LocalAuthenticationClient` replaces the Supabase
 /// one, and the two Firebase-backed repositories are satisfied by local stand-
