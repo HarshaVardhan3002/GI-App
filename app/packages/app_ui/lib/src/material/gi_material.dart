@@ -17,9 +17,10 @@ import 'package:flutter/material.dart';
 /// graded 58% at the screen edge to 16% at the inner edge, and the inner
 /// [fadeExtent] masking to transparent so the bar has no edge to notice.
 ///
-/// **This is the Normal material only.** Ultradünn, Dick, reduced-transparency
-/// collapse and the shared [BackdropGroup] pass are Phase 8; the dimensions
-/// here are the ones that phase will keep.
+/// It takes its blur from the route's shared [GiBackdropGroup] pass and its
+/// kill switch from [MaterialQuality]. With the switch off it paints the same
+/// tint opaque at the same depth, at the same size, in the same place. The
+/// screen is never missing a surface, only its transparency.
 /// {@endtemplate}
 class GiMaterial extends StatelessWidget {
   /// {@macro gi_material}
@@ -65,6 +66,8 @@ class GiMaterial extends StatelessWidget {
     final outer = fromTop ? Alignment.topCenter : Alignment.bottomCenter;
     final inner = fromTop ? Alignment.bottomCenter : Alignment.topCenter;
 
+    final blurEnabled = MaterialQuality.blurOf(context);
+
     return ClipRect(
       child: ShaderMask(
         // The mask applies to the material, blur included. Fading only the
@@ -86,20 +89,29 @@ class GiMaterial extends StatelessWidget {
             stops: [0, fadeStart, 1],
           ).createShader(rect);
         },
-        child: BackdropFilter(
+        child: BackdropFilter.grouped(
+          // `.grouped` rather than the default constructor: this bar shares
+          // the route's one backdrop pass with every other material on it.
           filter: ui.ImageFilter.compose(
             outer: saturate(saturation),
             inner: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
           ),
+          enabled: blurEnabled,
           child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: outer,
                 end: inner,
-                colors: [
-                  tint.withValues(alpha: .58),
-                  tint.withValues(alpha: .16),
-                ],
+                // Section 4: reduced transparency collapses the material to an
+                // opaque surface at the same depth. The grade stays, because a
+                // bar that is heavier at the screen edge is a shape decision
+                // rather than a transparency one; only the alpha goes.
+                colors: blurEnabled
+                    ? [
+                        tint.withValues(alpha: .58),
+                        tint.withValues(alpha: .16),
+                      ]
+                    : [tint, tint.withValues(alpha: .92)],
               ),
             ),
             child: child,
@@ -142,16 +154,21 @@ class GiSheetMaterial extends StatelessWidget {
     final colors = context.gi;
     const shape = BorderRadius.vertical(top: Radius.circular(radius));
 
+    final blurEnabled = MaterialQuality.blurOf(context);
+
     return ClipRRect(
       borderRadius: shape,
-      child: BackdropFilter(
+      child: BackdropFilter.grouped(
         filter: ui.ImageFilter.compose(
           outer: GiMaterial.saturate(saturation),
           inner: ui.ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
         ),
+        enabled: blurEnabled,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: colors.depth(.15).withValues(alpha: .88),
+            color: blurEnabled
+                ? colors.depth(.15).withValues(alpha: .88)
+                : colors.depth(.15),
             borderRadius: shape,
             border: Border(
               top: BorderSide(

@@ -2,6 +2,7 @@ import 'package:chats_repository/chats_repository.dart';
 import 'package:database_client/database_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
+import 'package:flutter_instagram_offline_first_clone/app/view/frame_log.dart';
 import 'package:flutter_instagram_offline_first_clone/bootstrap_local.dart';
 import 'package:local_content_client/local_content_client.dart';
 import 'package:persistent_storage/persistent_storage.dart';
@@ -24,6 +25,9 @@ import 'package:user_repository/user_repository.dart';
 ///   flutter run -t lib/main_local.dart
 void main() {
   bootstrapLocal(() async {
+    // Off unless `--dart-define=GI_FRAME_LOG=true`. See `FrameLog`.
+    FrameLog.start();
+
     // The content set is read once, before the first frame, so the feed never
     // renders an empty state it would have to recover from.
     final contentSource = LocalContentSource();

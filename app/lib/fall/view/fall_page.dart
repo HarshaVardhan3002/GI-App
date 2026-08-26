@@ -129,36 +129,40 @@ class _FallViewState extends State<FallView> {
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      // The image runs under the status bar and the top bar floats over it, so
-      // the Scaffold must not subtract the inset first.
-      top: false,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: _revealed
-                ? FallReveal(
-                    giCase: widget.giCase,
-                    selectedOptionId: _selectedOptionId!,
-                  )
-                : FallQuestion(
-                    giCase: widget.giCase,
-                    selectedOptionId: _selectedOptionId,
-                    onSelect: _select,
-                    onConfirm: _confirm,
-                  ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            // The date is dropped once the answers are gone: on the reveal the
-            // reader is reading a recommendation, not placing a case in time.
-            child: FallHeader(
-              date: _revealed ? null : widget.giCase.date,
+    // **Fall is its own route, so it gets its own backdrop pass.** The group
+    // wraps the stack rather than sitting inside it, so what the header's
+    // material samples is the image and the content under it.
+    return GiBackdropGroup(
+      child: AppScaffold(
+        // The image runs under the status bar and the top bar floats over
+        // it, so the Scaffold must not subtract the inset first.
+        top: false,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: _revealed
+                  ? FallReveal(
+                      giCase: widget.giCase,
+                      selectedOptionId: _selectedOptionId!,
+                    )
+                  : FallQuestion(
+                      giCase: widget.giCase,
+                      selectedOptionId: _selectedOptionId,
+                      onSelect: _select,
+                      onConfirm: _confirm,
+                    ),
             ),
-          ),
-        ],
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              // The date is dropped once the answers are gone: on the
+              // reveal the reader is reading a recommendation, not placing
+              // a case in time.
+              child: FallHeader(date: _revealed ? null : widget.giCase.date),
+            ),
+          ],
+        ),
       ),
     );
   }

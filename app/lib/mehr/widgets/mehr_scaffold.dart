@@ -40,109 +40,115 @@ class MehrScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.gi;
 
-    return AppScaffold(
-      top: false,
-      bottom: false,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                top:
-                    MediaQuery.paddingOf(context).top +
-                    barHeight +
-                    AppSpacing.lg,
-                left: AppSpacing.lg,
-                right: AppSpacing.lg,
-                // The last row can always be scrolled clear of the chrome.
-                bottom: MediaQuery.paddingOf(context).bottom + AppSpacing.xxlg,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: children,
+    // Each screen under Mehr is a route of its own, so the group belongs on
+    // the scaffold rather than one level up: pushing a sub-page pushes its own
+    // backdrop pass with it.
+    return GiBackdropGroup(
+      child: AppScaffold(
+        top: false,
+        bottom: false,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  top:
+                      MediaQuery.paddingOf(context).top +
+                      barHeight +
+                      AppSpacing.lg,
+                  left: AppSpacing.lg,
+                  right: AppSpacing.lg,
+                  // The last row can always be scrolled clear of the chrome.
+                  bottom:
+                      MediaQuery.paddingOf(context).bottom + AppSpacing.xxlg,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: children,
+                ),
               ),
             ),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: GiMaterial(
-              edge: VerticalDirection.up,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SafeArea(
-                    bottom: false,
-                    child: SizedBox(
-                      height: barHeight,
-                      child: Stack(
-                        children: [
-                          // The title is centred on the screen rather than
-                          // between the controls, so it does not shift when a
-                          // back label gets longer.
-                          Center(
-                            child: Text(
-                              title,
-                              style: GiText.headline.copyWith(
-                                color: colors.label,
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: GiMaterial(
+                edge: VerticalDirection.up,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SafeArea(
+                      bottom: false,
+                      child: SizedBox(
+                        height: barHeight,
+                        child: Stack(
+                          children: [
+                            // The title is centred on the screen rather than
+                            // between the controls, so it does not shift when a
+                            // back label gets longer.
+                            Center(
+                              child: Text(
+                                title,
+                                style: GiText.headline.copyWith(
+                                  color: colors.label,
+                                ),
                               ),
                             ),
-                          ),
-                          if (backLabel != null)
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Tappable.faded(
-                                backgroundColor: Colors.transparent,
-                                onTap: () {
-                                  GiHaptics.selection(context);
-                                  context.pop();
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: AppSpacing.md,
-                                    vertical: AppSpacing.sm,
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_back_ios_new_rounded,
-                                        size: 15,
-                                        color: colors.tint,
-                                      ),
-                                      const Gap.h(AppSpacing.xs),
-                                      Text(
-                                        backLabel!,
-                                        style: GiText.subhead.copyWith(
+                            if (backLabel != null)
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Tappable.faded(
+                                  backgroundColor: Colors.transparent,
+                                  onTap: () {
+                                    GiHaptics.selection(context);
+                                    context.pop();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: AppSpacing.md,
+                                      vertical: AppSpacing.sm,
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.arrow_back_ios_new_rounded,
+                                          size: 15,
                                           color: colors.tint,
                                         ),
-                                      ),
-                                    ],
+                                        const Gap.h(AppSpacing.xs),
+                                        Text(
+                                          backLabel!,
+                                          style: GiText.subhead.copyWith(
+                                            color: colors.tint,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          if (trailing != null)
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                  right: AppSpacing.lg,
+                            if (trailing != null)
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: AppSpacing.lg,
+                                  ),
+                                  child: trailing,
                                 ),
-                                child: trailing,
                               ),
-                            ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: GiMaterial.fadeExtent),
-                ],
+                    const SizedBox(height: GiMaterial.fadeExtent),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ export 'src/extensions/extensions.dart';
 export 'src/feedback/gi_haptics.dart';
 export 'src/generated/generated.dart';
 export 'src/material/gi_material.dart';
+export 'src/material/material_quality.dart';
 export 'src/spacing/app_spacing.dart';
 export 'src/theme/theme.dart';
 export 'src/typography/typography.dart';

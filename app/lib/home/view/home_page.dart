@@ -160,17 +160,25 @@ class _HomeViewState extends State<HomeView> {
                   // the home indicator's inset, otherwise the safe area would
                   // be subtracted twice and the glass would stop short of the
                   // screen edge.
-                  _ => AppScaffold(
-                    body: widget.navigationShell,
-                    extendBody: true,
-                    // The card is full bleed on both edges: the image runs
-                    // under the status bar and the peek runs under the tab
-                    // bar. Each bar carries its own inset, so the Scaffold
-                    // must not subtract them first.
-                    top: false,
-                    bottom: false,
-                    bottomNavigationBar: BottomNavBar(
-                      navigationShell: widget.navigationShell,
+                  // **One `BackdropGroup` for the whole tab shell.** The tab
+                  // bar and whichever screen's top bar is showing are the only
+                  // materials on this route, and inside the group they share a
+                  // single backdrop pass instead of taking one each. The group
+                  // wraps the scaffold rather than sitting inside it, so what
+                  // it samples is the content underneath both bars.
+                  _ => GiBackdropGroup(
+                    child: AppScaffold(
+                      body: RepaintBoundary(child: widget.navigationShell),
+                      extendBody: true,
+                      // The card is full bleed on both edges: the image runs
+                      // under the status bar and the peek runs under the tab
+                      // bar. Each bar carries its own inset, so the Scaffold
+                      // must not subtract them first.
+                      top: false,
+                      bottom: false,
+                      bottomNavigationBar: BottomNavBar(
+                        navigationShell: widget.navigationShell,
+                      ),
                     ),
                   ),
                 };
