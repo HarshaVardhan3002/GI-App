@@ -1,298 +1,365 @@
-# UX walkthrough and colour injection
+# UX walkthrough
 
-Gletscherspalte is final. This is where every token lands, what the reader sees
-at each moment, and which existing package does each job.
+Gletscherspalte, set in Fira Sans with Newsreader, rendered as diffusing glass.
+This is every token, every material, every curve, and what the reader sees at
+each moment.
 
-The rule throughout: **the clone is the executable ground truth.** Nothing here
-is written from scratch that the fork already ships working. Where a component
-exists, it is re-pointed, not replaced.
+**The clone is the executable ground truth.** Nothing here is written from
+scratch that the fork already ships working.
+
+**References:** Apple's material and vibrancy system, and the Tesla iOS app,
+where the vehicle is rendered large and the interface dissolves around it. Our
+equivalent is the endoscopic image. Both share the same discipline: deep ground,
+content as the only bright thing, chrome that fades rather than ends.
 
 ---
 
-## 1. The palette, final
+## 1. Colour is a ramp, not three tokens
 
-Role-named. A widget that hardcodes a hex is a defect.
+Hard-set tokens produce a visible step wherever two of them meet. The ground is a
+continuous ramp of glacier-biased near-blacks, and a component asks for a
+**depth between 0 and 1** rather than a named colour. Named stops are positions
+on the ramp, not separate decisions.
 
-| Token | Light | Dark | What it is |
+| Depth | Dark | Light | Named |
 |---|---|---|---|
-| `surface` | `#FFFFFF` | `#000000` | Page ground. True black in dark: the image floats, OLED disappears |
-| `surfaceRaised` | `#F1F5F9` | `#101A22` | Cards, grouped rows, sheets, app bar fill |
-| `surfacePressed` | `#E4EBF2` | `#18242E` | Pressed and selected states |
-| `separator` | `#D5DDE6` | `#26333D` | Hairlines |
-| `label` | `#0B1620` | `#FFFFFF` | Primary text |
-| `labelSecondary` | `#485A69` | `#9BAAB6` | Supporting text |
-| `labelTertiary` | `#7A8B99` | `#6B7A86` | Metadata, timestamps, captions |
-| `tint` | `#0B6BB5` | `#3FA9F5` | Every interactive element, nothing else |
-| `correct` | `#2E7D4F` | `#30D158` | Verdict only |
-| `incorrect` | `#C0392B` | `#FF453A` | Verdict only |
-| `warning` | `#B26A00` | `#FF9F0A` | Placeholder marking only |
+| 0.00 | `#000000` | `#FFFFFF` | `surface` |
+| 0.15 | `#04080B` | `#F7FAFC` | |
+| 0.30 | `#080F14` | `#F1F5F9` | `surfaceRaised` |
+| 0.45 | `#0C161D` | `#E9F0F6` | |
+| 0.60 | `#122029` | `#E0EAF2` | `surfacePressed` |
+| 0.80 | `#182A35` | `#D6E2EC` | |
+| 1.00 | `#1E3542` | `#C9D8E4` | `separator` |
 
-Measured: text 18.26:1 light / 21:1 dark, secondary 7.14 / 8.82, tint 5.55 /
-8.21. All clear AA. Tint sits 157 degrees from mucosa and 70 from verdict green.
+**No surface is neutral grey.** Every depth carries a trace of the tint hue, so
+the ground reads as one material lit at different depths rather than as separate
+greys stacked on each other. That is the mixture.
 
-## 2. Injection: two files, then thirty-two sites
+Text holds 12.55:1 or better at every depth on the ramp; secondary label on the
+deepest surface is 6.98 dark and 5.85 light.
 
-The fork already centralises colour, which is why this is cheap.
-
-**`packages/app_ui/lib/src/colors/app_colors.dart`** holds 20 constants.
-**`packages/app_ui/lib/src/theme/app_theme.dart`** builds both themes from them
-through `FlexThemeData`, and `AppTheme.primary` / `backgroundColor` are getters
-that `AppDarkTheme` already overrides. Add the Gletscherspalte tokens to
-`AppColors`, point the two theme classes at them, and **all 81 files that import
-`app_ui` inherit the new palette with no edit of their own.**
-
-The reason it propagates: widgets read colour through
-`context.adaptiveColor`, `context.customReversedAdaptiveColor(light:, dark:)`
-and `Theme.of(context)`, all of which resolve from those two files.
-
-**The remaining work is widgets that bypass the theme.** 277 hardcoded colour
-references exist across the app, but they cluster in screens this product hides:
-
-| Area | Hardcoded refs | In scope? |
+| Semantic | Light | Dark |
 |---|---|---|
-| `reels`, `chats`, `comments`, `share_post` | ~90 | No, hidden |
-| `app_colors.dart` + `app_theme.dart` | 60 | Yes, these are the edit |
-| **All shipped surfaces combined** | **32** | **Yes** |
+| `label` | `#0B1620` | `#FFFFFF` |
+| `labelSecondary` | `#485A69` | `#9BAAB6` |
+| `labelTertiary` | `#7A8B99` | `#6B7A86` |
+| `tint` | `#0B6BB5` | `#3FA9F5` |
+| `correct` | `#2E7D4F` | `#30D158` |
+| `incorrect` | `#C0392B` | `#FF453A` |
+| `warning` | `#B26A00` | `#FF9F0A` |
 
-Thirty-two sites: `feed/widgets` 9, `post_large` 8, `app_ui/widgets` 12,
-`timeline` 3. That is the entire recolour beyond the theme files.
+## 2. The material system
 
-Two known offenders already identified: `CarouselDotIndicator` hardcodes
-`Colors.blue.shade500` and `Colors.grey`; `feed_loading_block` hardcodes its
-shimmer colours.
+**The difference between glass and frost is not the blur. It is saturation.**
 
-## 3. Token to component
+Flutter's `BackdropFilter` desaturates what sits behind it, which is why default
+glass looks like fog. Apple's materials blur and push saturation back up, so
+light appears to pass through rather than stop.
 
-Every component on a shipped surface.
+Native, no package required. `ColorFilter implements ImageFilter`, so:
 
-| Component | Where | Tokens |
+```
+BackdropFilter(
+  filter: ImageFilter.compose(
+    outer: ColorFilter.matrix(saturation(1.8)),
+    inner: ImageFilter.blur(sigmaX: 26, sigmaY: 26),
+  ),
+  child: ...,
+)
+```
+
+| Material | Blur | Saturation | Tint | Where |
+|---|---|---|---|---|
+| Ultradünn | 18 | 1.8 | depth 0.30 at 24% | Over media: counter pill, placeholder badge |
+| Normal | 26 | 1.8 | depth 0.30, graded 58% to 16% | App bar, bottom navigation |
+| Dick | 40 | 1.5 | depth 0.15 at 88% | Sheets |
+
+**Four rules that keep it a material and not decoration.**
+
+1. **Bars and sheets only.** Glass means "floating over moving content". Never on
+   cards, rows, badges sitting on a flat ground.
+2. **No grain, no noise.** Film grain over blur is what makes frost read as
+   dirty. The surface is clean or it is wrong.
+3. **Fade, never stop.** Every material's trailing edge is masked to transparent
+   over roughly 36dp. No hairline marks where chrome ends and content begins.
+4. **Edges are light, not shadow.** A 1px inset highlight at 16% white on the
+   leading edge, a 1px inset shade below. No cast shadows anywhere in the app.
+   Elevation is carried by blur radius and edge light.
+
+**Reduced transparency** collapses each material to an opaque surface at the same
+depth. Nothing is lost but the effect.
+
+**Cost, stated honestly.** `BackdropFilter` forces a save-layer and reads back
+the framebuffer. Impeller on Android handles it far better than Skia did, but it
+is still the most expensive thing we draw, and inherited scroll feel is the
+quality bar. Budget: **one backdrop filter on the feed**, `RepaintBoundary`
+around it, never inside a list item, and frame times read on the emulator before
+it ships.
+
+## 3. Motion
+
+Everything eases. Nothing snaps. The Tesla app's weight comes from long, low
+tension curves rather than from bounce.
+
+| Moment | Curve | Duration |
 |---|---|---|
-| App bar fill | `FeedAppBar` | `surfaceRaised` at 78% opacity, blurred |
-| Wordmark | `AppLogo` | `label` |
-| Feed ground | `FeedView` / `AppScaffold` | `surface` |
-| Post header date | `PostHeader` | `labelTertiary` |
-| Post header type pill | `PostHeader` | `surfaceRaised` fill, `labelSecondary` text |
-| Media | `PostMedia` | none. The image is the colour |
-| Carousel dots | `CarouselDotIndicator` | active `tint`, inactive `labelTertiary` at 40% |
-| Image counter pill | `PostMedia` overlay | `#000` at 60%, white text. Fixed, not tokenised: it sits on photography in both modes |
-| Attribution line | media overlay | white at 70% over scrim. Same reason |
-| Placeholder badge | media overlay | `warning` fill, `surface` text |
-| Caption / question | `PostCaption` | `label` |
-| Answer row, idle | detail screen | `surfaceRaised` fill, `label` text |
-| Answer row, selected | detail screen | `surfacePressed` fill, `tint` checkmark |
-| Answer row, correct | after reveal | `correct` mark, `label` text |
-| Answer row, wrong choice | after reveal | `incorrect` mark |
-| Answer row, not chosen | after reveal | `labelSecondary` text |
-| Confirm button, enabled | detail screen | `tint` fill, `#FFFFFF` label |
-| Confirm button, disabled | detail screen | `surfaceRaised` fill, `labelTertiary` label |
-| Verdict line | reveal | `correct` or `incorrect` |
-| Recommendation card | reveal | `surfaceRaised`, `separator` hairlines |
-| Quote | reveal | `label` |
-| Citation | reveal | `labelTertiary` |
-| Source row | reveal | `tint` label, `labelTertiary` chevron |
-| Bottom nav, active | `BottomNavBar` | `label` |
-| Bottom nav, inactive | `BottomNavBar` | `labelTertiary` |
-| Skeletons | `feed_loading_block` | base `surfaceRaised`, highlight `surfacePressed` |
+| Feed to detail | `OpenContainer` fadeThrough | 420ms |
+| Reveal rise | `easeOutExpo`, 24dp | 420ms, 60ms stagger |
+| Answer selection | `easeOut` | 160ms |
+| Sheet present | spring, low stiffness, high damping | ~500ms settle |
+| Bar material fade on scroll | linear against scroll offset | continuous |
+| Press feedback | `Tappable` scale to 0.97 | 120ms |
 
-**Where the eye goes, by construction.** On the feed the only saturated thing is
-the image, so it takes the eye first with nothing competing. On the detail screen
-before answering, the only tinted element is the confirm button, so the eye lands
-image, question, answers, button in that order without a single arrow or nudge.
-After the reveal, `correct` or `incorrect` is the only new colour on screen and
-it appears exactly once.
+**No bounce anywhere.** An overshoot reads as playful, and nothing in this
+product is playful.
 
-## 4. Splash
+**Haptics**, because half of what makes an Apple app feel expensive is felt
+rather than seen:
+
+| Event | Feedback |
+|---|---|
+| Answer selected | `HapticFeedback.selectionClick()` |
+| Confirm pressed | `HapticFeedback.lightImpact()` |
+| Reveal lands | nothing. The verdict is information, not an event |
+| Sheet dismissed | `HapticFeedback.selectionClick()` |
+| Pull to refresh triggers | `HapticFeedback.mediumImpact()` |
+
+Deliberately no haptic on a correct answer. A buzz of congratulation is the
+gamification the brief rules out, delivered through the one channel that cannot
+be ignored.
+
+`prefers-reduced-motion` collapses the reveal rise to a crossfade and the
+container transform to a fade.
+
+## 4. Injection: two files, then thirty-two sites
+
+`packages/app_ui/lib/src/colors/app_colors.dart` holds 20 constants.
+`packages/app_ui/lib/src/theme/app_theme.dart` builds both themes from them
+through `FlexThemeData`, and `AppDarkTheme` already overrides the colour getters.
+Add the ramp and the semantics to `AppColors`, point the two theme classes at
+them, and **all 81 files importing `app_ui` inherit the palette untouched**,
+because widgets read through `context.adaptiveColor`,
+`context.customReversedAdaptiveColor` and `Theme.of(context)`.
+
+277 hardcoded colour references exist, but they cluster in `reels`, `chats`,
+`comments` and `share_post`, all hidden. **On shipped surfaces: 32.** That is
+`feed/widgets` 9, `post_large` 8, `app_ui/widgets` 12, `timeline` 3.
+
+Known offenders: `CarouselDotIndicator` hardcodes `Colors.blue.shade500` and
+`Colors.grey`; `feed_loading_block` hardcodes its shimmer colours.
+
+## 5. Splash
 
 ### The bug that ships today
 
 `values-night/styles.xml` sets `Theme.Black.NoTitleBar` but points
-`windowBackground` at `@drawable/launch_background`, which is hardcoded
-`@android:color/white`. **Every cold start on a dark-mode phone flashes white
-before the app paints.** It is inherited, it is real, and it would be visible on
-a projector.
+`windowBackground` at `@drawable/launch_background`, hardcoded to
+`@android:color/white`. **Every cold start on a dark-mode phone flashes white.**
+Inherited, real, and visible on a projector.
 
-### What the reader should see
+### The sequence
 
-1. **Native window, frame zero.** Ground only: `#FFFFFF` light, `#000000` dark.
-   No logo yet. This is the OS window, and it is on screen before Flutter exists.
-2. **Wordmark, centred.** *GI Daily* in `label`, optically centred, sitting
-   slightly above true centre.
+1. **Frame zero, OS window.** Ground only, depth 0.00. No wordmark. This is on
+   screen before Flutter exists.
+2. **Wordmark.** *GI Daily* in Newsreader 400 at 28, `label`, optically centred
+   and sitting at 46% of height rather than 50%, because centred text reads low.
 3. **Flutter's first frame paints the same ground**, so the handover is
-   invisible. This is the whole trick: the native splash background and the app's
-   `surface` token must be the same value in each mode, or there is a flash at
-   the seam.
+   invisible. The native splash colour and the app's depth 0.00 must be the same
+   value in each mode or there is a seam.
+4. **Feed fades up over 280ms.** The wordmark does not move to the app bar. A
+   hero transition from splash to bar is the kind of flourish that looks
+   expensive once and slow every time after.
 
-Fix: add `drawable-night/launch_background.xml` with the dark ground, and set
-both drawables' colour from the Gletscherspalte `surface` values.
+Fix: add `drawable-night/launch_background.xml`.
 
-**No animation on the splash.** Content loads from the bundle in well under a
-frame budget, so an animated splash would be padding a wait that does not exist.
-`lottie` is in the tree if that changes; it should not.
+**No animated splash.** Content loads from the bundle in under a frame budget,
+so animation would pad a wait that does not exist.
 
-## 5. Feed
+## 6. Feed
 
-What the reader sees, top to bottom, on opening.
+**App bar.** *GI Daily* in Newsreader at 20, left. Nothing on the right; the
+chat icon is commented out. The bar is Normal material, and **it is transparent
+at rest**, gaining its tint as content scrolls beneath it, interpolated against
+scroll offset rather than switched at a threshold. At the top of the feed there
+is no bar, only the wordmark floating over the ground.
 
-**App bar.** *GI Daily* left, nothing right. The chat icon is commented out. The
-bar is `surfaceRaised` at 78% with a blur behind it, so the image scrolls under
-it rather than stopping at it.
+**No story row.** Commented out at `feed_page.dart:135`.
 
-**No story row.** Commented out at `feed_page.dart:135`. Its absence is the first
-signal that this is not the app it was forked from.
+**The case.** Full-bleed 4:5 media, edge to edge, the widest thing on screen.
 
-**The case.** Full-bleed 4:5 media, the widest thing on screen, edge to edge.
-Above it a single line: `25. August · Therapiestrategie` in `labelTertiary`. No
-avatar, no username, no verified tick. There is one publisher and putting its
-face on every post is noise.
+Above it, one line at depth 0.00: `25. August · Therapiestrategie` in
+`labelTertiary` at 13. No avatar, no username, no verified tick. There is one
+publisher and putting its face on every post is noise.
 
-**Below the media:** the question as caption, `label`, two lines then ellipsis.
-Truncation is deliberate. The full question lives on the detail screen, and a
-truncated question is an invitation to open rather than a summary that replaces
-it.
+**The media's lower edge dissolves.** A gradient scrim from transparent to depth
+0.00 over the bottom 96dp, so the image does not stop at a line, it becomes the
+ground. This is the single most important detail for "flows rather than hard
+boundaries": the case has no bottom edge.
 
-**No action row.** No like, comment, share, bookmark, no counts. Commented out in
-`post_footer.dart`. This is the largest single visual difference from the fork,
-and it is what makes the surface read as clinical rather than social.
+Over that scrim, bottom-left: the attribution at 13, white at 70%. If the image
+is a placeholder, the badge sits above it in Ultradünn material with `warning`
+text rather than a solid fill, so the warning reads as a label on the image
+rather than a sticker over it.
 
-**Then the next case, dated a day earlier.** The feed reads backwards in time.
-Nothing dated ahead of today appears, even when approved and sitting in the
-bundle.
+**Carousel.** Where a case has several views, dots sit centred below the media,
+active `tint`, inactive `labelTertiary` at 40%. A counter pill top-right in
+Ultradünn material.
 
-**Bottom nav, three items.** Feed, Archiv, Profil. Active `label`, inactive
-`labelTertiary`. No tint on the nav: the tint means "you can act on this", and a
-tab you are already on is not an action.
+**Caption.** The question in Newsreader at 17, `label`, two lines then ellipsis.
+Truncation is deliberate: a truncated question invites opening, a full one
+replaces it.
 
-## 6. Detail screen
+**No action row.** No like, comment, share, bookmark, counts. Commented out in
+`post_footer.dart`. The largest single visual difference from the fork.
 
-Reached by tapping the post. `animations` provides `OpenContainer`, so the feed
-card physically expands into the screen: the image is continuous through the
-transition and the reader never loses the thing they tapped.
+**Then the next case, a day earlier.** Between cases, 40dp of ground and no
+divider. The fork's `DividerBlock` is commented out: two cases separated by
+space read as two moments, separated by a line they read as two rows.
 
-**Order down the screen:** media carousel, date and type, question in full,
-answers, confirm.
+**Bottom navigation.** Three items, Normal material, fading in the same way as
+the top bar. Active `label`, inactive `labelTertiary`. **No tint on the nav**:
+tint means "you can act on this", and the tab you are on is not an action.
 
-**The image is pinch-zoomable** via `pinch_zoom_release_unzoom`, already in the
-tree. For an endoscopic image this is not a nicety; a Facharzt will want to look
-closer at a pit pattern, and the gesture is expected.
+## 7. Detail screen
 
-**Answers** are one inset grouped container with hairline separators, not four
-cards. Four stacked cards is the shape every quiz app produces; a set of mutually
-exclusive choices is a grouped list. Rows are 56 tall, minimum 44 touch target,
-text `label` at 17/24.
+**Entry.** `OpenContainer` from the feed card. The image is continuous through
+the transition, so the reader never loses the thing they tapped. 420ms.
 
-**Confirm sits below the answers, full width, 50 tall**, `tint` filled. It is
-disabled until a selection exists, and disabled dims the label rather than
+**Media, full width, pinch-zoomable** via `pinch_zoom_release_unzoom`. For an
+endoscopic image this is expected, not a nicety: a Facharzt will want to look
+closer at a pit pattern. On release it settles back with the same spring as the
+sheet.
+
+**Below it:** date and type at 13, then the question in **Newsreader at 26**,
+`label`, tracking -0.02em. 26 rather than 22 because Newsreader is measurably
+narrower than Fira Sans and the compound test allows it.
+
+**Answers.** One inset grouped container at depth 0.30, hairline separators
+inset to the text's leading edge. Not four cards. Rows 56 tall, minimum 44 touch
+target, text in Fira Sans at 17/24.
+
+- Idle: depth 0.30, `label`.
+- Selected: depth 0.60, `tint` checkmark, 160ms ease, `selectionClick`.
+- The container's corners are continuous, and only the first and last rows carry
+  them, so the group reads as one pane rather than four.
+
+**Confirm.** Full width, 50 tall, `tint` fill, `#FFFFFF` label, Fira Sans 17
+semibold. Disabled until a selection exists; disabled dims the label rather than
 removing the fill, so the control still says what it would do.
 
-**Placement rationale:** the button is at the bottom of the content, not pinned
-to the viewport. A pinned button would cover the image on a small screen, and the
-reader has to pass the answers to reach it anyway.
+It sits **below the answers in the content flow, not pinned to the viewport**. A
+pinned button covers the image on a small screen, and the reader passes the
+answers to reach it anyway.
 
-## 7. The reveal
+## 8. The reveal
 
-The app's one authored motion moment. `flutter_animate` drives it; `sprung`
+The app's one authored motion moment. `flutter_animate` drives it, `sprung`
 supplies the curve.
 
-**On confirm, in sequence:**
+On confirm, in sequence, 60ms apart, each rising 24dp on `easeOutExpo`:
 
-1. Answers stop being interactive. The correct row is marked `correct` whether or
-   not it was chosen; a wrong choice is marked `incorrect`; everything else drops
-   to `labelSecondary`.
-2. **Verdict**, one line, `correct` or `incorrect`, 17/22 semibold. It says
-   *Richtig* or *Nicht richtig* and nothing else.
-3. **Begründung**, body text, `label`, 17/24.
-4. **The recommendation**, a grouped container: quote, Konsensstärke,
-   citation, and a source row, in that order and in one container so the quote
-   can never be separated from its citation by a later layout change.
+1. **Answers lock.** The correct row is marked `correct` whether or not it was
+   chosen; a wrong choice is marked `incorrect`; every other row drops to
+   `labelSecondary`. No row moves or resizes.
+2. **Verdict.** One line: *Richtig* or *Nicht richtig*, Fira Sans 17 semibold in
+   `correct` or `incorrect`. Nothing else on the line. No icon larger than 22.
+3. **Begründung.** Fira Sans 17/24, `label`.
+4. **The recommendation.** A grouped container at depth 0.30: the quote in
+   **Newsreader 17/26**, then Konsensstärke, then the citation, then a source
+   row. One container, so the quote can never be separated from its citation by
+   a later layout change.
 
-The whole block rises 24 with an exponential ease-out over 420ms, verdict
-leading, roughly 60ms between elements. Nothing bounces. Nothing celebrates. A
-correct answer at Facharzt level is expected, not an achievement.
+The quote's serif is the point at which our prose stops and the guideline's
+begins, marked by the face rather than by quotation marks.
 
-`prefers-reduced-motion` collapses the rise to a crossfade.
+**Nothing bounces. Nothing celebrates. No haptic.** A correct answer at Facharzt
+level is expected.
 
-**Source sheet** opens from the source row: dataset, licence, holder, guideline,
-register number, rights note, who approved it. This is where constraints 1 and 2
-become inspectable rather than claimed.
+## 9. Source sheet
 
-## 8. German text, measured
+Presented as a sheet in Dick material, dragged from the source row, with the
+screen behind scaling back and dimming to depth 0.15. Detent at 92% height.
 
-The content is full of compounds: `Zylinderepithelmetaplasie` at 25 characters,
-`Los-Angeles-Klassifikation` at 26, `Argon-Plasma-Koagulation` at 24.
+Contents, in grouped containers: image credit per view, dataset, class, source
+file, licence, holder; then guideline, publisher, AWMF register, version,
+recommendation number, citation, URL; then the rights note; then who approved it
+and when.
 
-**That sets a ceiling on display type, and it is arithmetic rather than taste.**
-On a 360dp screen with 16dp gutters there are 328dp of line.
+**This is where constraints 1 and 2 stop being claims.** A licence you cannot
+inspect is a licence nobody should believe.
 
-Measured against the real font files, not estimated from an average advance:
+## 10. Archive and Profile
+
+**Archive.** The `timeline` grid re-pointed at earlier cases, newest first,
+excluding today's. Cells are 4:5 crops at depth 0.00 with 2dp gutters, so the
+grid reads as a contact sheet rather than as tiles. Tapping opens the same
+detail screen through the same container transform.
+
+**Profile.** Not social. Appearance, language, and the screens the constraints
+oblige: dataset attribution, guideline rights note, and the review status of the
+content set. This is where `ATTRIBUTION.md` becomes visible in the product.
+
+## 11. German text, measured
+
+Content carries 26-character compounds. On a 360dp phone with 16dp gutters there
+are 328dp of line, German does not break compounds, and Flutter does not
+hyphenate.
+
+Measured against the real font files:
 
 | Face | `Argon-Plasma-Koagulation` at 22 | Ceiling |
 |---|---|---|
 | Newsreader | 256px | **29** |
 | Fira Sans | 268px | 26 |
 
-Newsreader is the narrower of the two, which is why the question is set in it at
-**26** rather than pinned at 22.
-
-Consequences:
-
-- **The question is set at 26, not 34.** The large-title treatment that suits an
-  English product breaks on `Argon-Plasma-Koagulation`.
-- **No text is centred.** Ragged-right on long compounds is legible; centred
+- **The question is 26, not 34.** A large-title treatment breaks on
+  `Argon-Plasma-Koagulation`.
+- **Nothing is centred.** Ragged-right on long compounds is legible; centred
   compounds produce visibly uneven rag.
-- **Answer rows wrap to two lines and are sized for it.** The longest current
-  option is 62 characters. A row that grows is correct; a row that ellipsises an
-  answer is not, because the reader cannot choose what they cannot read.
-- **`softWrap` true, `overflow` visible on answers**, ellipsis only on the feed
-  caption where truncation is intentional.
-- **Soft hyphens.** Flutter does not hyphenate automatically. Where a compound
-  must break, the break belongs in the content as `­`, which is a content
-  pipeline concern and a schema note, not a widget concern.
+- **Answer rows grow to two lines.** The longest current option is 62
+  characters. A row that grows is correct; a row that ellipsises an answer is
+  not, because the reader cannot choose what they cannot read.
+- **Ellipsis only on the feed caption**, where truncation is intentional.
+- **Soft hyphens** belong in the content, not in widgets. A schema concern.
+- **Newsreader's optical size axis must be driven** through `FontVariation`, or
+  the 26 question renders with the contrast of a 12 caption and looks brittle.
 
-Body text sits at 17/24 with a measure well under 65 characters at phone width,
-so the long words never stack into a wall.
-
-## 9. Motion, all of it already in the tree
-
-Nothing new is installed.
+## 12. Everything is already in the tree
 
 | Moment | Package | Already used by |
 |---|---|---|
-| Feed card to detail | `animations` `OpenContainer` | in `pubspec.yaml` |
-| Reveal choreography | `flutter_animate` | `instagram_blocks_ui` |
-| Spring curves | `sprung` | `instagram_blocks_ui` |
-| Loading skeletons | `shimmer` | `app_ui`, `feed_loading_block` |
-| Progressive image load | `flutter_blurhash`, `octo_image` | `instagram_blocks_ui` |
-| Media carousel | `carousel_slider` | `MediaCarousel` |
-| Carousel dots | `smooth_page_indicator` | `instagram_blocks_ui` |
-| Pinch zoom on the image | `pinch_zoom_release_unzoom` | `instagram_blocks_ui` |
+| Feed to detail | `animations` | in `pubspec.yaml` |
+| Reveal | `flutter_animate` | `instagram_blocks_ui` |
+| Curves | `sprung` | `instagram_blocks_ui` |
+| Skeletons | `shimmer` | `app_ui` |
+| Progressive image | `flutter_blurhash`, `octo_image` | `instagram_blocks_ui` |
+| Carousel and dots | `carousel_slider`, `smooth_page_indicator` | `instagram_blocks_ui` |
+| Pinch zoom | `pinch_zoom_release_unzoom` | `instagram_blocks_ui` |
 | Scroll awareness | `visibility_detector`, `inview_notifier_list` | `FeedBody` |
 | Archive grid | `flutter_staggered_grid_view`, `sliver_tools` | `timeline` |
-| Press feedback | `Tappable` (scale and fade) | `app_ui` |
+| Press feedback | `Tappable` | `app_ui` |
+| Material | `dart:ui` `ImageFilter.compose` | native |
+| Haptics | `HapticFeedback` | native |
 
-**Scroll physics, page transitions, image loading and tap response are
-inherited untouched.** They are the reason the fork was worth forking, and any
-change that makes a screen feel slower than the fork did is a regression.
+**Nothing new is installed.**
 
-## 10. Built from scratch: almost nothing
+## 13. Reuse ledger
 
 | Surface | Source |
 |---|---|
 | Splash | Existing Android splash, recoloured, plus a night drawable |
-| Feed | `FeedPage` unchanged, two render sites commented |
+| Feed | `FeedPage`, three render sites commented |
 | Post | `PostLarge` kept whole; header content changed, footer hidden |
-| Media, carousel, dots, zoom | Existing widgets, re-pointed |
-| Detail screen | **New composition** of existing widgets on the fork's existing post route |
-| Answers, confirm | New widgets, built from `app_ui` primitives |
-| Reveal | New composition, `flutter_animate` |
+| Media, carousel, zoom | Existing widgets, re-pointed |
+| Detail screen | **New composition** of existing widgets on the fork's post route |
+| Answers, confirm | New widgets from `app_ui` primitives |
+| Reveal | **New composition**, `flutter_animate` |
+| Material | New, ~40 lines, `dart:ui` |
 | Source sheet | New composition, existing sheet mechanics |
-| Archive | `timeline` grid, re-pointed at cases |
+| Archive | `timeline` grid, re-pointed |
 | Profile | `user_profile` scaffold, content replaced |
 | Bottom nav | Existing, three items, indices mapped |
 | Theme | Two files edited |
 
-The only genuinely new code is the detail screen's composition and the reveal.
-Everything else is re-pointing something that already works.
-
-## 11. Open
-
-- **App icon.** Still unsolved.
+The only genuinely new code is the detail screen composition, the reveal, and
+the material. Everything else is re-pointing something that already works.

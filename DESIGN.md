@@ -41,52 +41,76 @@ app bar's rhythm survives the swap.
 No icon-plus-name lockup. The name alone, because at 20pt in a header a mark and
 a word compete and the word wins.
 
-## 3. Appearance - both, and both real
+## 3. Colour is a ramp
 
-The fork ships `AppTheme` (light) and `AppDarkTheme` (true black). Both stay, and
-both are decided rather than inherited.
+Hard-set tokens produce a visible step wherever two meet. The ground is a
+continuous ramp of glacier-biased near-blacks, and a component asks for a
+**depth between 0 and 1** rather than a named colour. Named stops are positions
+on the ramp.
 
-Tokens are named for **role**, never hue, so a screen is written once and reads
-correctly in both. Any widget that hardcodes a hex value is a defect.
-
-| Token | Light | Dark | Role |
+| Depth | Dark | Light | Named |
 |---|---|---|---|
-| `surface` | `#FFFFFF` | `#000000` | Page ground. Dark is true black - the image floats and OLED disappears |
-| `surfaceRaised` | `#F1F5F9` | `#101A22` | Cards, grouped containers, sheets |
-| `surfacePressed` | `#E4EBF2` | `#18242E` | Selected and pressed rows |
-| `separator` | `#D5DDE6` | `#26333D` | Hairlines |
-| `label` | `#0B1620` | `#FFFFFF` | Primary text |
-| `labelSecondary` | `#485A69` | `#9BAAB6` | Supporting text |
-| `labelTertiary` | `#7A8B99` | `#6B7A86` | Metadata, timestamps |
-| `tint` | `#0A6FD8` | `#0A84FF` | **Every** interactive element |
-| `correct` | `#2E7D4F` | `#30D158` | Verdict only |
-| `incorrect` | `#C0392B` | `#FF453A` | Verdict only |
-| `warning` | `#B26A00` | `#FF9F0A` | Placeholder marking only |
+| 0.00 | `#000000` | `#FFFFFF` | `surface` |
+| 0.15 | `#04080B` | `#F7FAFC` | |
+| 0.30 | `#080F14` | `#F1F5F9` | `surfaceRaised` |
+| 0.45 | `#0C161D` | `#E9F0F6` | |
+| 0.60 | `#122029` | `#E0EAF2` | `surfacePressed` |
+| 0.80 | `#182A35` | `#D6E2EC` | |
+| 1.00 | `#1E3542` | `#C9D8E4` | `separator` |
 
-Light values are darkened from their dark counterparts to hold 4.5:1 on white.
-The same token, contrast-correct in both, not the same hex twice.
+**No surface is neutral grey.** Every depth carries a trace of the tint, so the
+ground reads as one material lit at different depths rather than separate greys
+stacked on each other.
 
-**Green and red never appear on anything that is not a verdict.** No green
-buttons, no red borders, no coloured badges. Their scarcity is what makes them
-readable.
+| Semantic | Light | Dark |
+|---|---|---|
+| `label` | `#0B1620` | `#FFFFFF` |
+| `labelSecondary` | `#485A69` | `#9BAAB6` |
+| `labelTertiary` | `#7A8B99` | `#6B7A86` |
+| `tint` | `#0B6BB5` | `#3FA9F5` |
+| `correct` | `#2E7D4F` | `#30D158` |
+| `incorrect` | `#C0392B` | `#FF453A` |
+| `warning` | `#B26A00` | `#FF9F0A` |
 
-## 4. Glass - as a material, not a decoration
+Text holds 12.55:1 or better at every depth. Green and red never appear on
+anything that is not a verdict.
 
-Translucency is used where the chassis already earns it: **bars over moving
-content**. The app bar sits over a scrolling feed, and the reveal sheet sits over
-the case. In both, the blur communicates depth and keeps text legible over
-whatever scrolls beneath.
+Both appearances ship, following the system.
 
-Rendered with `liquid_glass_renderer` (shader-based refraction), falling back to
-`BackdropFilter` if the shader misbehaves on a device.
+## 4. Material
 
-**Where glass is allowed:** the feed app bar, the bottom navigation bar, the
-reveal sheet, the source sheet.
+**The difference between glass and frost is saturation, not blur.** Flutter's
+`BackdropFilter` desaturates what sits behind it, which is why default glass
+reads as fog on a window. Apple's materials blur and push saturation back up, so
+light appears to pass through the surface rather than stop at it.
 
-**Where it is banned:** cards, list rows, buttons, badges, empty states, and
-anything that is not floating above something else. Frosted panels sitting on a
-flat background are the single most common way glass reads as decoration, and it
-is not used that way here.
+Native, no package: `ColorFilter implements ImageFilter`, so
+`ImageFilter.compose` takes a saturation filter outside a blur.
+
+| Material | Blur | Saturation | Tint | Where |
+|---|---|---|---|---|
+| Ultradünn | 18 | 1.8 | depth 0.30 at 24% | Over media |
+| Normal | 26 | 1.8 | depth 0.30, graded 58% to 16% | Bars |
+| Dick | 40 | 1.5 | depth 0.15 at 88% | Sheets |
+
+Four rules keep it a material rather than decoration:
+
+1. **Bars and sheets only.** Glass means floating over moving content. Never on
+   cards, rows or badges sitting on a flat ground.
+2. **No grain, no noise.** Grain over blur is what makes frost read as dirty.
+3. **Fade, never stop.** Trailing edges mask to transparent over ~36dp. No
+   hairline marks where chrome ends.
+4. **Edges are light, not shadow.** A 1px inset highlight at 16% white, a 1px
+   inset shade below. **No cast shadows anywhere in this app.** Elevation is
+   blur radius and edge light.
+
+Reduced transparency collapses each material to an opaque surface at the same
+depth.
+
+**Cost.** `BackdropFilter` forces a save-layer and reads the framebuffer back.
+Budget one on the feed, `RepaintBoundary` around it, never inside a list item.
+Inherited scroll feel is the quality bar and this is the one decision capable of
+breaking it.
 
 ## 5. Type
 
@@ -196,12 +220,31 @@ a new one.
 
 ## 9. Motion
 
-**Inherited, not invented.** The fork's scroll physics, page transitions, image
-loading and tap response are the quality bar. Nothing replaces them.
+**Inherited, not invented.** The fork's scroll physics, page transitions and tap
+response are the quality bar. Anything that feels slower than the fork did is a
+regression.
 
-One authored moment is added: **the reveal**. Verdict first, then reasoning, then
-the recommendation, rising 24 with an exponential ease-out over ~420ms. Nothing
-bounces. Reduce Motion crossfades.
+Everything eases; nothing snaps. **No bounce anywhere** — an overshoot reads as
+playful and nothing here is playful.
+
+| Moment | Curve | Duration |
+|---|---|---|
+| Feed to detail | `OpenContainer` | 420ms |
+| Reveal rise | `easeOutExpo`, 24dp | 420ms, 60ms stagger |
+| Answer selection | `easeOut` | 160ms |
+| Sheet present | spring, low stiffness | ~500ms settle |
+| Bar material on scroll | against scroll offset | continuous |
+| Press | scale 0.97 | 120ms |
+
+**Haptics**, because much of what makes a native app feel expensive is felt:
+`selectionClick` on answer select and sheet dismiss, `lightImpact` on confirm,
+`mediumImpact` on pull-to-refresh.
+
+**Nothing on the verdict.** A buzz of congratulation is gamification delivered
+through the one channel that cannot be ignored.
+
+Reduced motion collapses the reveal to a crossfade and the container transform
+to a fade.
 
 ## 10. Content is provisional by design
 
@@ -217,4 +260,8 @@ fix a comma. The review UI in `pipeline/` is where approval happens.
 - A quote rendered without its citation.
 - Placeholder content that does not announce itself.
 - Glass on something that is not floating over content.
+- Grain or noise over a blur. That is what makes frost read as dirty.
+- A cast shadow. Elevation here is blur radius and edge light.
+- A hard edge where a material or the media ends.
+- A neutral grey surface. Every depth carries the tint.
 - An interface that feels slower or less smooth than the fork did.
