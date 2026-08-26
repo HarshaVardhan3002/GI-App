@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:database_client/database_client.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/routes/routes.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 import 'package:flutter_instagram_offline_first_clone/media/media.dart';
@@ -119,6 +120,11 @@ class TageskartePeek extends StatelessWidget {
 
 /// {@template fall_oeffnen}
 /// The one tinted element on the screen, and therefore the one next action.
+///
+/// **It says what it will do, which changes once the case is answered.**
+/// `DESIGN.md` section 8: an answered card reads *Auflösung ansehen* and opens
+/// straight to the revealed state. A card that still said *Fall öffnen* would
+/// be offering a question the reader has already settled.
 /// {@endtemplate}
 class FallOeffnen extends StatelessWidget {
   /// {@macro fall_oeffnen}
@@ -130,6 +136,8 @@ class FallOeffnen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.gi;
+    final answers = context.read<AnswerSource>();
+
     return Tappable.faded(
       backgroundColor: Colors.transparent,
       onTap: () {
@@ -146,9 +154,17 @@ class FallOeffnen extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              context.l10n.openCaseText,
-              style: GiText.headline.copyWith(color: colors.tint),
+            // Rebuilt from the store rather than from a flag passed down, so
+            // answering a case updates the card behind it without Heute being
+            // rebuilt or reloaded.
+            ListenableBuilder(
+              listenable: answers,
+              builder: (context, _) => Text(
+                answers.answerOf(postId) == null
+                    ? context.l10n.openCaseText
+                    : context.l10n.viewRevealText,
+                style: GiText.headline.copyWith(color: colors.tint),
+              ),
             ),
             const Gap.h(AppSpacing.xs),
             Icon(Icons.arrow_forward_ios_rounded, size: 14, color: colors.tint),

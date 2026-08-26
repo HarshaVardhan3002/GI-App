@@ -7,6 +7,7 @@ import 'package:firebase_remote_config_repository/firebase_remote_config_reposit
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
+import 'package:flutter_instagram_offline_first_clone/archiv/archiv.dart';
 import 'package:flutter_instagram_offline_first_clone/auth/auth.dart';
 import 'package:flutter_instagram_offline_first_clone/chats/chat/chat.dart';
 import 'package:flutter_instagram_offline_first_clone/fall/fall.dart';
@@ -19,6 +20,8 @@ import 'package:flutter_instagram_offline_first_clone/home/home.dart';
 import 'package:flutter_instagram_offline_first_clone/reels/reels.dart';
 import 'package:flutter_instagram_offline_first_clone/search/search.dart';
 import 'package:flutter_instagram_offline_first_clone/stories/stories.dart';
+// TimelinePage is commented out at branch 1 and stays wired.
+// ignore: unused_import
 import 'package:flutter_instagram_offline_first_clone/timeline/timeline.dart';
 import 'package:flutter_instagram_offline_first_clone/user_profile/user_profile.dart';
 import 'package:go_router/go_router.dart';
@@ -196,7 +199,11 @@ class AppRouter {
                 pageBuilder: (context, state) {
                   return CustomTransitionPage(
                     key: state.pageKey,
-                    child: const TimelinePage(),
+                    // The fork's timeline is a grid of everyone's posts.
+                    // Archiv is this product's: every released case, as a
+                    // contact sheet. `TimelinePage` stays wired.
+                    child: const ArchivPage(),
+                    // child: const TimelinePage(),
                     transitionsBuilder:
                         (context, animation, secondaryAnimation, child) {
                           return FadeTransition(

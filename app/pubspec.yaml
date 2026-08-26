@@ -62,6 +62,10 @@ dependencies:
   ogp_data_extract: ^0.2.2
   palette_generator: ^0.3.3+3
   path_provider: ^2.1.5
+  # Already in the tree through flutter_bloc, declared directly because
+  # `ListenableProvider` is not part of what flutter_bloc re-exports and
+  # `AnswerSource` is a Listenable.
+  provider: ^6.1.5
   persistent_storage:
     path: packages/storage/persistent_storage
   posts_repository:

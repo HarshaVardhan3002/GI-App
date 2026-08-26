@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app_ui/app_ui.dart';
 import 'package:database_client/database_client.dart';
 import 'package:flutter/material.dart';
@@ -61,10 +63,11 @@ class FallNotFound extends StatelessWidget {
 /// {@template fall_view}
 /// The case, in whichever of its two states it is in.
 ///
-/// **The answer lives here and nowhere else, for now.** A reader's answers are
-/// not persisted: Archiv marks a case as answered, and that needs a store the
-/// backend seam does not have yet. When it does, this state moves behind
-/// [CaseSource] and this widget stops holding it. Nothing else has to change.
+/// **The chosen-but-not-confirmed answer lives here; the confirmed one does
+/// not.** Once committed it goes to [AnswerSource], which is a seam of its own
+/// rather than part of [CaseSource]: cases arrive from a publisher, answers
+/// belong to the reader. Today that seam writes to this device. A backend
+/// implements the same interface and nothing above it changes.
 /// {@endtemplate}
 class FallView extends StatefulWidget {
   /// {@macro fall_view}
@@ -81,6 +84,21 @@ class _FallViewState extends State<FallView> {
   String? _selectedOptionId;
   bool _revealed = false;
 
+  @override
+  void initState() {
+    super.initState();
+    // A case that has already been answered opens on its reveal. **A case is
+    // answered once**, so re-entering it to try again is not a thing the
+    // screen offers.
+    final previous = context.read<AnswerSource>().answerOf(
+      widget.giCase.post.id,
+    );
+    if (previous != null) {
+      _selectedOptionId = previous.optionId;
+      _revealed = true;
+    }
+  }
+
   void _select(String optionId) {
     if (_revealed) return;
     GiHaptics.selection(context);
@@ -88,7 +106,23 @@ class _FallViewState extends State<FallView> {
   }
 
   void _confirm() {
-    if (_selectedOptionId == null || _revealed) return;
+    final optionId = _selectedOptionId;
+    if (optionId == null || _revealed) return;
+
+    final isCorrect = widget.giCase.options
+        .where((option) => option.id == optionId)
+        .any((option) => option.isCorrect);
+
+    // Not awaited: the reveal is already on screen by the time the write
+    // lands, and a slow disk should not sit between a reader and their answer.
+    unawaited(
+      context.read<AnswerSource>().record(
+        widget.giCase.post.id,
+        optionId: optionId,
+        isCorrect: isCorrect,
+      ),
+    );
+
     GiHaptics.reveal(context);
     setState(() => _revealed = true);
   }

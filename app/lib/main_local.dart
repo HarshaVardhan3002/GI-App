@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_instagram_offline_first_clone/app/app.dart';
 import 'package:flutter_instagram_offline_first_clone/bootstrap_local.dart';
 import 'package:local_content_client/local_content_client.dart';
+import 'package:persistent_storage/persistent_storage.dart';
 import 'package:posts_repository/posts_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:search_repository/search_repository.dart';
 import 'package:shared/shared.dart';
 import 'package:stories_repository/stories_repository.dart';
@@ -28,6 +30,17 @@ void main() {
     await contentSource.load();
 
     final databaseClient = LocalDatabaseClient(source: contentSource);
+
+    // Answers are the reader's own and live on this device only. Read before
+    // the first frame for the same reason the content is: Archiv asks about
+    // every visible cell while it scrolls, so the lookup has to be
+    // synchronous.
+    final answerStore = LocalAnswerStore(
+      storage: PersistentStorage(
+        sharedPreferences: await SharedPreferences.getInstance(),
+      ),
+    );
+    await answerStore.load();
     final authenticationClient = LocalAuthenticationClient();
 
     final userRepository = UserRepository(
@@ -37,8 +50,17 @@ void main() {
 
     // The case seam sits above the router rather than inside a screen, so any
     // route can read it and none of them knows it is backed by four JSON files.
-    return RepositoryProvider<CaseSource>.value(
-      value: databaseClient,
+    // Two seams above the router: what the cases are, and what this reader has
+    // answered. They are separate because their owners are: one arrives from a
+    // publisher, the other belongs to whatever account system exists later.
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<CaseSource>.value(value: databaseClient),
+        // `ListenableProvider`, not `RepositoryProvider`: `AnswerSource` is a
+        // Listenable, and a plain Provider refuses one outright rather than
+        // silently failing to rebuild its dependents.
+        ListenableProvider<AnswerSource>.value(value: answerStore),
+      ],
       child: App(
         userRepository: userRepository,
         postsRepository: PostsRepository(databaseClient: databaseClient),

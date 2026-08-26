@@ -1360,6 +1360,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'–'**
   String get emptyValueText;
+
+  /// Count of cases in the archive, shown beside the title.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No cases} =1{1 case} other{{count} cases}}'**
+  String caseCountText(int count);
+
+  /// Shown when no case has been released yet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing in the archive yet.'**
+  String get archiveEmptyText;
+
+  /// Replaces "Fall öffnen" on a card whose case has been answered.
+  ///
+  /// In en, this message translates to:
+  /// **'See the answer'**
+  String get viewRevealText;
 }
 
 class _AppLocalizationsDelegate

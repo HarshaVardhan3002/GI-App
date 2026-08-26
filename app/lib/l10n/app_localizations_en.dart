@@ -798,4 +798,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emptyValueText => '–';
+
+  @override
+  String caseCountText(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cases',
+      one: '1 case',
+      zero: 'No cases',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get archiveEmptyText => 'Nothing in the archive yet.';
+
+  @override
+  String get viewRevealText => 'See the answer';
 }

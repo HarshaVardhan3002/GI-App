@@ -49,5 +49,8 @@
   "reviewedByLabelText": "Geprüft von",
   "notReviewedText": "nicht geprüft",
   "caseNotFoundText": "Dieser Fall ist nicht hinterlegt.",
-  "emptyValueText": "–"
+  "emptyValueText": "–",
+  "caseCountText": "{count, plural, =0{Keine Fälle} =1{1 Fall} other{{count} Fälle}}",
+  "archiveEmptyText": "Noch keine Fälle im Archiv.",
+  "viewRevealText": "Auflösung ansehen"
 }

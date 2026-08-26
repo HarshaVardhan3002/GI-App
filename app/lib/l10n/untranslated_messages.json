@@ -199,6 +199,9 @@
     "reviewedByLabelText",
     "notReviewedText",
     "caseNotFoundText",
-    "emptyValueText"
+    "emptyValueText",
+    "caseCountText",
+    "archiveEmptyText",
+    "viewRevealText"
   ]
 }

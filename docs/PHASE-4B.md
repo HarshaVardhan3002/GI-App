@@ -23,6 +23,16 @@ Instagram's palette. That is the mechanism behind three separate findings:
 None of those hexes is a stop on the ramp, and section 11 names a flat neutral
 grey surface as a wrongness tell.
 
+> **Correction.** As first written, this section implied all three were fixed
+> by the repaint. **They were not.** A re-audit of the running build found the
+> Archiv search field still sampling `#424242`, because that widget sets its
+> own colour rather than reading the theme, and a theme repaint cannot reach a
+> hardcoded one. The stock-blue indicator and the profile buttons were
+> genuinely fixed by it. The search field went with the fork's Archiv when
+> Phase 6 replaced that screen, which is a different fix from the one claimed
+> here. Recorded rather than quietly edited: a phase report that overstates
+> what shipped is worse than one that admits a gap.
+
 `AppTheme` and `AppDarkTheme` now derive everything from `GiColors`, and the
 two share one `_build` so they cannot drift. The `ColorScheme` is overwritten
 with ramp stops rather than trusted, because Flex derives its surface tones by
