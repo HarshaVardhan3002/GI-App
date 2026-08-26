@@ -155,8 +155,20 @@ class _HomeViewState extends State<HomeView> {
                     onBackButtonTap: () => HomeProvider().animateToPage(1),
                   ),
                   2 => const ChatsPage(),
+                  // `extendBody`: the bar is a material now, so the content
+                  // has to run underneath it. `bottom: false`: the bar owns
+                  // the home indicator's inset, otherwise the safe area would
+                  // be subtracted twice and the glass would stop short of the
+                  // screen edge.
                   _ => AppScaffold(
                     body: widget.navigationShell,
+                    extendBody: true,
+                    // The card is full bleed on both edges: the image runs
+                    // under the status bar and the peek runs under the tab
+                    // bar. Each bar carries its own inset, so the Scaffold
+                    // must not subtract them first.
+                    top: false,
+                    bottom: false,
                     bottomNavigationBar: BottomNavBar(
                       navigationShell: widget.navigationShell,
                     ),

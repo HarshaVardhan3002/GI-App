@@ -17,7 +17,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get homeNavBarItemLabel => 'Home';
 
   @override
-  String get searchNavBarItemLabel => 'Search';
+  String get searchNavBarItemLabel => 'Suche';
 
   @override
   String get createMediaNavBarItemLabel => 'Create media';
@@ -354,7 +354,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get publishText => 'Publish';
 
   @override
-  String get searchText => 'Search';
+  String get searchText => 'Suche';
 
   @override
   String get addMessageText => 'Add message';
@@ -710,5 +710,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get questionTypeDiagnosisText => 'DIAGNOSE';
 
   @override
-  String get questionTypeTreatmentText => 'THERAPIE';
+  String get questionTypeTreatmentText => 'THERAPIESTRATEGIE';
+
+  @override
+  String get placeholderImageLabelText => 'PLATZHALTER';
+
+  @override
+  String get placeholderImageBodyText => 'Kein endoskopisches Bild hinterlegt';
 }

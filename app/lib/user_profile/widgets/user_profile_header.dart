@@ -20,6 +20,9 @@ class UserProfileHeader extends StatelessWidget {
   final String userId;
   final PostSponsoredBlock? sponsoredPost;
 
+  // Only caller is the commented-out statistics row above. Kept, per
+  // CLAUDE.md rule 3, so restoring that row is one uncomment.
+  // ignore: unused_element
   void _pushToUserStatistics(BuildContext context, {required int tabIndex}) =>
       context.pushNamed(
         AppRoutes.userStatistics.name,
@@ -102,13 +105,16 @@ class UserProfileHeader extends StatelessWidget {
                   tappableVariant: TappableVariant.scaled,
                   showWhenSeen: true,
                 ),
-                const Gap.h(AppSpacing.md),
-                Expanded(
-                  child: UserProfileStatisticsCounts(
-                    onStatisticTap: (tabIndex) =>
-                        _pushToUserStatistics(context, tabIndex: tabIndex),
-                  ),
-                ),
+                // Posts, followers and following. There is no account here and
+                // therefore no social graph to count, and the row rendered in
+                // English besides.
+                // const Gap.h(AppSpacing.md),
+                // Expanded(
+                //   child: UserProfileStatisticsCounts(
+                //     onStatisticTap: (tabIndex) =>
+                //         _pushToUserStatistics(context, tabIndex: tabIndex),
+                //   ),
+                // ),
               ],
             ),
             const Gap.v(AppSpacing.md),
@@ -123,20 +129,26 @@ class UserProfileHeader extends StatelessWidget {
                 ),
               ),
             ),
-            const Gap.v(AppSpacing.md),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (isOwner) ...const [
-                  Flexible(flex: 3, child: EditProfileButton()),
-                  gapW12,
-                  Flexible(flex: 3, child: ShareProfileButton()),
-                  gapW12,
-                  Flexible(child: ShowSuggestedPeopleButton()),
-                ] else
-                  const Expanded(flex: 3, child: UserProfileFollowUserButton()),
-              ],
-            ),
+            // Edit profile, Share profile, Suggested people, Follow. All four
+            // belong to an account and a social graph this product does not
+            // have, and all four rendered in English.
+            // const Gap.v(AppSpacing.md),
+            // Row(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   children: [
+            //     if (isOwner) ...const [
+            //       Flexible(flex: 3, child: EditProfileButton()),
+            //       gapW12,
+            //       Flexible(flex: 3, child: ShareProfileButton()),
+            //       gapW12,
+            //       Flexible(child: ShowSuggestedPeopleButton()),
+            //     ] else
+            //       const Expanded(
+            //         flex: 3,
+            //         child: UserProfileFollowUserButton(),
+            //       ),
+            //   ],
+            // ),
           ],
         ),
       ),

@@ -2,7 +2,6 @@
   "de": [
     "feedAppBarTitle",
     "homeNavBarItemLabel",
-    "searchNavBarItemLabel",
     "createMediaNavBarItemLabel",
     "reelsNavBarItemLabel",
     "profileNavBarItemLabel",
@@ -82,7 +81,6 @@
     "refreshText",
     "noReelsFoundText",
     "publishText",
-    "searchText",
     "addMessageText",
     "messageText",
     "editPictureText",
@@ -173,6 +171,8 @@
     "imageMissingText",
     "questionTypeFindingText",
     "questionTypeDiagnosisText",
-    "questionTypeTreatmentText"
+    "questionTypeTreatmentText",
+    "placeholderImageLabelText",
+    "placeholderImageBodyText"
   ]
 }

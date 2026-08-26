@@ -726,5 +726,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get questionTypeDiagnosisText => 'DIAGNOSIS';
 
   @override
-  String get questionTypeTreatmentText => 'TREATMENT';
+  String get questionTypeTreatmentText => 'TREATMENT STRATEGY';
+
+  @override
+  String get placeholderImageLabelText => 'PLACEHOLDER';
+
+  @override
+  String get placeholderImageBodyText => 'No endoscopic image on file';
 }

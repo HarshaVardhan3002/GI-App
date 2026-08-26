@@ -42,6 +42,16 @@ class Tageskarte extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
     final imageHeight = width * imageAspect;
+    // The tab bar is a material and the card runs underneath it, so the bar no
+    // longer shortens the body. The text block and the peek have to clear it
+    // themselves, or they render behind the labels.
+    //
+    // **The bar's height is already in here.** With `extendBody`, a Scaffold
+    // reports `max(bar height, viewPadding.bottom)` as the body's bottom
+    // padding precisely so a full-bleed body can do this. Adding
+    // `BottomNavBar.barHeight` on top counted the bar twice and left the peek
+    // floating 49dp above the bar.
+    final barInset = MediaQuery.paddingOf(context).bottom;
 
     return ColoredBox(
       color: context.gi.surface,
@@ -80,16 +90,16 @@ class Tageskarte extends StatelessWidget {
           Positioned(
             left: AppSpacing.lg,
             right: AppSpacing.lg,
-            bottom: peekHeight + AppSpacing.lg,
+            bottom: barInset + peekHeight + AppSpacing.lg,
             child: TageskarteText(giCase: giCase),
           ),
           if (!isLast)
-            const Positioned(
+            Positioned(
               left: AppSpacing.sm,
               right: AppSpacing.sm,
-              bottom: 0,
+              bottom: barInset,
               height: peekHeight,
-              child: TageskartePeek(),
+              child: const TageskartePeek(),
             ),
         ],
       ),

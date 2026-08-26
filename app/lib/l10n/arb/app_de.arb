@@ -19,5 +19,9 @@
   "imageMissingText": "Bild nicht verfügbar",
   "questionTypeFindingText": "BEFUND",
   "questionTypeDiagnosisText": "DIAGNOSE",
-  "questionTypeTreatmentText": "THERAPIE"
+  "questionTypeTreatmentText": "THERAPIESTRATEGIE",
+  "searchNavBarItemLabel": "Suche",
+  "searchText": "Suche",
+  "placeholderImageLabelText": "PLATZHALTER",
+  "placeholderImageBodyText": "Kein endoskopisches Bild hinterlegt"
 }

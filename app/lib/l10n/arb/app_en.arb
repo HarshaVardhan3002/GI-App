@@ -532,8 +532,16 @@
   "@questionTypeDiagnosisText": {
     "description": "Question type label: what is this called."
   },
-  "questionTypeTreatmentText": "TREATMENT",
+  "questionTypeTreatmentText": "TREATMENT STRATEGY",
   "@questionTypeTreatmentText": {
     "description": "Question type label: what would you do."
+  },
+  "placeholderImageLabelText": "PLACEHOLDER",
+  "placeholderImageBodyText": "No endoscopic image on file",
+  "@placeholderImageLabelText": {
+    "description": "Overline on the stand-in shown where a real endoscopic image will go."
+  },
+  "@placeholderImageBodyText": {
+    "description": "Body line on the stand-in shown where a real endoscopic image will go."
   }
 }

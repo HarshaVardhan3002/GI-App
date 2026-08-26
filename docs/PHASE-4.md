@@ -41,6 +41,12 @@ lines. **The dissolve is doing the job the arithmetic assigned it.**
 The last case draws no peek, so the reader can see they have reached the end
 without being told.
 
+> **Two of the three "corrections" below were wrong, and were reversed in
+> phase 4b.** The question-type label and the top bar's right slot are both
+> restored to what the design documents and the screen mockups specified. The
+> section is kept as written rather than edited, because the reasoning that
+> produced the mistake is worth reading. See `docs/PHASE-4B.md`.
+
 ## Three corrections to the design documents
 
 **Question types were guessed.** `DESIGN.md` and `docs/SCREENS.md` used

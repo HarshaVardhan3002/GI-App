@@ -30,6 +30,11 @@ class BottomNavBar extends StatelessWidget {
   /// bottom navigation bars.
   final StatefulNavigationShell navigationShell;
 
+  /// The row of labels, above the home indicator's inset. 49 is the height a
+  /// tab bar has on iOS, and a 49dp row makes each label a target well past
+  /// the 44 minimum in `DESIGN.md` section 6.
+  static const double barHeight = 49;
+
   @override
   Widget build(BuildContext context) {
     final videoPlayer = VideoPlayerInheritedWidget.of(context);
@@ -48,10 +53,10 @@ class BottomNavBar extends StatelessWidget {
     const branchOfTab = <int>[0, 1, 4];
 
     // The upstream five-item builder is left alone; these three are built here
-    // so nothing in `app_ui` had to change. Labels are tooltips only, since
-    // both label rows are hidden, and they have their own keys rather than
-    // borrowing Instagram's: calling Archiv `searchNavBarItemLabel` would have
-    // been a lie in the source even with nothing drawn.
+    // so nothing in `app_ui` had to change. The labels are what the bar draws,
+    // and they have their own keys rather than borrowing Instagram's: calling
+    // Archiv `searchNavBarItemLabel` would have been a lie in the source. The
+    // icons are carried but unused, since `NavBarItem` requires one.
     final navigationBarItems = <NavBarItem>[
       NavBarItem(
         icon: Icons.home_filled,
@@ -89,48 +94,88 @@ class BottomNavBar extends StatelessWidget {
 
     final currentTab = branchOfTab.indexOf(navigationShell.currentIndex);
 
-    return BottomNavigationBar(
-      // A branch outside the three (nothing navigates there now, but the
-      // branches still exist) would give -1, so it falls back to Heute.
-      currentIndex: currentTab == -1 ? 0 : currentTab,
-      onTap: (tab) {
-        final branch = branchOfTab[tab];
-        final isCurrent = branch == navigationShell.currentIndex;
+    void onTabTapped(int tab) {
+      final branch = branchOfTab[tab];
+      final isCurrent = branch == navigationShell.currentIndex;
 
-        // The horizontal PageView is pinned in `home_page.dart`; this keeps its
-        // state consistent with the tab anyway.
-        HomeProvider().togglePageView(enable: branch == 0);
+      // The horizontal PageView is pinned in `home_page.dart`; this keeps its
+      // state consistent with the tab anyway.
+      HomeProvider().togglePageView(enable: branch == 0);
 
-        if (branch case 0) {
-          videoPlayer.videoPlayerState.playFeed();
-        } else if (branch case 1) {
-          videoPlayer.videoPlayerState.playTimeline();
-        } else {
-          videoPlayer.videoPlayerState.stopAll();
-        }
+      if (branch case 0) {
+        videoPlayer.videoPlayerState.playFeed();
+      } else if (branch case 1) {
+        videoPlayer.videoPlayerState.playTimeline();
+      } else {
+        videoPlayer.videoPlayerState.stopAll();
+      }
 
-        navigationShell.goBranch(branch, initialLocation: isCurrent);
+      navigationShell.goBranch(branch, initialLocation: isCurrent);
 
-        // Tapping Heute while already on it returns to the top.
-        if (branch == 0 && isCurrent) FeedPageController().scrollToTop();
-      },
-      iconSize: 28,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      // With both label rows hidden, colour is the only thing saying which tab
-      // you are on, and upstream left selected and unselected the same.
-      backgroundColor: context.gi.surface,
-      selectedItemColor: context.gi.label,
-      unselectedItemColor: context.gi.labelTertiary,
-      items: navigationBarItems
-          .map(
-            (e) => BottomNavigationBarItem(
-              icon: e.child ?? Icon(e.icon),
-              label: e.label,
-              tooltip: e.tooltip,
-            ),
-          )
-          .toList(),
+      // Tapping Heute while already on it returns to the top.
+      if (branch == 0 && isCurrent) FeedPageController().scrollToTop();
+
+      GiHaptics.selection(context);
+    }
+
+    return GiMaterial(
+      edge: VerticalDirection.down,
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: BottomNavBar.barHeight,
+          child: Row(
+            children: [
+              for (var tab = 0; tab < navigationBarItems.length; tab++)
+                Expanded(
+                  child: _NavBarLabel(
+                    label: navigationBarItems[tab].label ?? '',
+                    isCurrent: tab == (currentTab == -1 ? 0 : currentTab),
+                    onTap: () => onTabTapped(tab),
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// {@template nav_bar_label}
+/// One tab: its name, and whether you are on it.
+///
+/// **A word, not a pictogram.** Three destinations named in Fachsprache do not
+/// need icons to tell them apart, and the fork's icons were a house, a grid and
+/// an ellipsis borrowed from an app about photographs. Weight carries the
+/// selection, the way `docs/SCREENS.md` draws it.
+/// {@endtemplate}
+class _NavBarLabel extends StatelessWidget {
+  const _NavBarLabel({
+    required this.label,
+    required this.isCurrent,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isCurrent;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.gi;
+    return Tappable.faded(
+      onTap: onTap,
+      backgroundColor: Colors.transparent,
+      child: Center(
+        child: Text(
+          label,
+          style: GiText.caption.copyWith(
+            color: isCurrent ? colors.label : colors.labelTertiary,
+            fontWeight: isCurrent ? AppFontWeight.semiBold : null,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1190,8 +1190,20 @@ abstract class AppLocalizations {
   /// Question type label: what would you do.
   ///
   /// In en, this message translates to:
-  /// **'TREATMENT'**
+  /// **'TREATMENT STRATEGY'**
   String get questionTypeTreatmentText;
+
+  /// Overline on the stand-in shown where a real endoscopic image will go.
+  ///
+  /// In en, this message translates to:
+  /// **'PLACEHOLDER'**
+  String get placeholderImageLabelText;
+
+  /// Body line on the stand-in shown where a real endoscopic image will go.
+  ///
+  /// In en, this message translates to:
+  /// **'No endoscopic image on file'**
+  String get placeholderImageBodyText;
 }
 
 class _AppLocalizationsDelegate

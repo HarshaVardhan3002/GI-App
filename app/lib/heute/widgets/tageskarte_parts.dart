@@ -3,6 +3,7 @@ import 'package:database_client/database_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_instagram_offline_first_clone/app/routes/routes.dart';
 import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
+import 'package:flutter_instagram_offline_first_clone/media/media.dart';
 import 'package:go_router/go_router.dart';
 
 /// {@template tageskarte_images}
@@ -38,22 +39,8 @@ class _TageskarteImagesState extends State<TageskarteImages> {
     return PageView.builder(
       controller: _controller,
       itemCount: widget.images.length,
-      itemBuilder: (context, index) => Image.asset(
-        widget.images[index].assetPath,
-        fit: BoxFit.cover,
-        // The image is the content, so a failure to load it is worth seeing
-        // rather than worth hiding behind an empty box.
-        errorBuilder: (context, error, stackTrace) => ColoredBox(
-          color: context.gi.depth(.30),
-          child: Center(
-            child: Text(
-              context.l10n.imageMissingText,
-              textAlign: TextAlign.center,
-              style: GiText.footnote.copyWith(color: context.gi.warning),
-            ),
-          ),
-        ),
-      ),
+      itemBuilder: (context, index) =>
+          GiImageView(image: widget.images[index]),
     );
   }
 }
@@ -164,52 +151,69 @@ class FallOeffnen extends StatelessWidget {
 }
 
 /// {@template heute_header}
-/// The wordmark, over the image.
+/// The wordmark, and the name of the screen you are on.
 ///
-/// The day is deliberately not repeated here. `docs/SCREENS.md` put the date in
-/// the top bar as well as in the card's meta line, and on one screen that is
-/// the same fact printed twice. The card keeps it, because that is where it
-/// belongs to a case rather than to the app.
+/// The image runs full bleed to the top, so this is not an app bar above the
+/// content: it is the Normal material floating over it, and the image stays
+/// visible underneath. It is here because an endoscopic image can be bright at
+/// its top edge and white text on it would be unreadable exactly when the
+/// image is at its best.
+///
+/// **The right slot names the screen.** An earlier pass dropped it, reasoning
+/// that the date already appears in the card's meta line. That was a
+/// misreading of the mockup: the right slot carries *Heute*, the destination,
+/// not the date, and with three tab destinations the top bar is where you are
+/// told which one you are in.
 /// {@endtemplate}
 class HeuteHeader extends StatelessWidget {
   /// {@macro heute_header}
   const HeuteHeader({super.key});
 
-  /// How far the scrim reaches. Enough to carry the wordmark and its safe area,
-  /// and no further: it is there to make text legible, not to darken the image.
-  static const double scrimHeight = 140;
+  /// The row the wordmark sits in, above the status bar's inset. 44 is the
+  /// minimum target in `DESIGN.md` section 6 and the height of a navigation
+  /// bar on iOS.
+  static const double barHeight = 44;
 
   @override
   Widget build(BuildContext context) {
-    final surface = context.gi.surface;
     return IgnorePointer(
-      child: SizedBox(
-        height: scrimHeight,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                surface.withValues(alpha: .85),
-                surface.withValues(alpha: 0),
-              ],
-              stops: const [0, 1],
-            ),
-          ),
-          child: const SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.sm,
+      child: GiMaterial(
+        edge: VerticalDirection.up,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SafeArea(
+              bottom: false,
+              child: SizedBox(
+                height: barHeight,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const AppLogo(),
+                      Text(
+                        context.l10n.todayNavBarItemLabel,
+                        style: GiText.subhead.copyWith(
+                          // Present without competing with the wordmark. The
+                          // label colour at 70%, rather than
+                          // `labelSecondary`, because it sits on a material
+                          // over the image and has to hold against whatever
+                          // is behind it.
+                          color: context.gi.label.withValues(alpha: .7),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: AppLogo(),
-              ),
             ),
-          ),
+            // The material's own fade tail. Section 4 rule 3: no hairline
+            // where chrome ends.
+            const SizedBox(height: GiMaterial.fadeExtent),
+          ],
         ),
       ),
     );
