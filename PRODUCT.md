@@ -1,4 +1,4 @@
-# PRODUCT.md — GI Daily
+# PRODUCT.md - GI Daily
 
 ## What it is
 
@@ -33,20 +33,20 @@ number. Not a streak. Not a score.
 
 ## The three question types
 
-`diagnosis` — what is this? · `finding` — what do we see endoscopically? ·
-`treatment` — what is the right strategy from here?
+`diagnosis` - what is this? · `finding` - what do we see endoscopically? ·
+`treatment` - what is the right strategy from here?
 
 ## Hard constraints
 
 1. **No patient data.** Images only from open, de-identified CC BY 4.0 datasets
-   (HyperKvasir, GastroVision). Attribution renders on screen.
+ (HyperKvasir, GastroVision). Attribution renders on screen.
 2. **Guideline text is cited, never redistributed.** Max 400 characters quoted,
-   always with its citation. Copyright is the AWMF author collective's; shipping
-   needs a separate rights agreement.
+ always with its citation. Copyright is the AWMF author collective's; shipping
+ needs a separate rights agreement.
 3. **Nothing unreviewed reaches a user.** Generated content is `draft` until a
-   physician approves it. Only `approved` renders.
+ physician approves it. Only `approved` renders.
 4. **German UI, German content, Fachsprache.** No mascots, no confetti, no
-   gamification aesthetic. English exists only as a developer debug locale.
+ gamification aesthetic. English exists only as a developer debug locale.
 
 ## Platform
 
@@ -60,15 +60,15 @@ Both light and dark appearances ship, following the system.
 
 ## Context
 
-DGVS Hackathon 2026, Viszeralmedizin congress, Hamburg, 17–18 September. Team of
+DGVS Hackathon 2026, Viszeralmedizin congress, Hamburg, 17-18 September. Team of
 three developers and two physicians. The deliverable is a working prototype
-demoed to a jury in roughly ten minutes — not a shipped product.
+demoed to a jury in roughly ten minutes - not a shipped product.
 
 ## Architecture
 
 Content is data, not code. The app reads JSON from its own bundle; no widget
 knows what is in it. `pipeline/src/lib/schema.ts` is the contract, and content is
-edited by physicians and teammates as JSON — never by editing Dart.
+edited by physicians and teammates as JSON - never by editing Dart.
 
 There is no backend, and every seam where one would attach is a clean interface
 with a local implementation behind it. See `docs/COMPONENT-MAP.md` §5.

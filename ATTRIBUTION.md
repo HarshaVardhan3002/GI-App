@@ -17,7 +17,7 @@ That licence carries a clause beyond standard MIT:
 > replication of the original code.
 
 **What this obliges us to do.** The product being built here is a daily
-learning app for gastroenterologists — a different product with a different
+learning app for gastroenterologists - a different product with a different
 audience, a different content model and a different feature set. Meeting the
 clause is not automatic; it is met by the work: removing the Instagram identity
 entirely, cutting the social feature set down to what a clinical reader needs,
@@ -34,10 +34,10 @@ Endoscopic images come only from open, de-identified datasets under
 CC BY 4.0. Attribution renders on screen next to every image, and the licence
 metadata travels with each image record in `app/assets/content/images.json`.
 
-- **HyperKvasir** — Borgli et al., Simula.
-  <https://datasets.simula.no/hyper-kvasir/>
-- **GastroVision** — Jha et al.
-  <https://github.com/DebeshJha/GastroVision>
+- **HyperKvasir** - Borgli et al., Simula.
+ <https://datasets.simula.no/hyper-kvasir/>
+- **GastroVision** - Jha et al.
+ <https://github.com/DebeshJha/GastroVision>
 
 No patient data is used, and none may be added.
 
