@@ -43,11 +43,15 @@ class BildquellenPage extends StatelessWidget {
           // in a German screen. What is true about a placeholder is who made
           // it and that it is one.
           GiGroupHeader(
-            image.isPlaceholder ? l10n.placeholderImageLabelText : image.source,
+            image.isRightsCleared
+                ? image.source
+                : image.isPlaceholder
+                ? l10n.placeholderImageLabelText
+                : l10n.testImageLabelText,
           ),
           GiGroup(
             children: [
-              if (!image.isPlaceholder)
+              if (image.isRightsCleared)
                 GiRow(
                   label: l10n.licenceLabelText,
                   value: image.licenceSpdx,
@@ -128,9 +132,16 @@ class LeitlinienPage extends StatelessWidget {
           ),
           GiGroup(
             children: [
+              // A placeholder guideline's title says so in its own text; it
+              // should say so in its own colour too, like every other
+              // placeholder in the app.
               GiRow(
                 label: guideline.title,
-                labelStyle: GiText.body.copyWith(color: colors.label),
+                labelStyle: GiText.body.copyWith(
+                  color: guideline.isPlaceholder
+                      ? colors.warning
+                      : colors.label,
+                ),
               ),
               GiRow(
                 label: guideline.publisher,

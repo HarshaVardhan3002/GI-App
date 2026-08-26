@@ -1576,6 +1576,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rights not cleared'**
   String get unclearedRightsRowText;
+
+  /// Marks an image that is a technical test rather than cleared content.
+  ///
+  /// In en, this message translates to:
+  /// **'TEST IMAGE'**
+  String get testImageLabelText;
 }
 
 class _AppLocalizationsDelegate

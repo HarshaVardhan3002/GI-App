@@ -32,8 +32,8 @@ class GiRollingText extends StatefulWidget {
   const GiRollingText(
     this.text, {
     this.style,
-    this.dwell = const Duration(milliseconds: 2200),
-    this.speed = 26,
+    this.dwell = const Duration(milliseconds: 1600),
+    this.speed = 46,
     this.textAlign = TextAlign.start,
     super.key,
   });
@@ -54,7 +54,9 @@ class GiRollingText extends StatefulWidget {
   /// Density-independent pixels per second while rolling.
   ///
   /// Slow enough to read at, which is the whole point: a fast roll would only
-  /// tell the reader that more text exists.
+  /// tell the reader that more text exists. It started at 26, which was a
+  /// reading pace for a heading and a 38-second cycle for the 158-character
+  /// clinical vignettes this content set actually holds.
   final double speed;
 
   /// Alignment while at rest and while the text fits.

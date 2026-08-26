@@ -926,4 +926,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get unclearedRightsRowText => 'Rights not cleared';
+
+  @override
+  String get testImageLabelText => 'TEST IMAGE';
 }

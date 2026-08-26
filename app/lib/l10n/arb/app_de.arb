@@ -88,5 +88,9 @@
   "unclearedRightsRowText": "Rechte ungeprüft",
   "@unclearedRightsRowText": {
     "description": "Inhaltsstatus row: images whose licence is not cleared."
+  },
+  "testImageLabelText": "TESTBILD",
+  "@testImageLabelText": {
+    "description": "Marks an image that is a technical test rather than cleared content."
   }
 }

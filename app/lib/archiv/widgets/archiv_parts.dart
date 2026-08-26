@@ -160,6 +160,9 @@ class ArchivCell extends StatelessWidget {
     // read it without ever hearing it change. It is a Listenable for exactly
     // this: answering a case marks its cell without the sheet being rebuilt.
     final answers = context.read<AnswerSource>();
+    final isDark = colors.brightness == Brightness.dark;
+    final scrimColor = isDark ? Colors.black : Colors.white;
+    final dateColor = isDark ? Colors.white : colors.label;
 
     return Tappable.scaled(
       backgroundColor: Colors.transparent,
@@ -175,11 +178,23 @@ class ArchivCell extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
+            // The cell has a ground of its own. Images are contained rather
+            // than cropped, so a 1356x520 strip fills a fraction of a 4:5
+            // cell; without a ground the rest of the cell is the page and the
+            // cell stops reading as a cell - the answered dot in particular
+            // ends up floating in what looks like empty page.
+            ColoredBox(color: colors.depth(.30)),
             GiImageView(image: giCase.images.first),
             // The date has to stay legible over any image, and section 11
             // rules out a cast shadow. A scrim is the same job done as a
             // surface rather than as an effect.
-            const Positioned(
+            // **The scrim follows the appearance, and it used to not.** A
+            // black scrim under white text is right over a photograph in the
+            // dark appearance and reads as a grey slab across the bottom of
+            // every cell in the light one, where the cell above it is nearly
+            // white. It is the ground's own extreme in each appearance, so the
+            // band belongs to the cell rather than being laid over it.
+            Positioned(
               left: 0,
               right: 0,
               bottom: 0,
@@ -189,7 +204,10 @@ class ArchivCell extends StatelessWidget {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Color(0xB3000000)],
+                    colors: [
+                      scrimColor.withValues(alpha: 0),
+                      scrimColor.withValues(alpha: .70),
+                    ],
                   ),
                 ),
               ),
@@ -199,7 +217,7 @@ class ArchivCell extends StatelessWidget {
               bottom: AppSpacing.xs,
               child: Text(
                 DateFormat('d. MMM').format(giCase.date),
-                style: GiText.caption.copyWith(color: Colors.white),
+                style: GiText.caption.copyWith(color: dateColor),
               ),
             ),
             // `Positioned` has to be the Stack's direct child, so the

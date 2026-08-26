@@ -89,21 +89,33 @@ class HerkunftSheet extends StatelessWidget {
               GiGroupHeader(l10n.imageCreditHeaderText),
               GiGroup(
                 children: [
+                  // `source`, `className` and `licenceSpdx` are schema keys,
+                  // not display strings. On a cleared image they happen to
+                  // read as dataset names; on anything else they print
+                  // `placeholder`, `PLACEHOLDER`, `UNVERIFIED` and
+                  // `dyed-lifted-polyps` at a German reader. Constraint 4 is
+                  // not satisfied by a value that came out of a JSON file.
                   GiRow(
                     label: l10n.datasetLabelText,
-                    value: image.source,
+                    value: image.isRightsCleared
+                        ? image.source
+                        : image.isPlaceholder
+                        ? l10n.placeholderImageLabelText
+                        : l10n.testImageLabelText,
                     labelColor: colors.labelSecondary,
                   ),
-                  GiRow(
-                    label: l10n.imageClassLabelText,
-                    value: image.className,
-                    labelColor: colors.labelSecondary,
-                  ),
-                  GiRow(
-                    label: l10n.licenceLabelText,
-                    value: image.licenceSpdx,
-                    labelColor: colors.labelSecondary,
-                  ),
+                  if (image.isRightsCleared) ...[
+                    GiRow(
+                      label: l10n.imageClassLabelText,
+                      value: image.className,
+                      labelColor: colors.labelSecondary,
+                    ),
+                    GiRow(
+                      label: l10n.licenceLabelText,
+                      value: image.licenceSpdx,
+                      labelColor: colors.labelSecondary,
+                    ),
+                  ],
                   GiRow(
                     label: l10n.rightsLabelText,
                     value: image.licenceHolder,

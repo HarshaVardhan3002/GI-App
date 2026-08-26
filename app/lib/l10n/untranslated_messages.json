@@ -235,6 +235,7 @@
     "contentPendingNoticeText",
     "imprintPendingNoticeText",
     "noReleasedCaseText",
-    "unclearedRightsRowText"
+    "unclearedRightsRowText",
+    "testImageLabelText"
   ]
 }
