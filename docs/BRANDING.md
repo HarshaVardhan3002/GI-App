@@ -126,11 +126,14 @@ prose stops and the guideline's begins.
 
 ## 6. Wordmark
 
-**GI Daily**, 700 weight, tracking -0.02em, sentence case. Not all-caps,
-and not a logotype pretending to be a signature.
+**GI Daily**, Newsreader 20 / 24 at weight 400, tracking -0.2, sentence case.
+Not all-caps, and not a logotype pretending to be a signature.
 
-It replaces `AppLogo` at the optical weight the Instagram wordmark held, so the
-app bar's rhythm survives the swap. Four call sites pick it up unchanged.
+This supersedes the 700-weight figure written here before the typefaces were
+chosen. See `DESIGN.md` §2 and §5.
+
+It replaces `AppLogo`, which rendered an SVG. The widget keeps the SVG's sizing
+contract, so all four call sites pick the wordmark up unchanged.
 
 **No icon-and-name lockup.** At 20pt in a header, a mark and a word compete and
 the word wins. The app icon is a separate problem and is not solved by shrinking
@@ -149,9 +152,15 @@ learner being encouraged.
 
 ## 8. Open
 
-- **App icon.** Not designed. A wordmark does not shrink into an icon, and the
-  obvious move, a stylised lumen or scope circle, risks reading as a generic
-  medical roundel. Worth a separate pass.
+- **App icon. Needed, not merely wanted.** Still not designed, but no longer
+  something that can wait. From Android 12 the launcher icon *is* the launch
+  screen, so the icon is the first thing anyone sees, jury included. What ships
+  today is the upstream author's unicorn. Phase 1 keeps it off the splash by
+  drawing nothing there; the launcher still shows it.
+
+  A wordmark does not shrink into an icon, and the obvious move, a stylised
+  lumen or scope circle, risks reading as a generic medical roundel. It needs
+  its own pass, soon.
 - **Whether the wordmark should be German.** *GI Daily* is English in a German
   product. Defensible as a name rather than a phrase, but the physicians on the
   team should get a say before it is on screen at a DGVS congress.

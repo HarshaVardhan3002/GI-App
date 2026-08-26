@@ -94,15 +94,35 @@ the applicationId forces a fresh install and a new signing identity.
 `drawable/launch_background.xml`, whose first layer is `@android:color/white`.
 That is the flash: white window, then the app paints near-black.
 
-Add `res/drawable-night/launch_background.xml` with `@color/launch_background`
-(depth 0.00 dark, `#000000`) and add `res/drawable-night-v21/` to match the
-existing `drawable-v21` duplicate. The night qualifier outranks the version
-qualifier, so day launches are untouched.
+**Shipped differently, and more simply, than planned.** No night-qualified
+drawable was needed. Both `launch_background.xml` variants now reference
+`@color/launch_background`, and the *colour* carries the night qualifier:
+
+- `values/colors.xml` - `#FFFFFF`, depth 0.00 light
+- `values-night/colors.xml` - `#000000`, depth 0.00 dark
+
+Two small files instead of two duplicated layer-lists, and the day launch is
+unchanged because its value is what `@android:color/white` already was.
 
 ### D4 - Launch mark
-**Decided: ground only.** The image layer comes out of all four
-`launch_background.xml` variants. The splash is one flat colour and the first
-thing drawn is the app.
+**Decided: ground only.** The splash is one flat colour and the first thing
+drawn is the app.
+
+**The spec was wrong about where the mark lives, and the emulator proved it.**
+Commenting the image layer out of `launch_background.xml` removed nothing on the
+device we demo on. From Android 12 the platform draws the launch screen itself:
+the app's **launcher icon**, centred on `windowSplashScreenBackground`. The
+legacy layer-list is ignored on API 31 and up.
+
+So the mark is removed where it actually lives, in
+`values-v31/styles.xml` and `values-night-v31/styles.xml`:
+
+- `windowSplashScreenBackground` = `@color/launch_background`
+- `windowSplashScreenAnimatedIcon` = a deliberately transparent vector
+
+Both qualified directories are needed. `night` outranks `v31` in resource
+precedence, so on a dark API-36 device `values-night/` would otherwise win and
+take the v31 overrides with it. The layer-list edit stays for pre-12 devices.
 
 The unicorn is black-filled, so on a dark ground it was invisible regardless. A
 splash mark buys nothing at 400ms and costs a second asset that has to track the
@@ -112,10 +132,15 @@ wordmark, so it would be text drawn twice in two systems. This matches how
 `ic_launch_image.xml` stays on disk, unreferenced, recorded for the later sweep.
 
 ### D5 - Launcher icon
-Still unsolved and still blocking nothing, but it now has a name: the icon
-currently in the launcher is the upstream author's unicorn. Until it is
-replaced, **the demo device must not show the launcher.** Recorded here so the
-demo script accounts for it.
+**No longer optional, and no longer only about the launcher.** `BRANDING.md` §8
+parked the icon as "not designed, blocks nothing". D4 shows why that is wrong on
+a modern Android: from Android 12 the launcher icon *is* the launch screen. The
+icon currently shipping is the upstream author's unicorn.
+
+The transparent-icon override keeps it off the splash, so it no longer appears
+at every cold start. It is still what the launcher shows, and it is still
+somebody else's mark. **It needs designing, and `BRANDING.md` §8 needs
+correcting.**
 
 ### D6 - Font bundling
 Mandatory, because D1 renders in a face the repository does not have.
@@ -181,6 +206,33 @@ did not capture the day launch.
 
 **Done means:** it builds, both launches show the right ground colour, the header
 reads *GI Daily* with no shift, and the report names anything it could not check.
+
+---
+
+## What was verified, and how
+
+| Claim | How it was checked | Result |
+|---|---|---|
+| Dark launch window | Cold start after `pm clear`, centre pixel sampled | `#000000`, flat, no mark |
+| Light launch window | Same | `#FFFFFF`, flat, no mark |
+| All four `LaunchTheme` variants present | `aapt2 dump resources` | `()`, `night`, `v31`, `night-v31` |
+| Wordmark reads *GI Daily* | Screenshot | Yes, and no other mark in the bar |
+| Wordmark is Newsreader, not a fallback | Screenshot, letterform inspection | Serif, with visible stroke contrast |
+| App label | `aapt2 dump badging` | `[DEV] GI Daily` |
+| Feed layout unbroken | Screenshot | No clipping, no blank areas |
+
+The first launch-window screenshots were taken while the app was warm and caught
+nothing, so they were retaken after `pm clear` forced a slow cold start. **A
+screenshot that misses the launch window looks exactly like a launch window with
+nothing in it**, which is why the colours were sampled numerically rather than
+described.
+
+### One thing that looks like a bug and is not
+
+The app renders dark whatever the system is set to.
+`ThemeModeBloc() : super(ThemeMode.dark)` - the fork defaults to dark
+explicitly rather than following the system, which is also what `DESIGN.md`
+wants. Erscheinungsbild wires the choice up in a later phase.
 
 **Not verified by this phase, and said so:** iOS labels, iOS launch screen, and
 anything about how this looks on a Mac.

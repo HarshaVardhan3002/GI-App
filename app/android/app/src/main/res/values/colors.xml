@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The ground the window paints between the tap and Flutter's first frame.
+         Depth 0.00 of the Gletscherspalte ramp - see DESIGN.md section 3. The
+         night-qualified value in values-night/colors.xml is what stops the
+         white flash on a dark device. -->
+    <color name="launch_background">#FFFFFF</color>
+</resources>

@@ -82,17 +82,17 @@ android {
         production {
             dimension "default"
             applicationIdSuffix ""
-            manifestPlaceholders = [appName: "Flutter Instagram Offline First Clone"]
+            manifestPlaceholders = [appName: "GI Daily"]
         }
         staging {
             dimension "default"
             applicationIdSuffix ".stg"
-            manifestPlaceholders = [appName: "[STG] Flutter Instagram Offline First Clone"]
+            manifestPlaceholders = [appName: "[STG] GI Daily"]
         }
         development {
             dimension "default"
             applicationIdSuffix ".dev"
-            manifestPlaceholders = [appName: "[DEV] Flutter Instagram Offline First Clone"]
+            manifestPlaceholders = [appName: "[DEV] GI Daily"]
         }
     }
 

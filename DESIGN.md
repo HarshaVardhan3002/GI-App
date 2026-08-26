@@ -33,10 +33,19 @@ Three rules everything derives from:
 
 **GI Daily.**
 
-Set in Inter, weight 700, tracking −0.02em, sentence case - *GI Daily*, never
-all-caps and never a logotype pretending to be a signature script. It replaces
-`AppLogo` at the same size and optical weight the Instagram wordmark had, so the
-app bar's rhythm survives the swap.
+Set in **Newsreader at 20 / 24, weight 400**, tracking -0.2, sentence case -
+*GI Daily*, never all-caps and never a logotype pretending to be a signature
+script. It is the first of the three places this product uses a serif, alongside
+the question and the guideline quote (§5).
+
+Newsreader carries an optical-size axis, so `opsz` is pinned to 20 at the
+wordmark. Left at the font's default of 18 the letterforms are drawn with
+slightly too much contrast for the size.
+
+It replaces `AppLogo`, which rendered an SVG. A vector scales into any box; text
+does not, so the widget keeps the SVG's `fit` / `width` / `height` contract and
+scales the wordmark into a box when a caller gives it one. No call site had to
+change.
 
 No icon-plus-name lockup. The name alone, because at 20pt in a header a mark and
 a word compete and the word wins.

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Depth 0.00 dark. The app paints near-black on its first frame, so the
+         window must already be near-black or the launch reads as a flash. -->
+    <color name="launch_background">#000000</color>
+</resources>
