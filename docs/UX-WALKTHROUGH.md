@@ -89,12 +89,14 @@ BackdropFilter(
 **Reduced transparency** collapses each material to an opaque surface at the same
 depth. Nothing is lost but the effect.
 
-**Cost, stated honestly.** `BackdropFilter` forces a save-layer and reads back
-the framebuffer. Impeller on Android handles it far better than Skia did, but it
-is still the most expensive thing we draw, and inherited scroll feel is the
-quality bar. Budget: **one backdrop filter on the feed**, `RepaintBoundary`
-around it, never inside a list item, and frame times read on the emulator before
-it ships.
+**Cost, solved.** `BackdropFilter` forces a save-layer and reads back the
+framebuffer, and it is still the most expensive thing we draw. Three things make
+it shippable: `BackdropGroup` with `BackdropFilter.grouped` collapses every
+material on a route into **one** shared backdrop pass; the `enabled` flag turns
+the effect off with identical layout, so there is no second code path; and the
+blurred area is bar-height, roughly 11% of the viewport, never full screen.
+Never inside a list item. Measured before merge. Full treatment in
+`docs/MATERIAL-IMPLEMENTATION.md`.
 
 ## 3. Motion
 

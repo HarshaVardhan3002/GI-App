@@ -108,9 +108,10 @@ Reduced transparency collapses each material to an opaque surface at the same
 depth.
 
 **Cost.** `BackdropFilter` forces a save-layer and reads the framebuffer back.
-Budget one on the feed, `RepaintBoundary` around it, never inside a list item.
-Inherited scroll feel is the quality bar and this is the one decision capable of
-breaking it.
+Solved rather than rationed: `BackdropGroup` with `BackdropFilter.grouped` makes
+every material on a route share **one** backdrop pass, and the `enabled` flag
+turns the effect off without changing a single dimension. See
+`docs/MATERIAL-IMPLEMENTATION.md`. Never inside a list item.
 
 ## 5. Type
 
