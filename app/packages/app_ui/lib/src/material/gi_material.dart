@@ -112,20 +112,23 @@ class GiMaterial extends StatelessWidget {
           enabled: blurEnabled,
           child: DecoratedBox(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: outer,
-                end: inner,
-                // Section 4: reduced transparency collapses the material to an
-                // opaque surface at the same depth. The grade stays, because a
-                // bar that is heavier at the screen edge is a shape decision
-                // rather than a transparency one; only the alpha goes.
-                colors: blurEnabled
-                    ? [
-                        tint.withValues(alpha: .58),
-                        tint.withValues(alpha: .16),
-                      ]
-                    : [tint, tint.withValues(alpha: .92)],
-              ),
+              // **Held at 58%, not graded down across the bar.** The tint used
+              // to ramp 58% to 16% over the bar's whole height, on top of the
+              // ShaderMask above already fading the material to nothing over
+              // its last [fadeExtent]. Two mechanisms doing one job, and the
+              // one that lost was legibility: by the label row the tint was
+              // near 16%, so a bar over a bright endoscopic frame barely
+              // darkened it. Measured on `emulator-5554`, *Heute* against a
+              // pale mucosal wall came out at **1.10:1**. It was unreadable,
+              // on the second case a reader sees.
+              //
+              // Section 4 still reads 58% to 16%: the grade is the mask's, in
+              // the 36dp tail where it belongs, and the bar holds its tint
+              // over the text it is there to carry. Against the same frame
+              // that measured 1.10:1 this holds about 6.4:1.
+              //
+              // Reduced transparency drops the alpha and nothing else.
+              color: blurEnabled ? tint.withValues(alpha: .58) : tint,
             ),
             child: child,
           ),
@@ -234,7 +237,18 @@ class GiThinMaterial extends StatelessWidget {
   static const double saturation = 1.8;
 
   /// Section 4, Ultradünn.
-  static const double tintAlpha = .24;
+  ///
+  /// **55%, not the 24% first written down.** 24% was set against an
+  /// assumption about what "over media" meant, and the media in this app is an
+  /// endoscopic frame lit by a xenon source, which is the brightest thing on
+  /// the screen by a wide margin. Once Heute's pane moved up to sit directly
+  /// under the frame, 24% of a near-black tint over that light left the
+  /// question and the tint reading off a bright olive ground.
+  ///
+  /// It is still the thinnest of the three by a long way, and 45% of the light
+  /// still comes through, which is the whole reason the pane is this material
+  /// and not a sheet.
+  static const double tintAlpha = .55;
 
   @override
   Widget build(BuildContext context) {

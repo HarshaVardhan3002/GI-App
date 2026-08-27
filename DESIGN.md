@@ -86,6 +86,12 @@ stacked on each other.
 Text holds 12.29:1 or better against every depth a surface is actually painted
 at. Green and red never appear on anything that is not a verdict.
 
+**A photograph is not a depth on the ramp**, and the two places text sits over
+one - the wordmark and the screen name on Heute's bar - are outside that
+guarantee by construction. They are held by the material underneath them
+instead, and the number that matters there is measured against the brightest
+frame in the content set, not against a stop.
+
 **Dark `label` is not pure white, and that is deliberate.** It was `#FFFFFF`
 until the owner called the result cream. At the sizes the Newsreader wordmark
 and question are set, pure white on a near-black ground blooms and reads warm,
@@ -107,8 +113,8 @@ Native, no package: `ColorFilter implements ImageFilter`, so
 
 | Material | Blur | Saturation | Tint | Where |
 |---|---|---|---|---|
-| Ultradünn | 18 | 1.8 | depth 0.30 at 24% | Over media: Heute's text pane |
-| Normal | 26 | 1.8 | depth 0.30, graded 58% to 16% | Bars |
+| Ultradünn | 18 | 1.8 | depth 0.30 at 55% | Over media: Heute's text pane |
+| Normal | 26 | 1.8 | depth 0.30 held at 58%, masked out over the tail | Bars |
 | Dick | 40 | 1.5 | depth 0.15 at 88% | Sheets |
 
 Four rules keep it a material rather than decoration:
@@ -117,7 +123,13 @@ Four rules keep it a material rather than decoration:
    cards, rows or badges sitting on a flat ground.
 2. **No grain, no noise.** Grain over blur is what makes frost read as dirty.
 3. **Fade, never stop.** Trailing edges mask to transparent over ~36dp. No
-   hairline marks where chrome ends.
+   hairline marks where chrome ends. **That mask is the whole grade.** Normal
+   used to *also* ramp its tint from 58% to 16% across the bar's full height,
+   which meant the tint was near its weakest exactly where the label sits. Over
+   a pale endoscopic frame the *Heute* label measured **1.10:1** on
+   `emulator-5554`. A bar holds its tint over the text it carries and gives it
+   up in the tail; anything else is a bar that disappears when the picture
+   behind it is bright, which in this app is when the picture is best.
 4. **Edges are light, not shadow.** A 1px inset highlight at 16% white, a 1px
    inset shade below. **No cast shadows anywhere in this app.** Elevation is
    blur radius and edge light.
@@ -147,6 +159,14 @@ that size nothing survives but colour and where the colour sits.
 | Blur / saturation | 24 / 1.2 |
 | Grade | 55% down to where the frame stops, 18% just past it, 8% at the card's foot |
 | Placeholder | draws nothing. A drawing has no light to spill |
+
+**Ultradünn was 24% and is now 55%.** 24% was written against an assumption
+about what "over media" meant. The media here is an endoscopic frame lit by a
+xenon source, the brightest thing on any screen in this app, and once Heute's
+pane sat directly under one, 24% of a near-black tint left the question reading
+off bright olive. It is still by far the thinnest of the three, and 45% of the
+light still passes, which is the only reason the pane is a material and not a
+sheet.
 
 **Half strength at its strongest, and dimmest where the reading is.** The first
 build ran the light at full alpha and at saturation 1.5, and the card came back

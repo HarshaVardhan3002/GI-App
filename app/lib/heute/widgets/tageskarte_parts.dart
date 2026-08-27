@@ -52,8 +52,7 @@ class _TageskarteImagesState extends State<TageskarteImages> {
         GiHaptics.selection(context);
         widget.onIndexChanged?.call(index);
       },
-      itemBuilder: (context, index) =>
-          GiImageView(image: widget.images[index]),
+      itemBuilder: (context, index) => GiImageView(image: widget.images[index]),
     );
   }
 }
@@ -154,10 +153,7 @@ class FallOeffnen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       onTap: () {
         GiHaptics.commit(context);
-        context.pushNamed(
-          AppRoutes.post.name,
-          pathParameters: {'id': postId},
-        );
+        context.pushNamed(AppRoutes.post.name, pathParameters: {'id': postId});
       },
       child: Padding(
         // Vertical padding rather than a fixed height: the row has to stay a
@@ -234,12 +230,14 @@ class HeuteHeader extends StatelessWidget {
                       Text(
                         context.l10n.todayNavBarItemLabel,
                         style: GiText.subhead.copyWith(
-                          // Present without competing with the wordmark. The
-                          // label colour at 70%, rather than
-                          // `labelSecondary`, because it sits on a material
-                          // over the image and has to hold against whatever
-                          // is behind it.
-                          color: context.gi.label.withValues(alpha: .7),
+                          // Present without competing with the wordmark, and
+                          // 85% rather than the 70% it was: this sits on a
+                          // material over uncontrolled photography, and at 70%
+                          // over a pale frame it measured under 4.5:1 even
+                          // after the bar's tint was fixed. `labelSecondary`
+                          // would be worse here, not better, because it is
+                          // darker and the frame behind it can be light.
+                          color: context.gi.label.withValues(alpha: .85),
                         ),
                       ),
                     ],

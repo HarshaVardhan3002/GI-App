@@ -93,11 +93,19 @@ class _TageskarteState extends State<Tageskarte> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final cardHeight = constraints.maxHeight;
-        final aspect = image.aspectRatio > 0 ? image.aspectRatio : 1.25;
-        final field = (constraints.maxWidth / aspect).clamp(
-          cardHeight * minFieldFraction,
-          cardHeight * maxFieldFraction,
-        );
+        // **A placeholder is not a photograph and does not get a
+        // photograph's sizing.** It has no pixel dimensions, so it used to
+        // fall through to a 1.25 default, which is a real frame's shape: the
+        // field came out at 62% of the card and held two centred lines of
+        // text in the middle of an otherwise empty box more than half the
+        // screen tall. It takes the floor instead. There is nothing to look
+        // at, so it asks for the least room a field is allowed.
+        final field = image.isPlaceholder
+            ? cardHeight * minFieldFraction
+            : (constraints.maxWidth / image.aspectRatio).clamp(
+                cardHeight * minFieldFraction,
+                cardHeight * maxFieldFraction,
+              );
 
         return Stack(
           fit: StackFit.expand,
@@ -121,31 +129,53 @@ class _TageskarteState extends State<Tageskarte> {
             // taken the drag off it.
             Column(
               children: [
-                // Takes what the text leaves, and inside that sits at the
-                // image's own height, anchored to the top. Full bleed to
-                // the top of the screen: the wordmark is a material
-                // floating over the image, not a bar above it.
+                // **The frame and the text are one block, and the slack
+                // falls below them.**
+                //
+                // The pane used to be pinned to the bottom of the card, which
+                // put every card's empty space in the middle of it: on a wide
+                // frame that was a third of the screen of nothing between the
+                // image and the question, and on a placeholder, where there
+                // is no light to fill it with, it was simply a hole. A reader
+                // glancing at that reads a screen that failed to load.
+                //
+                // The design artifact has it this way round and it is right:
+                // the frame, the question directly under it, and whatever is
+                // left at the foot of the card. Space at the bottom of a short
+                // card reads as a short card. Space in the middle of one reads
+                // as a mistake.
                 Expanded(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: _BleedingField(
-                      height: field,
-                      child: TageskarteImages(
-                        images: giCase.images,
-                        onIndexChanged: (i) => setState(() => _imageIndex = i),
+                  child: Column(
+                    children: [
+                      // Takes what the text leaves, and inside that sits at
+                      // the image's own height. Full bleed to the top of the
+                      // screen: the wordmark is a material floating over the
+                      // image, not a bar above it.
+                      Flexible(
+                        child: _BleedingField(
+                          height: field,
+                          child: TageskarteImages(
+                            images: giCase.images,
+                            onIndexChanged: (i) =>
+                                setState(() => _imageIndex = i),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-                GiThinMaterial(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      AppSpacing.md,
-                      AppSpacing.lg,
-                      AppSpacing.lg,
-                    ),
-                    child: TageskarteText(giCase: giCase, imageIndex: index),
+                      GiThinMaterial(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            AppSpacing.lg,
+                            AppSpacing.md,
+                            AppSpacing.lg,
+                            AppSpacing.lg,
+                          ),
+                          child: TageskarteText(
+                            giCase: giCase,
+                            imageIndex: index,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 if (!widget.isLast)

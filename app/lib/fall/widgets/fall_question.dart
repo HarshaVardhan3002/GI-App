@@ -65,8 +65,7 @@ class FallQuestion extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.gi;
     final size = MediaQuery.sizeOf(context);
-    final imageHeight =
-        size.height * frameFraction(giCase.images.first, size);
+    final imageHeight = size.height * frameFraction(giCase.images.first, size);
     final languageCode = Localizations.localeOf(context).languageCode;
 
     return ColoredBox(
@@ -105,10 +104,7 @@ class FallQuestion extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [
-                    colors.surface.withValues(alpha: 0),
-                    colors.surface,
-                  ],
+                  colors: [colors.surface.withValues(alpha: 0), colors.surface],
                   stops: const [0, .84],
                 ),
               ),

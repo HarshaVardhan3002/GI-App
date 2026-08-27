@@ -140,19 +140,19 @@ class GiAmbient extends StatelessWidget {
                     ? const [
                         Color(0x8CFFFFFF),
                         Color(0x8CFFFFFF),
-                        Color(0x2EFFFFFF),
-                        Color(0x14FFFFFF),
+                        Color(0x4DFFFFFF),
+                        Color(0x33FFFFFF),
                       ]
                     : const [
                         Color(0x3DFFFFFF),
                         Color(0x3DFFFFFF),
-                        Color(0x17FFFFFF),
-                        Color(0x0AFFFFFF),
+                        Color(0x21FFFFFF),
+                        Color(0x16FFFFFF),
                       ],
                 stops: [
                   0,
                   focusEnd.clamp(0.0, 1.0),
-                  (focusEnd + .16).clamp(0.0, 1.0),
+                  (focusEnd + .20).clamp(0.0, 1.0),
                   1,
                 ],
               ).createShader(rect),

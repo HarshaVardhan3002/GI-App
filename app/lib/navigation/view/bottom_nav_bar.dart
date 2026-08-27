@@ -120,23 +120,43 @@ class BottomNavBar extends StatelessWidget {
 
     return GiMaterial(
       edge: VerticalDirection.down,
-      child: SafeArea(
-        top: false,
-        child: SizedBox(
-          height: BottomNavBar.barHeight,
-          child: Row(
-            children: [
-              for (var tab = 0; tab < navigationBarItems.length; tab++)
-                Expanded(
-                  child: _NavBarLabel(
-                    label: navigationBarItems[tab].label ?? '',
-                    isCurrent: tab == (currentTab == -1 ? 0 : currentTab),
-                    onTap: () => onTabTapped(tab),
-                  ),
-                ),
-            ],
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // **The material's fade tail, and the labels have to sit below it.**
+          //
+          // `GiMaterial` masks itself to transparent over its last
+          // [GiMaterial.fadeExtent], and that mask applies to the child on the
+          // material as well as to the material. Without this spacer the 49dp
+          // label row started inside the 36dp tail, so the labels themselves
+          // were drawn at partial alpha: *Archiv* rendered at (106,117,130)
+          // against a token of #485A69 and measured **4.22:1** in light, under
+          // AA, and the selected label came out at (183,187,192) against a
+          // token of #E4EBF2.
+          //
+          // It was diagnosed twice wrong first, as a colour token and then as
+          // a type size, and neither moved the number. `HeuteHeader` already
+          // does exactly this at the other end of the screen.
+          const SizedBox(height: GiMaterial.fadeExtent),
+          SafeArea(
+            top: false,
+            child: SizedBox(
+              height: BottomNavBar.barHeight,
+              child: Row(
+                children: [
+                  for (var tab = 0; tab < navigationBarItems.length; tab++)
+                    Expanded(
+                      child: _NavBarLabel(
+                        label: navigationBarItems[tab].label ?? '',
+                        isCurrent: tab == (currentTab == -1 ? 0 : currentTab),
+                        onTap: () => onTabTapped(tab),
+                      ),
+                    ),
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -171,7 +191,12 @@ class _NavBarLabel extends StatelessWidget {
         child: Text(
           label,
           style: GiText.caption.copyWith(
-            color: isCurrent ? colors.label : colors.labelTertiary,
+            // `labelSecondary`, not `labelTertiary`. An unselected tab is
+            // still navigation, and tertiary is the ramp's metadata colour:
+            // against the bar it measured 4.47:1, which is the AA line rather
+            // than clear of it. Secondary holds 8.3:1 and still reads as
+            // unselected next to the weight change.
+            color: isCurrent ? colors.label : colors.labelSecondary,
             fontWeight: isCurrent ? AppFontWeight.semiBold : null,
           ),
         ),

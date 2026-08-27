@@ -111,35 +111,35 @@ class GiImagePlaceholder extends StatelessWidget {
 
           return Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.xlg,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xlg),
               child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                context.l10n.placeholderImageLabelText,
-                style: GiText.caption.copyWith(
-                  color: colors.warning,
-                  letterSpacing: 1.2,
-                ),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    context.l10n.placeholderImageLabelText,
+                    style: GiText.caption.copyWith(
+                      color: colors.warning,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const Gap.v(AppSpacing.md),
+                  Text(
+                    context.l10n.placeholderImageBodyText,
+                    textAlign: TextAlign.center,
+                    style: GiText.subhead.copyWith(
+                      color: colors.labelSecondary,
+                    ),
+                  ),
+                  // `image.className` is not drawn here. It carries the
+                  // dataset's own label - `polyp`, `oesophagitis-a` - which is
+                  // an English developer token, and constraint 4 says the
+                  // interface is German. It stays on the model for the
+                  // provenance sheet, where it is quoted as the dataset's word
+                  // rather than presented as this app's.
+                ],
               ),
-              const Gap.v(AppSpacing.md),
-              Text(
-                context.l10n.placeholderImageBodyText,
-                textAlign: TextAlign.center,
-                style: GiText.subhead.copyWith(color: colors.labelSecondary),
-              ),
-                // `image.className` is not drawn here. It carries the
-                // dataset's own label - `polyp`, `oesophagitis-a` - which is
-                // an English developer token, and constraint 4 says the
-                // interface is German. It stays on the model for the
-                // provenance sheet, where it is quoted as the dataset's word
-                // rather than presented as this app's.
-              ],
             ),
-          ),
-        );
+          );
         },
       ),
     );
