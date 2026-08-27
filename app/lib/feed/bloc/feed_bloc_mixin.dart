@@ -310,8 +310,6 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
   /// The updated blocks list is sent back through the provided [SendPort].
   static Future<void> _computeSponsoredBlocks(List<dynamic> args) async {
     final sendPort = args[0] as SendPort;
-    // Read only by the commented-out end-of-feed blocks below.
-    // ignore: unused_local_variable
     final hasMore = args[1] as bool;
     final blocks = args[2] as List<InstaBlock>;
     final sponsoredBlocksListJson = List<Map<String, dynamic>>.from(
@@ -357,22 +355,16 @@ mixin FeedBlocMixin on Bloc<FeedEvent, FeedState> {
       tempDataLength = tempBlocks.length;
     }
 
-    // Upstream closes an exhausted feed with a green tick reading "You're all
-    // caught up" and a "Suggested for you" header. Both are social-feed
-    // furniture: the first congratulates the reader for reaching the end of
-    // three cases, and the second introduces a section that is now empty,
-    // because the demo posts it used to hold are commented out in
-    // `feed_bloc.dart`. The blocks and their render sites all stay.
-    // if (!hasMore) {
-    //   return sendPort.send(
-    //     blocks.followedBy([
-    //       if (blocks.isNotEmpty) DividerHorizontalBlock(),
-    //       const SectionHeaderBlock(
-    //         sectionType: SectionHeaderBlockType.suggested,
-    //       ),
-    //     ]).toList(),
-    //   );
-    // }
+    if (!hasMore) {
+      return sendPort.send(
+        blocks.followedBy([
+          if (blocks.isNotEmpty) DividerHorizontalBlock(),
+          const SectionHeaderBlock(
+            sectionType: SectionHeaderBlockType.suggested,
+          ),
+        ]).toList(),
+      );
+    }
 
     return sendPort.send(blocks);
   }

@@ -312,16 +312,12 @@ class UserProfileAppBar extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            // Instagram's verified badge. Its shape and its blue are part of
-            // Instagram's identity, which ATTRIBUTION.md obliges us to remove,
-            // and this product has no verification to signal in the first
-            // place.
-            // Flexible(
-            //   child: Assets.icons.verifiedUser.svg(
-            //     width: AppSize.iconSizeSmall,
-            //     height: AppSize.iconSizeSmall,
-            //   ),
-            // ),
+            Flexible(
+              child: Assets.icons.verifiedUser.svg(
+                width: AppSize.iconSizeSmall,
+                height: AppSize.iconSizeSmall,
+              ),
+            ),
           ],
         ),
         actions: [

@@ -17,13 +17,7 @@ abstract class UITextStyle {
   static const _baseTextStyle = TextStyle(
     package: 'app_ui',
     fontWeight: AppFontWeight.medium,
-    // Fira Sans carries everything scanned or operated, which is everything
-    // these two scales are used for. Inter came with the fork and is not part
-    // of this product's type system; it stays bundled only until the last call
-    // site goes. Sizes and weights are upstream's and are left alone here, so
-    // this is a face swap and not a retype: the eight roles that matter live in
-    // GiText.
-    fontFamily: FontFamily.firaSans,
+    fontFamily: 'Inter',
     decoration: TextDecoration.none,
     textBaseline: TextBaseline.alphabetic,
   );
@@ -147,13 +141,7 @@ abstract class ContentTextStyle {
   static const _baseTextStyle = TextStyle(
     package: 'app_ui',
     fontWeight: AppFontWeight.medium,
-    // Fira Sans carries everything scanned or operated, which is everything
-    // these two scales are used for. Inter came with the fork and is not part
-    // of this product's type system; it stays bundled only until the last call
-    // site goes. Sizes and weights are upstream's and are left alone here, so
-    // this is a face swap and not a retype: the eight roles that matter live in
-    // GiText.
-    fontFamily: FontFamily.firaSans,
+    fontFamily: 'Inter',
     decoration: TextDecoration.none,
     textBaseline: TextBaseline.alphabetic,
   );
@@ -218,7 +206,7 @@ abstract class ContentTextStyle {
 
   /// Headline 6 Text Style
   static final TextStyle headline6 = _baseTextStyle.copyWith(
-    fontFamily: FontFamily.firaSans,
+    fontFamily: 'Inter',
     fontSize: 24,
     height: 1.27,
     fontWeight: AppFontWeight.bold,

@@ -22,8 +22,6 @@ dependencies:
     path: ../notifications_repository
   shared:
     path: ../shared
-  storage:
-    path: ../storage/storage
   user_repository:
     path: ../user_repository
 

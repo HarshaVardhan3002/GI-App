@@ -2,11 +2,7 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_blocks_ui/instagram_blocks_ui.dart';
 import 'package:instagram_blocks_ui/src/carousel_dot_indicator.dart';
-// Both are unused while the action row and the comment count are commented out
-// below. They stay so uncommenting is a one-line change.
-// ignore: unused_import
 import 'package:instagram_blocks_ui/src/comments_count.dart';
-// ignore: unused_import
 import 'package:instagram_blocks_ui/src/like_button.dart';
 import 'package:instagram_blocks_ui/src/post_large/post_caption.dart';
 import 'package:shared/shared.dart';
@@ -60,46 +56,38 @@ class PostFooter extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  // Like, comment and share are not part of this product: a
-                  // guideline case is read, not reacted to. Only the render is
-                  // commented out. `isLiked`, `likePost`, `onCommentsTap` and
-                  // `onPostShareTap` stay on the constructor, so every call
-                  // site is untouched.
                   child: Row(
-                    // Empty while the actions are commented out, and named so
-                    // the commented block below has somewhere to go back to.
-                    // ignore: avoid_redundant_argument_values
                     children: [
-                      // LikeButton(
-                      //   isLiked: isLiked,
-                      //   onLikedTap: likePost,
-                      // ),
-                      // gapW16,
-                      // Tappable.scaled(
-                      //   onTap: () => onCommentsTap(true),
-                      //   child: Transform.flip(
-                      //     flipX: true,
-                      //     child: Assets.icons.chatCircle.svg(
-                      //       height: AppSize.iconSize,
-                      //       width: AppSize.iconSize,
-                      //       colorFilter: ColorFilter.mode(
-                      //         context.adaptiveColor,
-                      //         BlendMode.srcIn,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // gapW16,
-                      // Tappable.scaled(
-                      //   onTap: () => onPostShareTap(block.id, block.author),
-                      //   child: Icon(
-                      //     Icons.near_me_outlined,
-                      //     size: AppSize.iconSize,
-                      //   ),
-                      // ),
+                      LikeButton(
+                        isLiked: isLiked,
+                        onLikedTap: likePost,
+                      ),
+                      gapW16,
+                      Tappable.scaled(
+                        onTap: () => onCommentsTap(true),
+                        child: Transform.flip(
+                          flipX: true,
+                          child: Assets.icons.chatCircle.svg(
+                            height: AppSize.iconSize,
+                            width: AppSize.iconSize,
+                            colorFilter: ColorFilter.mode(
+                              context.adaptiveColor,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                        ),
+                      ),
+                      gapW16,
+                      Tappable.scaled(
+                        onTap: () => onPostShareTap(block.id, block.author),
+                        child: const Icon(
+                          Icons.near_me_outlined,
+                          size: AppSize.iconSize,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -114,19 +102,16 @@ class PostFooter extends StatelessWidget {
                     );
                   },
                 ),
-              // Saving a case has no meaning when every case stays in Archiv.
-              // The Expanded stays so the dot indicator keeps its centre.
-              const Expanded(
+              Expanded(
                 child: Align(
                   alignment: Alignment.centerRight,
-                  // child: Tappable.scaled(
-                  //   onTap: () {},
-                  //   child: Icon(
-                  //     Icons.bookmark_outline_rounded,
-                  //     size: AppSize.iconSize,
-                  //   ),
-                  // ),
-                  child: SizedBox.shrink(),
+                  child: Tappable.scaled(
+                    onTap: () {},
+                    child: const Icon(
+                      Icons.bookmark_outline_rounded,
+                      size: AppSize.iconSize,
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -138,31 +123,26 @@ class PostFooter extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Like counts. Nothing here is liked, so the row would only ever
-              // read zero. Both builders stay on the constructor.
-              // Row(
-              //   children: [
-              //     if (likersInFollowingsBuilder != null)
-              //       likersInFollowingsBuilder!.call(),
-              //     if (likesCountBuilder != null)
-              //       likesCountBuilder!.call(onUserTap),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  if (likersInFollowingsBuilder != null)
+                    likersInFollowingsBuilder!.call(),
+                  if (likesCountBuilder != null)
+                    likesCountBuilder!.call(onUserTap),
+                ],
+              ),
               PostCaption(
                 username: author.username,
                 caption: block.caption,
                 onUserProfileAvatarTap: () =>
                     onAvatarTap.call(author.avatarUrl),
               ),
-              // Comments are not part of this product. `commentsCount` stays
-              // on the constructor and keeps returning zero from the local
-              // client.
-              // RepaintBoundary(
-              //   child: CommentsCount(
-              //     count: commentsCount,
-              //     onTap: () => onCommentsTap.call(false),
-              //   ),
-              // ),
+              RepaintBoundary(
+                child: CommentsCount(
+                  count: commentsCount,
+                  onTap: () => onCommentsTap.call(false),
+                ),
+              ),
               if (!isSponsored) TimeAgo(createdAt: block.createdAt),
               gapH8,
             ],

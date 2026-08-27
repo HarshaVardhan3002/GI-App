@@ -9,7 +9,7 @@ import 'package:notifications_repository/notifications_repository.dart';
 
 /// Every feature flag is on.
 ///
-/// Upstream this decides what the feed shows: sponsored blocks, recommended
+/// Upstream this decides what the feed shows — sponsored blocks, recommended
 /// posts. Here there is one case a day and nothing to gate, so the honest
 /// answer is a constant rather than a config fetch that cannot happen.
 class LocalRemoteConfigRepository implements FirebaseRemoteConfigRepository {
@@ -41,7 +41,7 @@ class LocalRemoteConfigRepository implements FirebaseRemoteConfigRepository {
 
 /// Push notifications, minus the push.
 ///
-/// A daily habit product wants a notification eventually: that is the whole
+/// A daily habit product wants a notification eventually — that is the whole
 /// retention mechanism. It needs a Firebase project and a server, neither of
 /// which exists yet, so this returns no token rather than pretending to
 /// register one.

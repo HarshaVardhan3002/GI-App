@@ -5,9 +5,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 part 'locale_event.dart';
 
 class LocaleBloc extends HydratedBloc<LocaleEvent, Locale> {
-  // German is the product's language, not a preference. English exists as a
-  // developer debug locale. Constraint 4.
-  LocaleBloc() : super(const Locale('de', 'DE')) {
+  LocaleBloc() : super(const Locale('en', 'US')) {
     on<LocaleChanged>((event, emit) => emit(event.locale ?? state));
   }
 

@@ -16,7 +16,7 @@ import 'package:authentication_client/authentication_client.dart';
 class LocalAuthenticationClient implements AuthenticationClient {
   LocalAuthenticationClient();
 
-  /// The reader. Not a person: a seat.
+  /// The reader. Not a person — a seat.
   static const reader = AuthenticationUser(
     id: 'gi-daily-reader',
     email: 'leser@gi-daily.example',

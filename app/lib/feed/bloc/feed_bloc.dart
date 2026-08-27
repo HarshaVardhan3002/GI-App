@@ -60,13 +60,7 @@ class FeedBloc extends Bloc<FeedEvent, FeedState> with FeedBlocMixin {
     Emitter<FeedState> emit,
   ) async {
     if (!state.feed.feedPage.hasMore) {
-      // Upstream pads an exhausted feed with `PostsRepository.recommendedPosts`
-      // - six hardcoded demo posts by `emil.zulufov` with stock photography
-      // loaded from freepik. This product has as many cases as it has cases,
-      // and the day it runs out it says so rather than borrowing someone
-      // else's. The event, its handler and the list all stay.
-      return;
-      // return add(const FeedRecommendedPostsPageRequested());
+      return add(const FeedRecommendedPostsPageRequested());
     }
     emit(state.loading());
     try {

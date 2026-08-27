@@ -66,10 +66,7 @@
       "id": "post-2026-08-24",
       "date": "2026-08-24",
       "imageIds": [
-        "test-ulkusperforation-001",
-        "test-ulkusperforation-002",
-        "test-ulkusperforation-003",
-        "test-ulkusperforation-004"
+        "placeholder-oesophagitis-a-001"
       ],
       "recommendationId": "platzhalter-r-1.1",
       "questionType": "diagnosis",
@@ -130,9 +127,9 @@
       "id": "post-2026-08-25",
       "date": "2026-08-25",
       "imageIds": [
-        "test-trichobezoar-001",
-        "test-trichobezoar-002",
-        "test-trichobezoar-003"
+        "placeholder-polyp-001",
+        "placeholder-dyed-lifted-polyps-001",
+        "placeholder-dyed-resection-margins-001"
       ],
       "recommendationId": "platzhalter-r-6.12",
       "questionType": "treatment",

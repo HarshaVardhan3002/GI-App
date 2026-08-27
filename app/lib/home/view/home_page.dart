@@ -129,15 +129,9 @@ class _HomeViewState extends State<HomeView> {
             return PageView.builder(
               itemCount: 3,
               controller: _pageController,
-              // The camera (page 0) and chats (page 2) are not part of this
-              // product, and both were reachable by a horizontal swipe from the
-              // feed even after their entry points were commented out. Pinning
-              // the physics is what actually removes them. `HomeProvider` and
-              // both pages stay in place.
-              physics: const NeverScrollableScrollPhysics(),
-              // physics: HomeProvider().enablePageView
-              //     ? null
-              //     : const NeverScrollableScrollPhysics(),
+              physics: HomeProvider().enablePageView
+                  ? null
+                  : const NeverScrollableScrollPhysics(),
               onPageChanged: (page) {
                 if (page != 0 && page != 2 && page == 1) {
                   customImagePickerKey.currentState?.resetAll();
@@ -155,30 +149,10 @@ class _HomeViewState extends State<HomeView> {
                     onBackButtonTap: () => HomeProvider().animateToPage(1),
                   ),
                   2 => const ChatsPage(),
-                  // `extendBody`: the bar is a material now, so the content
-                  // has to run underneath it. `bottom: false`: the bar owns
-                  // the home indicator's inset, otherwise the safe area would
-                  // be subtracted twice and the glass would stop short of the
-                  // screen edge.
-                  // **One `BackdropGroup` for the whole tab shell.** The tab
-                  // bar and whichever screen's top bar is showing are the only
-                  // materials on this route, and inside the group they share a
-                  // single backdrop pass instead of taking one each. The group
-                  // wraps the scaffold rather than sitting inside it, so what
-                  // it samples is the content underneath both bars.
-                  _ => GiBackdropGroup(
-                    child: AppScaffold(
-                      body: RepaintBoundary(child: widget.navigationShell),
-                      extendBody: true,
-                      // The card is full bleed on both edges: the image runs
-                      // under the status bar and the peek runs under the tab
-                      // bar. Each bar carries its own inset, so the Scaffold
-                      // must not subtract them first.
-                      top: false,
-                      bottom: false,
-                      bottomNavigationBar: BottomNavBar(
-                        navigationShell: widget.navigationShell,
-                      ),
+                  _ => AppScaffold(
+                    body: widget.navigationShell,
+                    bottomNavigationBar: BottomNavBar(
+                      navigationShell: widget.navigationShell,
                     ),
                   ),
                 };

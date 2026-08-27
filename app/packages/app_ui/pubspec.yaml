@@ -66,18 +66,6 @@ flutter:
       fonts:
         - asset: assets/fonts/Newsreader.ttf
           weight: 400
-    # Fira Sans carries everything that is scanned or operated. Static cuts
-    # rather than a variable file, because only three weights are in the scale
-    # and three static faces are smaller than one variable one.
-    # Licence: SIL OFL 1.1, text in assets/fonts/FiraSans-OFL.txt.
-    - family: FiraSans
-      fonts:
-        - asset: assets/fonts/FiraSans-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/FiraSans-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/FiraSans-SemiBold.ttf
-          weight: 600
 
 flutter_gen:
   assets:
