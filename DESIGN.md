@@ -307,10 +307,25 @@ The fork's `PostLarge` anatomy is kept. Its content changes.
 
 **Tageskarte, diffused.** Final.
 
-Today's case fills the viewport and its lower edge dissolves into the ground over
-150dp, so there is no card: there is an image that becomes the page. Bars float
-over it as material with the image visible beneath, which is how navigation
-survives a layout whose point is that content swallows the screen.
+Today's case fills the viewport and its lower edge dissolves into the ground, so
+there is no card: there is an image that becomes the page. Bars float over it as
+material with the image visible beneath, which is how navigation survives a
+layout whose point is that content swallows the screen.
+
+**The frame takes what the text does not.** The text block is measured and the
+frame gets the whole remainder, top-anchored at its own aspect and never
+cropped. That order is the rule, and it is the one thing that guarantees no
+empty region: the only element that can grow into spare space is the image, and
+the image always wants more. What a frame narrower or shorter than the field
+leaves is lit by section 4a's ambient, not left black.
+
+The dissolve is **48dp, not the 150 first written here**. 150 was set for a
+layout with nothing under the image, where the frame faded into black over a
+long run because there was nothing else to arrive at. The text now reads off an
+Ultradünn pane that begins where the frame ends, square-topped and with no light
+edge, because the frame has already dissolved into those pixels and a hairline
+there would contradict rule 3. A dissolve that outlasts its destination is just
+a dimmed image.
 
 Nothing sits below the case. A vertical swipe moves one day, snapped, and stops
 at today even when tomorrow is approved and waiting in the bundle. **The reader

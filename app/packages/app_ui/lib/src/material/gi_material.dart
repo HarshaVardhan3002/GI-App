@@ -220,13 +220,27 @@ class GiSheetMaterial extends StatelessWidget {
 /// {@endtemplate}
 class GiThinMaterial extends StatelessWidget {
   /// {@macro gi_thin_material}
-  const GiThinMaterial({required this.child, this.radius = 20, super.key});
+  const GiThinMaterial({
+    required this.child,
+    this.radius = 20,
+    this.showEdge = true,
+    super.key,
+  });
 
   /// What reads off the pane.
   final Widget child;
 
   /// The top corners. Square when a caller wants the pane to run to the edge.
   final double radius;
+
+  /// Whether to draw the 1px light edge along the top.
+  ///
+  /// **Off when something above the pane already dissolves into it.** The edge
+  /// exists to say where a surface begins; where the content above is feathered
+  /// into the same pixels, a hairline says the opposite, and section 4 rule 3
+  /// is exactly that there is no hairline where chrome ends. Heute's card runs
+  /// its image into the pane, so the pane has no beginning to mark.
+  final bool showEdge;
 
   /// Section 4, Ultradünn.
   static const double blurSigma = 18;
@@ -274,9 +288,11 @@ class GiThinMaterial extends StatelessWidget {
             // size; only the light behind it goes.
             color: blurEnabled ? tint.withValues(alpha: tintAlpha) : tint,
             borderRadius: shape,
-            border: Border(
-              top: BorderSide(color: Colors.white.withValues(alpha: .16)),
-            ),
+            border: showEdge
+                ? Border(
+                    top: BorderSide(color: Colors.white.withValues(alpha: .16)),
+                  )
+                : null,
           ),
           child: child,
         ),

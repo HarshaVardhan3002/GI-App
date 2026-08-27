@@ -14,6 +14,15 @@ import 'package:go_router/go_router.dart';
 /// image is contained inside it, whatever shape it arrived in. In an
 /// endoscopic image the edge of the lumen is often the finding, and a layout
 /// that trims it is a clinical mistake dressed as a design one.
+///
+/// **Each frame is sized and feathered on its own, inside the shared field.**
+/// The field is one height for the whole carousel, because a pane that moved
+/// every time the reader paged sideways would be the layout twitching at a
+/// gesture that was about the image. But a frame shorter than the field is
+/// anchored to the top of it, not centred: the wordmark floats over the image
+/// and centring put a band of ground under it, which turned a material back
+/// into a bar. And the dissolve at the bottom belongs to the frame's own lower
+/// edge, so a short frame in a tall field ends in light rather than at a cut.
 /// {@endtemplate}
 class TageskarteImages extends StatefulWidget {
   /// {@macro tageskarte_images}
@@ -29,6 +38,21 @@ class TageskarteImages extends StatefulWidget {
   /// Called with the index the carousel settled on. The dots that report it
   /// are not inside this widget.
   final ValueChanged<int>? onIndexChanged;
+
+  /// How far a frame's bottom edge feathers into the light behind it.
+  ///
+  /// **This is `DESIGN.md` section 8's "lower edge dissolves into the
+  /// ground"**, and the one place in the app where image pixels are
+  /// deliberately hidden. It is defensible because an endoscopic frame's
+  /// bottom edge is the dark periphery of the lumen rather than the finding,
+  /// and because Fall shows the same image whole and unfeathered. This is the
+  /// card's teaser, not the record.
+  ///
+  /// Section 8 says 150. That was written for a layout with no pane, where the
+  /// image dissolved into black over a long run because there was nothing else
+  /// to arrive at. Here the ambient arrives immediately, and a dissolve that
+  /// outlasts its destination is just a dimmed image.
+  static const double bleedExtent = 48;
 
   @override
   State<TageskarteImages> createState() => _TageskarteImagesState();
@@ -52,7 +76,74 @@ class _TageskarteImagesState extends State<TageskarteImages> {
         GiHaptics.selection(context);
         widget.onIndexChanged?.call(index);
       },
-      itemBuilder: (context, index) => GiImageView(image: widget.images[index]),
+      itemBuilder: (context, index) => _BleedingFrame(
+        image: widget.images[index],
+      ),
+    );
+  }
+}
+
+/// {@template bleeding_frame}
+/// One frame in the field: top-anchored, at its own height, dissolving at its
+/// own lower edge.
+///
+/// The mask is `dstIn`, so what shows through the last [TageskarteImages
+/// .bleedExtent] is whatever is painted behind the card, which is the image's
+/// own ambient light at exactly the colours that edge of the frame was. That is
+/// what makes it read as bleeding rather than as a gradient laid on top.
+/// {@endtemplate}
+class _BleedingFrame extends StatelessWidget {
+  const _BleedingFrame({required this.image});
+
+  /// The frame this is showing.
+  final GiImage image;
+
+  @override
+  Widget build(BuildContext context) {
+    const bleed = TageskarteImages.bleedExtent;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // A placeholder has no pixels and so no shape to ask for. It takes the
+        // field, which is the honest thing for a surface whose whole message
+        // is that there is nothing here yet.
+        final height = image.isPlaceholder
+            ? constraints.maxHeight
+            : (constraints.maxWidth / image.aspectRatio).clamp(
+                0.0,
+                constraints.maxHeight,
+              );
+
+        return Align(
+          alignment: Alignment.topCenter,
+          child: SizedBox(
+            width: double.infinity,
+            height: height,
+            child: ShaderMask(
+              blendMode: BlendMode.dstIn,
+              shaderCallback: (rect) {
+                // Read off the painted rect rather than assumed, for the same
+                // reason `GiMaterial` does: the feather is a fixed number of dp
+                // whatever height this frame ended up at.
+                final start = rect.height <= bleed
+                    ? 0.0
+                    : (rect.height - bleed) / rect.height;
+                return LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: const [
+                    Colors.white,
+                    Colors.white,
+                    Colors.transparent,
+                  ],
+                  stops: [0, start, 1],
+                ).createShader(rect);
+              },
+              child: GiImageView(image: image),
+            ),
+          ),
+        );
+      },
     );
   }
 }

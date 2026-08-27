@@ -7,25 +7,22 @@ import 'package:flutter_instagram_offline_first_clone/media/media.dart';
 import 'package:intl/intl.dart';
 
 /// {@template tageskarte}
-/// One case, one screen.
+/// One case, one screen. **The image is the page.**
 ///
-/// **The card is shaped by the image it is carrying, and the space the image
-/// does not want is lit by the image rather than left black.**
+/// `DESIGN.md` section 8: *"Today's case fills the viewport and its lower edge
+/// dissolves into the ground... there is no card: there is an image that
+/// becomes the page."* Three passes missed that sentence in the same way, by
+/// deciding the image's height first and letting whatever was left be somebody
+/// else's problem. Each time the leftover turned up somewhere: between the
+/// frame and the question, then at the foot of the card, then as most of the
+/// lower half with the text pinned to its top.
 ///
-/// Two earlier passes were wrong in the same way. The first pinned the image to
-/// a fixed 1.25 aspect, which was true of exactly one image shape. The second
-/// gave the image everything the text left and contained it inside that, which
-/// stopped the cropping but produced the real defect: a 1356x520 strip floating
-/// in the middle of a black field, the same rectangle of chrome whatever the
-/// case was. **A layout that ignores its content has decided its content does
-/// not matter.**
-///
-/// Now the image field is [GiImage.aspectRatio] tall at full width, bounded at
-/// both ends so no shape can starve the question or shrink itself to a stamp,
-/// and anchored to the top so the image runs full bleed under the wordmark.
-/// Everything it leaves is [GiAmbient]: the image itself, decoded small, scaled
-/// up and blurred past recognition. The text reads off a pane of the Ultradünn
-/// material laid over that light.
+/// **The text is measured and the image takes the rest.** That is the whole
+/// inversion, and it is why there can be no empty region: the only thing that
+/// can grow into spare space is the frame, and the frame always wants more.
+/// A tall image gets nearly the whole screen; a short one is contained inside
+/// the same field with [GiAmbient] lighting the margin it leaves. Nothing is
+/// cropped either way, because the field contains rather than covers.
 /// {@endtemplate}
 class Tageskarte extends StatefulWidget {
   /// {@macro tageskarte}
@@ -53,33 +50,20 @@ class _TageskarteState extends State<Tageskarte> {
   /// How much of the next card shows above the bottom bar.
   static const double peekHeight = 10;
 
-  /// The tallest the image field may be, as a fraction of the card.
+  /// Where the ambient light stops being at full strength, as a fraction of
+  /// the card.
   ///
-  /// A 527x675 portrait wants 128% of the screen at full width. Letting it have
-  /// that would push the question off the bottom, so it is capped and contained
-  /// inside the cap: pillarboxed by a few dp each side, with the ambient
-  /// showing in the margin, which is the shape a portrait frame should make.
-  ///
-  /// **The cap is what keeps the pane from overflowing**, now that the field is
-  /// a fixed height and the pane takes the remainder. At 62% the pane is left
-  /// at least a third of the card, and the text block inside it is bounded
-  /// because the question is one rolling line.
-  static const double maxFieldFraction = .62;
+  /// **A constant, and named as one.** It used to be derived from the image
+  /// field's height, which was knowable while the field was a fixed size.
+  /// Now the field is whatever the text leaves, so its height is not known
+  /// until the frame is laid out, and reading it back would cost a second
+  /// pass to save nothing: the frame covers everything above the pane in every
+  /// case, so the only ambient a reader ever sees is the band behind the pane
+  /// and the margin beside a frame that does not fill the width. The grade's
+  /// remaining job is to keep the foot of the screen darker than the head, so
+  /// the tab bar sits on the ramp rather than on the image's light.
+  static const double ambientFocusEnd = .68;
 
-  /// The shortest it may be. A 2.6:1 strip wants 38% of a phone screen and
-  /// reads as a postage stamp at that size. Below this the field keeps its
-  /// height and the strip is contained inside it, letting the light through
-  /// above and below.
-  static const double minFieldFraction = .34;
-
-  /// How far the bottom edge of the image feathers into its own light.
-  ///
-  /// Short on purpose. **This is the one place in the app where image pixels
-  /// are deliberately hidden**, and the only reason it is defensible is that an
-  /// endoscopic frame's bottom edge is the dark periphery of the lumen rather
-  /// than the finding, and that Fall shows the same image whole and
-  /// unfeathered. This is the card's teaser, not the record.
-  static const double bleedExtent = 32;
 
   @override
   Widget build(BuildContext context) {
@@ -95,165 +79,87 @@ class _TageskarteState extends State<Tageskarte> {
     final index = _imageIndex.clamp(0, giCase.images.length - 1);
     final image = giCase.images[index];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cardHeight = constraints.maxHeight;
-        // **A placeholder is not a photograph and does not get a
-        // photograph's sizing.** It has no pixel dimensions, so it used to
-        // fall through to a 1.25 default, which is a real frame's shape: the
-        // field came out at 62% of the card and held two centred lines of
-        // text in the middle of an otherwise empty box more than half the
-        // screen tall. It takes the floor instead. There is nothing to look
-        // at, so it asks for the least room a field is allowed.
-        final field = image.isPlaceholder
-            ? cardHeight * minFieldFraction
-            : (constraints.maxWidth / image.aspectRatio).clamp(
-                cardHeight * minFieldFraction,
-                cardHeight * maxFieldFraction,
-              );
-
-        return Stack(
-          fit: StackFit.expand,
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // The ground, lit by the frame it carries. Behind everything, the pane
+        // included, which is the point of the pane being thin.
+        GiAmbient(image: image, focusEnd: ambientFocusEnd),
+        // **No scroll view here, on purpose.** An earlier pass put one in so an
+        // enlarged text scale could not overflow, and it handed the Column
+        // unbounded height, which contradicts the [Expanded] below and rendered
+        // nothing at all. It was also solving a problem the Expanded already
+        // solves: at a large text scale the block grows and the image field is
+        // what yields. The card gives way at the image rather than at the
+        // question, which is the right order for this screen.
+        //
+        // A second scrollable inside the vertical pager would also have taken
+        // the drag off it.
+        Column(
           children: [
-            // The ground, lit by the frame it carries. Behind everything, the
-            // pane included, which is the point of the pane being thin.
-            GiAmbient(
-              image: image,
-              focusEnd: (field / cardHeight).clamp(0.0, 1.0),
+            // **The frame takes everything the text does not.** Sizing the
+            // field first and letting the leftover fall where it may is what
+            // put an empty region on this card three passes running. Each
+            // frame anchors to the top of this field at its own height and
+            // dissolves at its own lower edge; what it does not want is the
+            // ambient, lit by the same frame.
+            Expanded(
+              child: TageskarteImages(
+                images: giCase.images,
+                onIndexChanged: _onIndex,
+              ),
             ),
-            // **No scroll view here, on purpose.** The first attempt at this
-            // put one in so an enlarged text scale could not overflow, and it
-            // handed the Column unbounded height, which is a contradiction
-            // with the [Expanded] below it and rendered nothing at all. It was
-            // also solving a problem the Expanded already solves: when the
-            // text block grows, the image field is what yields. The card gives
-            // way at the image rather than at the question, which is the right
-            // order for this screen.
-            //
-            // A second scrollable inside the vertical pager would also have
-            // taken the drag off it.
-            Column(
-              children: [
-                // **The card is two regions and there is no third.** The
-                // frame at its own height, and then a pane that takes
-                // everything else.
-                //
-                // Both earlier arrangements left a region that was neither.
-                // Pinning the pane to the bottom put a third of the screen of
-                // nothing between the image and the question. Sliding the pane
-                // up under the frame moved the same emptiness to the foot of
-                // the card, where it read as a screen that had run out. The
-                // mistake was the same both times: treating the pane as a
-                // strip and the rest as leftover.
-                //
-                // An endoscopic frame is 1.3:1 and a phone is 2.2:1, so a
-                // frame can never cover this screen and something has to hold
-                // the rest. **A surface holds it. Emptiness does not.** The
-                // pane is thin enough that the image's light carries through
-                // it, so what fills the lower half is lit glass, not a gap.
-                _BleedingField(
-                  height: field,
-                  child: TageskarteImages(
-                    images: giCase.images,
-                    onIndexChanged: (i) => setState(() => _imageIndex = i),
-                  ),
+            // Square-topped and edgeless: the frame above has already
+            // dissolved into these pixels, so there is no boundary left to
+            // draw. A rounded, highlighted top here was what made the pane read
+            // as a card sitting on the screen instead of a surface the image
+            // runs into.
+            GiThinMaterial(
+              radius: 0,
+              showEdge: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  AppSpacing.md,
+                  AppSpacing.lg,
+                  AppSpacing.md,
                 ),
-                Expanded(
-                  child: GiThinMaterial(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.lg,
-                        AppSpacing.md,
-                        AppSpacing.lg,
-                        AppSpacing.lg,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TageskarteText(giCase: giCase, imageIndex: index),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                if (!widget.isLast)
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: AppSpacing.sm,
-                      right: AppSpacing.sm,
-                      bottom: barInset,
-                    ),
-                    child: const SizedBox(
-                      height: peekHeight,
-                      child: TageskartePeek(),
-                    ),
-                  )
-                else
-                  SizedBox(height: barInset + peekHeight),
-              ],
+                child: TageskarteText(giCase: giCase, imageIndex: index),
+              ),
             ),
+            if (!widget.isLast)
+              Padding(
+                padding: EdgeInsets.only(
+                  left: AppSpacing.sm,
+                  right: AppSpacing.sm,
+                  bottom: barInset,
+                ),
+                child: const SizedBox(
+                  height: peekHeight,
+                  child: TageskartePeek(),
+                ),
+              )
+            else
+              SizedBox(height: barInset + peekHeight),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
-}
 
-/// {@template bleeding_field}
-/// The image field, feathered at the bottom so the frame ends in its own light
-/// rather than at a cut.
-///
-/// The mask is `dstIn` over the whole field, so what shows through the last
-/// few dp is the ambient behind it, at exactly the colours that edge of the
-/// image was. That is what makes it read as bleeding rather than as a gradient
-/// laid on top of it.
-/// {@endtemplate}
-class _BleedingField extends StatelessWidget {
-  const _BleedingField({required this.height, required this.child});
-
-  /// The field's laid-out height.
-  final double height;
-
-  /// The carousel.
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    const bleed = _TageskarteState.bleedExtent;
-
-    return SizedBox(
-      width: double.infinity,
-      height: height,
-      child: ShaderMask(
-        blendMode: BlendMode.dstIn,
-        shaderCallback: (rect) {
-          // Read off the painted rect rather than assumed, for the same reason
-          // `GiMaterial` does: the feather is a fixed number of dp whatever
-          // height the field ended up at.
-          final start = rect.height <= bleed
-              ? 0.0
-              : (rect.height - bleed) / rect.height;
-          return LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: const [Colors.white, Colors.white, Colors.transparent],
-            stops: [0, start, 1],
-          ).createShader(rect);
-        },
-        child: child,
-      ),
-    );
-  }
+  void _onIndex(int i) => setState(() => _imageIndex = i);
 }
 
 /// {@template tageskarte_text}
 /// Everything under the image, as one block on a pane.
 ///
-/// Its height is **bounded**, because the question is one rolling line. An
-/// uncapped headline would make the block unbounded and the card's shape
-/// undecidable at design time, which is why the cap is a layout decision rather
-/// than a typographic one.
+/// **It is measured, not capped.** The card is laid out around this block's
+/// natural height, so every line it contains has to be bounded by its own
+/// rules rather than by a fraction of the screen. The question is two lines
+/// and the attribution is two; nothing here can run away.
+///
+/// The order is the mockup's: what the frame is, then which frame, then when
+/// and what kind, then the question, then the way in.
 /// {@endtemplate}
 class TageskarteText extends StatelessWidget {
   /// {@macro tageskarte_text}
@@ -279,27 +185,9 @@ class TageskarteText extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (giCase.images.length > 1) ...[
-          TageskarteDots(count: giCase.images.length, active: imageIndex),
-          const Gap.v(AppSpacing.md),
-        ],
-        Text(
-          '${_formatDate(context, giCase.date)} · '
-          '${_questionTypeLabel(l10n, giCase.questionType)}',
-          style: GiText.caption.copyWith(color: colors.labelSecondary),
-        ),
-        const Gap.v(AppSpacing.sm),
-        // One line that rolls, not two that stop at an ellipsis. German
-        // clinical headings do not fit on a phone, and the reader should not
-        // have to open the case to find out what the case is about. See
-        // `GiRollingText`.
-        GiRollingText(
-          giCase.question(languageCode),
-          style: GiText.question.copyWith(color: colors.label),
-        ),
-        const Gap.v(AppSpacing.lg),
-        FallOeffnen(postId: giCase.post.id),
-        const Gap.v(AppSpacing.md),
+        // Directly under the frame, where the mockup puts it and where a
+        // credit belongs: attached to the thing it credits, not filed at the
+        // bottom of the card behind the next action.
         Text(
           image.attributionText,
           maxLines: 2,
@@ -314,6 +202,45 @@ class TageskarteText extends StatelessWidget {
                 : colors.labelTertiary,
           ),
         ),
+        const Gap.v(AppSpacing.sm),
+        if (giCase.images.length > 1) ...[
+          TageskarteDots(count: giCase.images.length, active: imageIndex),
+          const Gap.v(AppSpacing.sm),
+        ],
+        Text(
+          '${_formatDate(context, giCase.date)} · '
+          '${_questionTypeLabel(l10n, giCase.questionType)}',
+          style: GiText.caption.copyWith(color: colors.labelSecondary),
+        ),
+        const Gap.v(AppSpacing.xs),
+        // **Truncated, not rolling.** `DESIGN.md` section 7 has always said
+        // truncated, and the mockup shows two lines ending in an ellipsis. The
+        // rolling line was added on the argument that a German clinical heading
+        // does not fit on a phone and the reader should not have to open the
+        // case to find out what it is about. On screen it did the opposite: at
+        // any moment it showed the middle of a sentence, cut at both ends, so
+        // the card's largest type was the one thing on it that could not be
+        // read. A heading that has to be waited for is worse than a heading
+        // that stops.
+        //
+        // The real fix is upstream and belongs to the content phase: the
+        // `question` field in `posts.json` holds a whole clinical vignette
+        // followed by the interrogative, and the card wants the interrogative.
+        //
+        // `GiRollingText` stays in `app_ui` per CLAUDE.md section 3.
+        //
+        // GiRollingText(
+        //   giCase.question(languageCode),
+        //   style: GiText.question.copyWith(color: colors.label),
+        // ),
+        Text(
+          giCase.question(languageCode),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: GiText.question.copyWith(color: colors.label),
+        ),
+        const Gap.v(AppSpacing.sm),
+        FallOeffnen(postId: giCase.post.id),
       ],
     );
   }
