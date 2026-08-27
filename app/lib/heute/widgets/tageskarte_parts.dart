@@ -192,11 +192,16 @@ class FallOeffnen extends StatelessWidget {
 /// its top edge and white text on it would be unreadable exactly when the
 /// image is at its best.
 ///
-/// **The right slot names the screen.** An earlier pass dropped it, reasoning
-/// that the date already appears in the card's meta line. That was a
-/// misreading of the mockup: the right slot carries *Heute*, the destination,
-/// not the date, and with three tab destinations the top bar is where you are
-/// told which one you are in.
+/// **The right slot is empty, and the wordmark is the whole bar.** It carried
+/// *Heute* for two passes, on the argument that the top bar is where you are
+/// told which destination you are in. The tab bar already says that, in the
+/// same word, with the selected tab in `label` and semiBold against the other
+/// two. Printing it twice on one screen made it look like a control, and it is
+/// not one: it never responded to a tap, because there was nothing for it to
+/// do. A word that looks pressable and is not is worse than no word.
+///
+/// The render site is commented out rather than deleted, per CLAUDE.md
+/// section 3, in case a screen turns up that does need a right-hand slot.
 /// {@endtemplate}
 class HeuteHeader extends StatelessWidget {
   /// {@macro heute_header}
@@ -209,7 +214,9 @@ class HeuteHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
+    // Entirely const now that the right-hand slot is gone: nothing in this bar
+    // depends on state, so it never rebuilds with the card behind it.
+    return const IgnorePointer(
       child: GiMaterial(
         edge: VerticalDirection.up,
         child: Column(
@@ -220,34 +227,29 @@ class HeuteHeader extends StatelessWidget {
               child: SizedBox(
                 height: barHeight,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.lg,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const AppLogo(),
-                      Text(
-                        context.l10n.todayNavBarItemLabel,
-                        style: GiText.subhead.copyWith(
-                          // Present without competing with the wordmark, and
-                          // 85% rather than the 70% it was: this sits on a
-                          // material over uncontrolled photography, and at 70%
-                          // over a pale frame it measured under 4.5:1 even
-                          // after the bar's tint was fixed. `labelSecondary`
-                          // would be worse here, not better, because it is
-                          // darker and the frame behind it can be light.
-                          color: context.gi.label.withValues(alpha: .85),
-                        ),
-                      ),
+                      AppLogo(),
+                      // The screen name lived here and said nothing the tab bar
+                      // was not already saying, in the same word, one bar away.
+                      //
+                      // Text(
+                      //   context.l10n.todayNavBarItemLabel,
+                      //   style: GiText.subhead.copyWith(
+                      //     color: context.gi.label.withValues(alpha: .85),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
               ),
             ),
             // The material's own fade tail. Section 4 rule 3: no hairline
-            // where chrome ends.
-            const SizedBox(height: GiMaterial.fadeExtent),
+            // where chrome ends, and the mask that makes it also fades
+            // whatever sits on the material, so the content has to end above
+            // it. `BottomNavBar` does the same at the other end.
+            SizedBox(height: GiMaterial.fadeExtent),
           ],
         ),
       ),

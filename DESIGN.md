@@ -185,7 +185,10 @@ And it is not expensive: the texture is smaller than an icon, and the upscale
 does the work a large blur would otherwise have to.
 
 **It fills a card, not a page.** Heute is for looking, so the light runs the
-whole card and the text reads off an Ultradünn pane laid over it. Fall is for
+whole card and the text reads off an Ultradünn pane laid over it. **That pane is
+a region, not a strip:** it takes everything the frame does not, down to the tab
+bar. A frame at 1.3:1 cannot cover a 2.2:1 phone, so something has to hold the
+rest of the screen, and a surface holds it where emptiness does not. Fall is for
 reading four options, so the light stops at the frame; coloured light under body
 text is a contrast problem dressed as atmosphere.
 

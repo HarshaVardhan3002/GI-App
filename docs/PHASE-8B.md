@@ -340,3 +340,62 @@ found`, and the pipeline still exited 0, so the measurements that followed were
 taken against the previous APK and showed no change. It was caught because two
 runs produced byte-identical numbers. Every build after that reports its own
 exit status.
+
+---
+
+# Owner round: the card is two regions, and the bar loses a word
+
+## The pane is a region, not a strip
+
+Both earlier arrangements left a region on the card that was neither image nor
+text. Pinning the pane to the bottom put a third of the screen of nothing
+between the frame and the question. Sliding the pane up under the frame, which
+is what the adversary round did, moved the same emptiness to the foot of the
+card, where it read worse: a screen that had run out.
+
+**The mistake was the same both times.** Treating the pane as a strip of a
+fixed height and the rest of the card as leftover.
+
+An endoscopic frame is about 1.3:1 and this phone is 2.2:1. A frame can never
+cover this screen, and something has to hold the rest. A surface holds it.
+Emptiness does not.
+
+So the card is two regions and there is no third:
+
+| | |
+|---|---|
+| The frame | its own aspect at full width, top-anchored, clamped 34-62% |
+| The pane | everything else, down to the tab bar |
+
+The pane is Ultradünn, so the image's light carries through it. What fills the
+lower half of the screen is lit glass with the question at its top, rather than
+a gap between two things.
+
+The 62% ceiling is now what prevents overflow, since the frame is a fixed height
+and the pane takes the remainder. At 62% the pane keeps at least a third of the
+card, and the text inside it is bounded because the question is one rolling line.
+
+## The screen name comes off the bar
+
+*Heute* sat in the top right of Heute's bar for two passes, on the argument that
+the top bar tells you which destination you are in.
+
+**The tab bar already says that**, in the same word, one bar away, with the
+selected tab in `label` and semiBold against the other two in `labelSecondary`.
+Printing it twice on one screen made it look like a control, and it was not one:
+it never responded to a tap because there was nothing for it to do. A word that
+looks pressable and is not is worse than no word.
+
+The render site is commented out rather than deleted, per CLAUDE.md section 3.
+With it gone the whole bar is `const`, so it never rebuilds with the card
+behind it.
+
+## Verified
+
+- `flutter analyze` over `lib`: no issues.
+- Built, installed, walked on `emulator-5554`. Three cards in dark, the
+  placeholder card, and two cards in light. No framework exceptions.
+- **Three cold starts**, each rendering fully. The first screenshot after an
+  install came back black; three force-stop-and-launch cycles afterwards all
+  rendered, so that was the post-install launch window and not a defect. Named
+  because a black screenshot is worth explaining rather than dropping.

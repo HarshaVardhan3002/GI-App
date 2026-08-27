@@ -59,6 +59,11 @@ class _TageskarteState extends State<Tageskarte> {
   /// that would push the question off the bottom, so it is capped and contained
   /// inside the cap: pillarboxed by a few dp each side, with the ambient
   /// showing in the margin, which is the shape a portrait frame should make.
+  ///
+  /// **The cap is what keeps the pane from overflowing**, now that the field is
+  /// a fixed height and the pane takes the remainder. At 62% the pane is left
+  /// at least a third of the card, and the text block inside it is bounded
+  /// because the question is one rolling line.
   static const double maxFieldFraction = .62;
 
   /// The shortest it may be. A 2.6:1 strip wants 38% of a phone screen and
@@ -129,53 +134,47 @@ class _TageskarteState extends State<Tageskarte> {
             // taken the drag off it.
             Column(
               children: [
-                // **The frame and the text are one block, and the slack
-                // falls below them.**
+                // **The card is two regions and there is no third.** The
+                // frame at its own height, and then a pane that takes
+                // everything else.
                 //
-                // The pane used to be pinned to the bottom of the card, which
-                // put every card's empty space in the middle of it: on a wide
-                // frame that was a third of the screen of nothing between the
-                // image and the question, and on a placeholder, where there
-                // is no light to fill it with, it was simply a hole. A reader
-                // glancing at that reads a screen that failed to load.
+                // Both earlier arrangements left a region that was neither.
+                // Pinning the pane to the bottom put a third of the screen of
+                // nothing between the image and the question. Sliding the pane
+                // up under the frame moved the same emptiness to the foot of
+                // the card, where it read as a screen that had run out. The
+                // mistake was the same both times: treating the pane as a
+                // strip and the rest as leftover.
                 //
-                // The design artifact has it this way round and it is right:
-                // the frame, the question directly under it, and whatever is
-                // left at the foot of the card. Space at the bottom of a short
-                // card reads as a short card. Space in the middle of one reads
-                // as a mistake.
+                // An endoscopic frame is 1.3:1 and a phone is 2.2:1, so a
+                // frame can never cover this screen and something has to hold
+                // the rest. **A surface holds it. Emptiness does not.** The
+                // pane is thin enough that the image's light carries through
+                // it, so what fills the lower half is lit glass, not a gap.
+                _BleedingField(
+                  height: field,
+                  child: TageskarteImages(
+                    images: giCase.images,
+                    onIndexChanged: (i) => setState(() => _imageIndex = i),
+                  ),
+                ),
                 Expanded(
-                  child: Column(
-                    children: [
-                      // Takes what the text leaves, and inside that sits at
-                      // the image's own height. Full bleed to the top of the
-                      // screen: the wordmark is a material floating over the
-                      // image, not a bar above it.
-                      Flexible(
-                        child: _BleedingField(
-                          height: field,
-                          child: TageskarteImages(
-                            images: giCase.images,
-                            onIndexChanged: (i) =>
-                                setState(() => _imageIndex = i),
-                          ),
-                        ),
+                  child: GiThinMaterial(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.lg,
+                        AppSpacing.md,
+                        AppSpacing.lg,
+                        AppSpacing.lg,
                       ),
-                      GiThinMaterial(
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            AppSpacing.lg,
-                            AppSpacing.md,
-                            AppSpacing.lg,
-                            AppSpacing.lg,
-                          ),
-                          child: TageskarteText(
-                            giCase: giCase,
-                            imageIndex: index,
-                          ),
-                        ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TageskarteText(giCase: giCase, imageIndex: index),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
                 if (!widget.isLast)

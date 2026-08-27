@@ -62,23 +62,54 @@ depend on it, what breaks if it changes, and what the design decision is.
 Dependency knowledge is **mapped in advance, not searched for mid-task**. When a
 component is touched, its blast radius is already known - one hop, no hunting.
 
-## 5. Delegate verification to a small agent, tightly scoped
+## 5. Subagents walk the app. They never read the code.
 
-Whenever a component is implemented, removed, or changed in a way that is
-**UI/UX-critical or system-critical**, verification is delegated to a small
-subagent (Sonnet).
+**When the owner says "spin up a subagent", they mean one thing: a Sonnet agent
+that opens the running app, walks it, and reports what it saw.** There is no
+other kind. It is a pair of eyes and a pair of thumbs, not a second engineer.
 
-The subagent's job is to execute and report. Nothing else.
+### What it does
 
-- **It gets exact instructions:** which build, which screen, which taps, in what
- order, what to look for, what to report.
-- **It gets no freedom to explore.** No wandering the codebase, no reading files
- it was not pointed at, no deciding what to test.
-- **It runs the live app** - build, install, launch, tap through the flow, take
- screenshots - and reports back what happened.
-- **It burns the minimum tokens possible.** The main thread does the thinking;
- the subagent does the clicking. If the instructions are vague enough that the
- agent has to explore, the instructions are wrong.
+- Builds are already installed; it launches the app and navigates it.
+- It takes screenshots at every step and **looks at them**, and it may measure
+  them (pixel sampling, contrast arithmetic) to turn an impression into a
+  number.
+- It reports **exact location and exact behaviour**: which screen, which
+  element, what it did, what it should have done, with the coordinate or the
+  measurement that proves it.
+- It reads `DESIGN.md`, `PRODUCT.md` and `docs/` so it can hold the app against
+  what the design says, and it names anything the running app does that those
+  documents do not.
+
+### What it must never do
+
+**It does not touch the code. Not to read it, not to search it, not to explain
+a defect with it, and never to change it.** No source files, no `flutter
+analyze`, no grep, no diffs, no "the cause is probably in". It reports the
+symptom and stops. Diagnosis and every edit belong to the main thread, which is
+the only agent allowed near the source.
+
+The reason is not tidiness. **An agent that has read the implementation stops
+seeing the screen and starts confirming the code**, and the whole value of a
+second pair of eyes is that they have not been told what the screen is supposed
+to be doing.
+
+### How it is briefed
+
+- **Exact instructions:** which screens, which taps, in what order, in which
+  appearance, what to capture, what to report. If the brief is vague enough
+  that the agent has to go looking, the brief is wrong.
+- **No freedom to explore.** It does not decide what to test.
+- **Minimum tokens.** The main thread does the thinking; the subagent does the
+  clicking and the looking.
+- **Harsh by default.** It is told to find what is wrong. Praise is not output.
+
+### What the main thread owes it back
+
+Findings are **verified before they are believed**. A subagent reporting a
+defect is a lead, not a fact: reproduce it, measure it, and if it does not
+reproduce, say so in the phase record so nobody fixes a bug that is not there.
+A fix that does not move the number is not a fix.
 
 ## 6. Every design decision goes through `impeccable`
 
