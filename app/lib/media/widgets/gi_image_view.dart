@@ -13,10 +13,24 @@ import 'package:flutter_instagram_offline_first_clone/l10n/l10n.dart';
 /// {@endtemplate}
 class GiImageView extends StatelessWidget {
   /// {@macro gi_image_view}
-  const GiImageView({required this.image, super.key});
+  const GiImageView({
+    required this.image,
+    this.fit = BoxFit.contain,
+    super.key,
+  });
 
   /// The image to show.
   final GiImage image;
+
+  /// How the image fills the box it is given.
+  ///
+  /// **`contain` everywhere except a screen that has decided otherwise.** Heute
+  /// passes `cover` when the case's frame is close enough to the screen's shape
+  /// that filling it costs a sliver off one edge; anywhere the cost would be a
+  /// real part of the picture, it stays `contain` and the screen letterboxes.
+  /// The caller owns that call because only the caller knows how much of its
+  /// box it is willing to spend.
+  final BoxFit fit;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +56,7 @@ class GiImageView extends StatelessWidget {
       // no detail left in it to mistake for the image, and it never overlaps
       // the frame. Black around a frame is not neutrality, it is a second
       // design decision made by default.
-      fit: BoxFit.contain,
+      fit: fit,
       // The image is the content, so a failure to load it is worth seeing
       // rather than worth hiding behind an empty box.
       errorBuilder: (context, error, stackTrace) => ColoredBox(

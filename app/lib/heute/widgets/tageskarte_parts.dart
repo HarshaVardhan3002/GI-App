@@ -10,19 +10,13 @@ import 'package:go_router/go_router.dart';
 /// {@template tageskarte_images}
 /// The image, or the images, filling the width.
 ///
-/// Never cropped by layout: the field takes the space the text leaves and each
-/// image is contained inside it, whatever shape it arrived in. In an
+/// Never trimmed by layout past what [_CaseFrame.coverFloor] allows. In an
 /// endoscopic image the edge of the lumen is often the finding, and a layout
-/// that trims it is a clinical mistake dressed as a design one.
+/// that cuts it away is a clinical mistake dressed as a design one.
 ///
-/// **Each frame is sized and feathered on its own, inside the shared field.**
-/// The field is one height for the whole carousel, because a pane that moved
-/// every time the reader paged sideways would be the layout twitching at a
-/// gesture that was about the image. But a frame shorter than the field is
-/// anchored to the top of it, not centred: the wordmark floats over the image
-/// and centring put a band of ground under it, which turned a material back
-/// into a bar. And the dissolve at the bottom belongs to the frame's own lower
-/// edge, so a short frame in a tall field ends in light rather than at a cut.
+/// **The carousel is the screen.** Each frame fills it, or is centred in it
+/// with black bars, and nothing is painted on top of the picture. See
+/// [_CaseFrame].
 /// {@endtemplate}
 class TageskarteImages extends StatefulWidget {
   /// {@macro tageskarte_images}
@@ -38,21 +32,6 @@ class TageskarteImages extends StatefulWidget {
   /// Called with the index the carousel settled on. The dots that report it
   /// are not inside this widget.
   final ValueChanged<int>? onIndexChanged;
-
-  /// How far a frame's bottom edge feathers into the light behind it.
-  ///
-  /// **This is `DESIGN.md` section 8's "lower edge dissolves into the
-  /// ground"**, and the one place in the app where image pixels are
-  /// deliberately hidden. It is defensible because an endoscopic frame's
-  /// bottom edge is the dark periphery of the lumen rather than the finding,
-  /// and because Fall shows the same image whole and unfeathered. This is the
-  /// card's teaser, not the record.
-  ///
-  /// Section 8 says 150. That was written for a layout with no pane, where the
-  /// image dissolved into black over a long run because there was nothing else
-  /// to arrive at. Here the ambient arrives immediately, and a dissolve that
-  /// outlasts its destination is just a dimmed image.
-  static const double bleedExtent = 48;
 
   @override
   State<TageskarteImages> createState() => _TageskarteImagesState();
@@ -76,93 +55,59 @@ class _TageskarteImagesState extends State<TageskarteImages> {
         GiHaptics.selection(context);
         widget.onIndexChanged?.call(index);
       },
-      itemBuilder: (context, index) => _BleedingFrame(
-        image: widget.images[index],
-      ),
+      itemBuilder: (context, index) => _CaseFrame(image: widget.images[index]),
     );
   }
 }
 
-/// {@template bleeding_frame}
-/// One frame, centred in the image box, dissolving into the light on whichever
-/// sides it does not reach.
+/// {@template case_frame}
+/// One frame, filling the screen it was given, untouched.
 ///
-/// **Centred, not top-anchored.** A frame shorter than the box used to sit at
-/// the top with the whole shortfall banked under it, which put a single tall
-/// band of ground between the image and the text and read as the screen having
-/// run out. Half above and half below is the shape a picture makes in a frame,
-/// and it halves the largest run of empty ground on the card.
+/// **Nothing is drawn on the picture.** No feather, no scrim, no light. Two
+/// passes put a dissolve on its lower edge and both were wrong for the same
+/// reason: the picture is the case, and softening it is editing the evidence.
+/// What sits over it is the text panel, and only where the text is.
 ///
-/// The mask is `dstIn`, so what shows through a dissolved edge is whatever is
-/// painted behind the card, which is the image's own ambient light at exactly
-/// the colours that edge of the frame was. That is what makes it read as
-/// bleeding rather than as a gradient laid on top.
-///
-/// **An edge that reaches the box is not dissolved.** A frame tall enough to
-/// fill the image box runs to the top of the screen, and feathering it there
-/// would fade the picture out under the status bar for no reason: there is
-/// nothing on the other side of that edge to bleed into.
+/// **`cover` when the frame can survive it, letterbox when it cannot.** A phone
+/// is about 2.2:1 tall and an endoscopic frame is about 1.3:1 wide, so filling
+/// the screen with one costs about two thirds of its width, which is not a crop
+/// but a different picture. When the shapes are close, [coverFloor] lets the
+/// frame fill the screen at the cost of a sliver off one edge, which is what
+/// the fork's own media does and what a reader expects from a feed. When they
+/// are not, the frame is centred at its own aspect and the screen goes black
+/// above and below it. `GiAmbient` lights those bars, and only those bars.
 /// {@endtemplate}
-class _BleedingFrame extends StatelessWidget {
-  const _BleedingFrame({required this.image});
+class _CaseFrame extends StatelessWidget {
+  const _CaseFrame({required this.image});
 
   /// The frame this is showing.
   final GiImage image;
 
+  /// How much of a frame's long axis has to survive for `cover` to be allowed.
+  ///
+  /// **85%.** A sliver off one edge is what a photograph survives; past that
+  /// the screen has chosen a different picture, and in an endoscopic frame the
+  /// edge of the lumen is often the finding. This is the line between an aspect
+  /// decision and a clinical one.
+  static const double coverFloor = .85;
+
   @override
   Widget build(BuildContext context) {
-    const bleed = TageskarteImages.bleedExtent;
-
     return LayoutBuilder(
       builder: (context, constraints) {
-        // A placeholder has no pixels and so no shape to ask for. It takes the
-        // box, which is the honest thing for a surface whose whole message is
-        // that there is nothing here yet.
-        final height = image.isPlaceholder
-            ? constraints.maxHeight
-            : (constraints.maxWidth / image.aspectRatio).clamp(
-                0.0,
-                constraints.maxHeight,
-              );
-        // Half a dp of slack: a frame that misses filling the box by a rounding
-        // error has no ground above it to bleed into, and feathering it would
-        // be a visible fade with nothing behind it.
-        final hasGap = constraints.maxHeight - height > 1;
+        // A placeholder has no pixels and so no shape to argue about. It takes
+        // the screen, which is the honest thing for a surface whose whole
+        // message is that there is nothing here yet.
+        if (image.isPlaceholder) return GiImageView(image: image);
 
-        return Center(
-          child: SizedBox(
-            width: double.infinity,
-            height: height,
-            child: ShaderMask(
-              blendMode: BlendMode.dstIn,
-              shaderCallback: (rect) {
-                // Read off the painted rect rather than assumed, for the same
-                // reason `GiMaterial` does: the feather is a fixed number of dp
-                // whatever height this frame ended up at.
-                final h = rect.height;
-                if (h <= bleed * 2) {
-                  return const LinearGradient(
-                    colors: [Colors.white, Colors.white],
-                  ).createShader(rect);
-                }
-                // The bottom edge always dissolves: the pane or the ground is
-                // under it either way. The top only when there is ground above.
-                final top = hasGap ? bleed / h : 0.0;
-                return LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    if (hasGap) Colors.transparent else Colors.white,
-                    Colors.white,
-                    Colors.white,
-                    Colors.transparent,
-                  ],
-                  stops: [0, top, (h - bleed) / h, 1],
-                ).createShader(rect);
-              },
-              child: GiImageView(image: image),
-            ),
-          ),
+        final box = constraints.maxWidth / constraints.maxHeight;
+        final frame = image.aspectRatio;
+        // What fraction of the frame's long axis `cover` would leave on screen.
+        final survives = frame > box ? box / frame : frame / box;
+
+        return GiImageView(
+          image: image,
+          fit: survives >= coverFloor ? BoxFit.cover : BoxFit.contain,
         );
       },
     );

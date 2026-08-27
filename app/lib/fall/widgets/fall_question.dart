@@ -89,7 +89,7 @@ class FallQuestion extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                GiAmbient(image: giCase.images.first, focusEnd: 1),
+                GiAmbient(image: giCase.images.first),
                 GiImageView(image: giCase.images.first),
               ],
             ),

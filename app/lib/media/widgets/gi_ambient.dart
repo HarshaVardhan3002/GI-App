@@ -32,15 +32,30 @@ import 'package:flutter/material.dart';
 /// {@endtemplate}
 class GiAmbient extends StatelessWidget {
   /// {@macro gi_ambient}
-  const GiAmbient({required this.image, this.focusEnd = .5, super.key});
+  const GiAmbient({
+    required this.image,
+    this.navInset = 0,
+    this.ground,
+    super.key,
+  });
 
   /// The image whose light this is. A placeholder has none, and draws nothing.
   final GiImage image;
 
-  /// Where the image field stops, as a fraction of this box's height. The
-  /// light is at full strength down to there and decays below it, so the spill
-  /// reads as coming from the frame rather than as a wash laid over the card.
-  final double focusEnd;
+  /// How much of the bottom edge gets no light at all, as a fraction of this
+  /// box's height.
+  ///
+  /// **The navigation bar's band.** The bar is a material with the screen
+  /// visible through it, and a bar showing the strongest part of a colour
+  /// spill is a bar that changes colour with the case behind it. The light
+  /// runs up to the bar and stops.
+  final double navInset;
+
+  /// What the light is composited over. Defaults to [GiColors.surface].
+  ///
+  /// Heute passes black: there the light falls on letterbox bars, and a bar is
+  /// the absence of a picture rather than a surface of the app.
+  final Color? ground;
 
   /// How wide the ambient source is decoded. Deliberately tiny: everything
   /// above roughly 64px is detail that the blur is about to destroy anyway.
@@ -70,7 +85,9 @@ class GiAmbient extends StatelessWidget {
 
     // A placeholder is drawn, not photographed. There is no light to spill,
     // and inventing some would be decoration standing in for content.
-    if (image.isPlaceholder) return ColoredBox(color: colors.surface);
+    if (image.isPlaceholder) {
+      return ColoredBox(color: ground ?? colors.surface);
+    }
 
     final blurEnabled = MaterialQuality.blurOf(context);
     final isDark = colors.brightness == Brightness.dark;
@@ -109,7 +126,7 @@ class GiAmbient extends StatelessWidget {
 
     return IgnorePointer(
       child: ColoredBox(
-        color: colors.surface,
+        color: ground ?? colors.surface,
         // Static: it does not move when the card scrolls and it does not
         // rebuild when the text does, so it rasterises once and is then free.
         child: RepaintBoundary(
@@ -119,48 +136,43 @@ class GiAmbient extends StatelessWidget {
               shaderCallback: (rect) => LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                // Full under the frame, decaying below it, and never quite
-                // reaching zero: the card's bottom keeps a trace of the image
-                // so the text block reads as sitting in the same room as it.
-                // **Half strength at its strongest, and a fifth in light.**
+                // **It gets stronger downward, and dies at the bar.**
                 //
+                // The spill is weakest where it meets the picture and heaviest
+                // at the foot of the screen. That is the way round it has to
+                // be: light next to the frame competes with the frame, and
+                // light under the text is what stops the reading end of the
+                // card from being a black hole. It stops dead at [navInset],
+                // because the tab bar is a material and a bar carrying the
+                // brightest part of a colour spill is a bar that changes
+                // colour with the case behind it.
+                //
+                // **Half strength at its strongest, and a fifth in light.**
                 // The first build ran this at full alpha and the card read as
                 // glowing rather than as lit: a ground as saturated as the
                 // endoscopic frame above it, the tint on *Fall öffnen* sitting
                 // on red. Light spills off a photograph at a fraction of the
-                // photograph, and the reading end of the card has to be the
-                // dimmest part of it.
+                // photograph.
                 //
                 // The two appearances need different numbers because the
                 // arithmetic is not the same in both. On black, compositing
                 // the frame *adds*, and the result is light. On white it
                 // *subtracts*, and the same alpha does not read as light at
                 // all, it reads as a stain on the paper. Light gets a wash.
-                //
-                // Light was raised from 24% to 32% once the frame moved to the
-                // middle of the image box: at 24% the bands above and below it
-                // were grey paper rather than the image's colour, which is the
-                // whole reason they are not just left empty. It is still well
-                // under half of dark's, for the reason above.
                 colors: isDark
                     ? const [
-                        Color(0x8CFFFFFF),
-                        Color(0x8CFFFFFF),
-                        Color(0x4DFFFFFF),
-                        Color(0x33FFFFFF),
+                        Color(0x59FFFFFF),
+                        Color(0x80FFFFFF),
+                        Color(0xB3FFFFFF),
+                        Color(0x00FFFFFF),
                       ]
                     : const [
-                        Color(0x52FFFFFF),
-                        Color(0x52FFFFFF),
-                        Color(0x21FFFFFF),
-                        Color(0x16FFFFFF),
+                        Color(0x33FFFFFF),
+                        Color(0x47FFFFFF),
+                        Color(0x66FFFFFF),
+                        Color(0x00FFFFFF),
                       ],
-                stops: [
-                  0,
-                  focusEnd.clamp(0.0, 1.0),
-                  (focusEnd + .20).clamp(0.0, 1.0),
-                  1,
-                ],
+                stops: [0, .55, (1 - navInset).clamp(.6, 1.0), 1],
               ).createShader(rect),
               child: SizedBox.expand(child: light),
             ),

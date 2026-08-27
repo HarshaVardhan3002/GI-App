@@ -11,18 +11,20 @@ import 'package:intl/intl.dart';
 ///
 /// `DESIGN.md` section 8: *"Today's case fills the viewport and its lower edge
 /// dissolves into the ground... there is no card: there is an image that
-/// becomes the page."* Three passes missed that sentence in the same way, by
-/// deciding the image's height first and letting whatever was left be somebody
-/// else's problem. Each time the leftover turned up somewhere: between the
-/// frame and the question, then at the foot of the card, then as most of the
-/// lower half with the text pinned to its top.
+/// becomes the page."*
 ///
-/// **The text is measured and the image takes the rest.** That is the whole
-/// inversion, and it is why there can be no empty region: the only thing that
-/// can grow into spare space is the frame, and the frame always wants more.
-/// A tall image gets nearly the whole screen; a short one is contained inside
-/// the same field with [GiAmbient] lighting the margin it leaves. Nothing is
-/// cropped either way, because the field contains rather than covers.
+/// **The image is the whole screen, and everything else floats on it.** Four
+/// passes read that sentence as "the image is the top part of the screen and
+/// the text is the bottom part", and every one of them left an empty region
+/// somewhere, because two boxes sharing a screen have to agree on a boundary
+/// and a photograph does not have one. There is one box now. It is the
+/// viewport, the frame fills it, and the question sits over the picture on a
+/// pane of glass.
+///
+/// A frame that cannot fill the viewport without losing itself is centred and
+/// the screen goes black above and below it. Those bars, and only those bars,
+/// carry the image's own light: see [GiAmbient]. Nothing is ever drawn on the
+/// picture.
 /// {@endtemplate}
 class Tageskarte extends StatefulWidget {
   /// {@macro tageskarte}
@@ -50,18 +52,14 @@ class _TageskarteState extends State<Tageskarte> {
   /// How much of the next card shows above the bottom bar.
   static const double peekHeight = 10;
 
-  /// Where the ambient light stops being at full strength, as a fraction of
-  /// the card.
+  /// How far the glass pane takes to appear, in dp from its top edge.
   ///
-  /// **Flat, at 1.** It used to fall off toward the foot, from a layout where
-  /// the ground ran all the way down to the tab bar and had to get out of the
-  /// bar's way. It no longer does: the diffusion pane covers everything from
-  /// the text down to the bottom edge, so the only ambient a reader sees is
-  /// inside the image box, above and below the frame, and both of those are
-  /// light spilling off the same picture. Grading one of them darker than the
-  /// other would say the light had a direction it does not have.
-  static const double ambientFocusEnd = 1;
-
+  /// **A pane over a photograph cannot have a top edge.** Anywhere it starts is
+  /// a horizontal line ruled across the picture, and the picture is the case.
+  /// 96dp is roughly the height of the attribution and the metadata line, so
+  /// the glass has reached full strength by the time the question needs it to
+  /// be there.
+  static const double paneFade = 96;
 
   @override
   Widget build(BuildContext context) {
@@ -77,81 +75,86 @@ class _TageskarteState extends State<Tageskarte> {
     final index = _imageIndex.clamp(0, giCase.images.length - 1);
     final image = giCase.images[index];
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        // The ground, lit by the frame it carries. Behind everything, the pane
-        // included, which is the point of the pane being thin.
-        GiAmbient(image: image, focusEnd: ambientFocusEnd),
-        // **No scroll view here, on purpose.** An earlier pass put one in so an
-        // enlarged text scale could not overflow, and it handed the Column
-        // unbounded height, which contradicts the [Expanded] below and rendered
-        // nothing at all. It was also solving a problem the Expanded already
-        // solves: at a large text scale the block grows and the image field is
-        // what yields. The card gives way at the image rather than at the
-        // question, which is the right order for this screen.
-        //
-        // A second scrollable inside the vertical pager would also have taken
-        // the drag off it.
-        Column(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final height = constraints.maxHeight;
+        return Stack(
+          fit: StackFit.expand,
           children: [
-            // **The image box: everything the text does not take.** Sizing
-            // the image first and letting the leftover fall where it may is
-            // what put an empty region on this card three passes running. The
-            // frame centres in this box at its own aspect, never cropped, and
-            // what it does not reach on either side of it is the ambient.
-            Expanded(
-              child: TageskarteImages(
-                images: giCase.images,
-                onIndexChanged: _onIndex,
-              ),
+            // Black, and lit only where the picture is not. When the frame
+            // covers the screen none of this is visible at all; when it cannot,
+            // this is what the bars are made of. Black rather than the app's
+            // surface because a bar is the absence of a picture, not a surface
+            // of the app.
+            GiAmbient(
+              image: image,
+              ground: Colors.black,
+              navInset: height <= 0 ? 0 : (barInset / height).clamp(0.0, .5),
             ),
-            // **The diffusion box: the text, and everything under it to the
-            // bottom edge of the screen.** The peek and the tab bar's inset
-            // are inside it rather than below it, because a strip of bare
-            // ground under the pane was the last place the card had nothing in
-            // it, and the tab bar's labels then sat on ramp while the question
-            // 40dp above them sat on glass.
+            // **Full screen.** Not `Expanded`, not a fraction, not a box with
+            // the text underneath it: the carousel is the viewport. Each frame
+            // decides for itself whether it can survive covering it.
+            TageskarteImages(
+              images: giCase.images,
+              onIndexChanged: _onIndex,
+            ),
+            // The reading end of the screen, floating on the picture. It is
+            // measured, so it takes exactly the height its own text needs and
+            // the picture keeps the rest.
             //
-            // Square-topped and edgeless: the frame has already dissolved into
-            // these pixels, so there is no boundary left to draw. A rounded,
-            // highlighted top was what made this read as a card sitting on the
-            // screen instead of a surface the image runs into.
-            GiThinMaterial(
-              radius: 0,
-              showEdge: false,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.lg,
-                      AppSpacing.md,
-                      AppSpacing.lg,
-                      AppSpacing.md,
-                    ),
-                    child: TageskarteText(giCase: giCase, imageIndex: index),
-                  ),
-                  if (!widget.isLast)
+            // Square-topped, edgeless and dissolved in over [paneFade]: a
+            // rounded, highlighted top would be a card sitting on a photograph,
+            // and section 4 rule 3 is that there is no hairline where chrome
+            // ends.
+            //
+            // The peek and the tab bar's inset are inside the pane rather than
+            // below it, so the labels on the bar read off the same glass the
+            // question does.
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: GiThinMaterial(
+                radius: 0,
+                showEdge: false,
+                fadeExtent: paneFade,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // The dissolve happens here, over nothing. Without this the
+                    // fade ran across the attribution line, and the one string
+                    // on the card that warns the reader what they are looking
+                    // at was the one string sitting on clear glass over a
+                    // photograph. Text starts where the material has arrived.
+                    const SizedBox(height: paneFade),
                     Padding(
-                      padding: EdgeInsets.only(
-                        left: AppSpacing.sm,
-                        right: AppSpacing.sm,
-                        bottom: barInset,
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.lg,
+                        0,
+                        AppSpacing.lg,
+                        AppSpacing.md,
                       ),
-                      child: const SizedBox(
-                        height: peekHeight,
-                        child: TageskartePeek(),
-                      ),
-                    )
-                  else
-                    SizedBox(height: barInset + peekHeight),
-                ],
+                      child: TageskarteText(giCase: giCase, imageIndex: index),
+                    ),
+                    if (!widget.isLast)
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: AppSpacing.sm,
+                          right: AppSpacing.sm,
+                          bottom: barInset,
+                        ),
+                        child: const SizedBox(
+                          height: peekHeight,
+                          child: TageskartePeek(),
+                        ),
+                      )
+                    else
+                      SizedBox(height: barInset + peekHeight),
+                  ],
+                ),
               ),
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 

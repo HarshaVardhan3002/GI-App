@@ -224,6 +224,7 @@ class GiThinMaterial extends StatelessWidget {
     required this.child,
     this.radius = 20,
     this.showEdge = true,
+    this.fadeExtent = 0,
     super.key,
   });
 
@@ -241,6 +242,18 @@ class GiThinMaterial extends StatelessWidget {
   /// is exactly that there is no hairline where chrome ends. Heute's card runs
   /// its image into the pane, so the pane has no beginning to mark.
   final bool showEdge;
+
+  /// How many dp the pane takes to appear at its top edge. Zero for a pane with
+  /// a real edge.
+  ///
+  /// **A pane laid over a photograph cannot begin anywhere.** Wherever it
+  /// starts is a horizontal line ruled across the picture. Above zero, the top
+  /// [fadeExtent] dp of the material dissolve out, blur included, and the tint
+  /// itself is graded from [gradedTopAlpha] to [gradedFootAlpha] rather than
+  /// being flat: a uniformly shaded panel over media reads as a slab, and the
+  /// end of the screen that has to carry small type is the end that needs the
+  /// most cover.
+  final double fadeExtent;
 
   /// Section 4, Ultradünn.
   static const double blurSigma = 18;
@@ -264,6 +277,36 @@ class GiThinMaterial extends StatelessWidget {
   /// and not a sheet.
   static const double tintAlpha = .55;
 
+  /// Where a graded pane starts, as an alpha: the edge that dissolves into
+  /// whatever is behind it.
+  ///
+  /// **Light needs far more of it, for the reason the ambient light needs
+  /// less.** On black the picture *adds*, and a thin tint is separation on its
+  /// own. On white the tint is white too, an endoscopic frame is bright pink, and a
+  /// light wash over a bright picture is still a bright picture. Measured on
+  /// the device at the first numbers, Hell had the rights warning at 3.2:1 and
+  /// the date line at 1.8:1: one of them unreadable, and the other the string
+  /// that tells a reader the image is not cleared.
+  static double gradedTopAlpha(Brightness brightness) =>
+      brightness == Brightness.dark ? .18 : .46;
+
+  /// What the pane has reached by the time the fade is over, which is where the
+  /// first line of text sits.
+  ///
+  /// **The grade is steep, then gentle.** Spreading it evenly from the top of
+  /// the pane to the foot of the screen sounds right and reads wrong: the text
+  /// begins about a fifth of the way down, so an even grade has the material at
+  /// a fifth of its strength exactly where the smallest type on the card is.
+  static double gradedBodyAlpha(Brightness brightness) =>
+      brightness == Brightness.dark ? .58 : .86;
+
+  /// Where a graded pane ends, at the foot of the screen. It keeps climbing
+  /// after the fade, because the pane is not a flat panel: section 4's ramp
+  /// runs the same way, and the foot of this screen is where the navigation bar
+  /// has to read.
+  static double gradedFootAlpha(Brightness brightness) =>
+      brightness == Brightness.dark ? .82 : .96;
+
   @override
   Widget build(BuildContext context) {
     final colors = context.gi;
@@ -271,8 +314,9 @@ class GiThinMaterial extends StatelessWidget {
 
     final blurEnabled = MaterialQuality.blurOf(context);
     final tint = colors.depth(.30);
+    final graded = fadeExtent > 0;
 
-    return ClipRRect(
+    Widget pane = ClipRRect(
       borderRadius: shape,
       // Plain, not `.grouped`, for the reason recorded on [GiMaterial].
       child: BackdropFilter(
@@ -285,8 +329,12 @@ class GiThinMaterial extends StatelessWidget {
           decoration: BoxDecoration(
             // Section 4: reduced transparency collapses the material to an
             // opaque surface at the same depth. Same depth, same place, same
-            // size; only the light behind it goes.
-            color: blurEnabled ? tint.withValues(alpha: tintAlpha) : tint,
+            // size; only the light behind it goes, grade included.
+            color: !blurEnabled
+                ? tint
+                : graded
+                ? null
+                : tint.withValues(alpha: tintAlpha),
             borderRadius: shape,
             border: showEdge
                 ? Border(
@@ -294,9 +342,98 @@ class GiThinMaterial extends StatelessWidget {
                   )
                 : null,
           ),
-          child: child,
+          // The grade is written in dp from the top edge, so it needs the
+          // pane's own height rather than the height it was offered. This is a
+          // measured pane inside a Stack: the offer is the whole card and the
+          // pane is a third of it. A painter is handed the size it actually
+          // took.
+          child: graded && blurEnabled
+              ? CustomPaint(
+                  painter: _GradedTint(
+                    tint: tint,
+                    fadeExtent: fadeExtent,
+                    brightness: colors.brightness,
+                  ),
+                  child: child,
+                )
+              : child,
         ),
       ),
     );
+
+    if (graded) {
+      pane = ShaderMask(
+        // The mask applies to the material, blur included. Fading only the tint
+        // would leave a sharply cut rectangle of blurred picture, which is the
+        // hairline section 4 rule 3 exists to prevent.
+        blendMode: BlendMode.dstIn,
+        shaderCallback: (rect) {
+          final stop = rect.height <= fadeExtent
+              ? 1.0
+              : (fadeExtent / rect.height).clamp(0.0, 1.0);
+          return LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: const [Colors.transparent, Colors.white, Colors.white],
+            stops: [0, stop, 1],
+          ).createShader(rect);
+        },
+        child: pane,
+      );
+    }
+
+    return pane;
   }
+}
+
+/// The graded tint under a [GiThinMaterial] that has a fade.
+///
+/// A painter rather than a `BoxDecoration` gradient because the grade's first
+/// stop is [GiThinMaterial.fadeExtent] dp from the top edge, and a decoration's
+/// stops are fractions. Only paint knows what the pane's height turned out to
+/// be.
+class _GradedTint extends CustomPainter {
+  const _GradedTint({
+    required this.tint,
+    required this.fadeExtent,
+    required this.brightness,
+  });
+
+  final Color tint;
+  final double fadeExtent;
+  final Brightness brightness;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    final stop = size.height <= fadeExtent
+        ? 1.0
+        : (fadeExtent / size.height).clamp(0.0, 1.0);
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            tint.withValues(
+              alpha: GiThinMaterial.gradedTopAlpha(brightness),
+            ),
+            tint.withValues(
+              alpha: GiThinMaterial.gradedBodyAlpha(brightness),
+            ),
+            tint.withValues(
+              alpha: GiThinMaterial.gradedFootAlpha(brightness),
+            ),
+          ],
+          stops: [0, stop, 1],
+        ).createShader(rect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(_GradedTint old) =>
+      old.tint != tint ||
+      old.fadeExtent != fadeExtent ||
+      old.brightness != brightness;
 }

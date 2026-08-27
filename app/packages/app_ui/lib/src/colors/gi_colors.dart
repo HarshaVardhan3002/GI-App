@@ -106,7 +106,7 @@ class GiColors {
       tint = const Color(0xFF0B6BB5),
       correct = const Color(0xFF2E7D4F),
       incorrect = const Color(0xFFC0392B),
-      warning = const Color(0xFFB26A00);
+      warning = const Color(0xFF995700);
 
   /// Which appearance this is. Drives [depth].
   final Brightness brightness;
@@ -132,6 +132,13 @@ class GiColors {
   final Color incorrect;
 
   /// Placeholder content and other things the reader is owed a warning about.
+  ///
+  /// **Darker in Hell than the first pass wrote it.** 0xFFB26A00 measured
+  /// 3.44:1 against the pane the rights notice actually sits on, and that
+  /// notice is a footnote, so it needs 4.5. The one string that says an image
+  /// is not cleared for publication cannot be the string a reader has to lean
+  /// in for. 0xFF995700 measures 4.7:1 there and darker on every deeper
+  /// surface.
   final Color warning;
 
   /// {@macro gi_ramp}
