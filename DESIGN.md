@@ -312,12 +312,25 @@ there is no card: there is an image that becomes the page. Bars float over it as
 material with the image visible beneath, which is how navigation survives a
 layout whose point is that content swallows the screen.
 
-**The frame takes what the text does not.** The text block is measured and the
-frame gets the whole remainder, top-anchored at its own aspect and never
-cropped. That order is the rule, and it is the one thing that guarantees no
-empty region: the only element that can grow into spare space is the image, and
-the image always wants more. What a frame narrower or shorter than the field
-leaves is lit by section 4a's ambient, not left black.
+**Two boxes, and there is no third.** The text block is measured; everything
+above it is the *image box*. That order is the rule, and it is the one thing
+that guarantees no empty region.
+
+- **Image box.** The frame sits centred in it at its own aspect, never cropped.
+  When the frame fills the box it runs edge to edge and no ground shows at all.
+  When it does not, the shortfall is split above and below it and lit by section
+  4a's ambient. Half and half, not banked under the picture: a single tall band
+  reads as the screen having run out, two short ones read as a picture in a
+  frame.
+- **Diffusion box.** The text, and everything under it down to the bottom edge
+  of the screen, on the Ultradünn material. The peek and the tab bar's inset are
+  inside it, not below it: a strip of bare ground under the pane was the last
+  place the card had nothing in it, and it put the tab bar's labels on the ramp
+  while the question 40dp above them sat on glass.
+
+An edge that reaches the box is not dissolved. A frame tall enough to fill the
+image box runs to the top of the screen, and feathering it there would fade the
+picture out under the status bar with nothing on the other side to bleed into.
 
 The dissolve is **48dp, not the 150 first written here**. 150 was set for a
 layout with nothing under the image, where the frame faded into black over a

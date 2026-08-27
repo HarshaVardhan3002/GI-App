@@ -53,16 +53,14 @@ class _TageskarteState extends State<Tageskarte> {
   /// Where the ambient light stops being at full strength, as a fraction of
   /// the card.
   ///
-  /// **A constant, and named as one.** It used to be derived from the image
-  /// field's height, which was knowable while the field was a fixed size.
-  /// Now the field is whatever the text leaves, so its height is not known
-  /// until the frame is laid out, and reading it back would cost a second
-  /// pass to save nothing: the frame covers everything above the pane in every
-  /// case, so the only ambient a reader ever sees is the band behind the pane
-  /// and the margin beside a frame that does not fill the width. The grade's
-  /// remaining job is to keep the foot of the screen darker than the head, so
-  /// the tab bar sits on the ramp rather than on the image's light.
-  static const double ambientFocusEnd = .68;
+  /// **Flat, at 1.** It used to fall off toward the foot, from a layout where
+  /// the ground ran all the way down to the tab bar and had to get out of the
+  /// bar's way. It no longer does: the diffusion pane covers everything from
+  /// the text down to the bottom edge, so the only ambient a reader sees is
+  /// inside the image box, above and below the frame, and both of those are
+  /// light spilling off the same picture. Grading one of them darker than the
+  /// other would say the light had a direction it does not have.
+  static const double ambientFocusEnd = 1;
 
 
   @override
@@ -97,50 +95,60 @@ class _TageskarteState extends State<Tageskarte> {
         // the drag off it.
         Column(
           children: [
-            // **The frame takes everything the text does not.** Sizing the
-            // field first and letting the leftover fall where it may is what
-            // put an empty region on this card three passes running. Each
-            // frame anchors to the top of this field at its own height and
-            // dissolves at its own lower edge; what it does not want is the
-            // ambient, lit by the same frame.
+            // **The image box: everything the text does not take.** Sizing
+            // the image first and letting the leftover fall where it may is
+            // what put an empty region on this card three passes running. The
+            // frame centres in this box at its own aspect, never cropped, and
+            // what it does not reach on either side of it is the ambient.
             Expanded(
               child: TageskarteImages(
                 images: giCase.images,
                 onIndexChanged: _onIndex,
               ),
             ),
-            // Square-topped and edgeless: the frame above has already
-            // dissolved into these pixels, so there is no boundary left to
-            // draw. A rounded, highlighted top here was what made the pane read
-            // as a card sitting on the screen instead of a surface the image
-            // runs into.
+            // **The diffusion box: the text, and everything under it to the
+            // bottom edge of the screen.** The peek and the tab bar's inset
+            // are inside it rather than below it, because a strip of bare
+            // ground under the pane was the last place the card had nothing in
+            // it, and the tab bar's labels then sat on ramp while the question
+            // 40dp above them sat on glass.
+            //
+            // Square-topped and edgeless: the frame has already dissolved into
+            // these pixels, so there is no boundary left to draw. A rounded,
+            // highlighted top was what made this read as a card sitting on the
+            // screen instead of a surface the image runs into.
             GiThinMaterial(
               radius: 0,
               showEdge: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.lg,
-                  AppSpacing.md,
-                  AppSpacing.lg,
-                  AppSpacing.md,
-                ),
-                child: TageskarteText(giCase: giCase, imageIndex: index),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.lg,
+                      AppSpacing.md,
+                      AppSpacing.lg,
+                      AppSpacing.md,
+                    ),
+                    child: TageskarteText(giCase: giCase, imageIndex: index),
+                  ),
+                  if (!widget.isLast)
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left: AppSpacing.sm,
+                        right: AppSpacing.sm,
+                        bottom: barInset,
+                      ),
+                      child: const SizedBox(
+                        height: peekHeight,
+                        child: TageskartePeek(),
+                      ),
+                    )
+                  else
+                    SizedBox(height: barInset + peekHeight),
+                ],
               ),
             ),
-            if (!widget.isLast)
-              Padding(
-                padding: EdgeInsets.only(
-                  left: AppSpacing.sm,
-                  right: AppSpacing.sm,
-                  bottom: barInset,
-                ),
-                child: const SizedBox(
-                  height: peekHeight,
-                  child: TageskartePeek(),
-                ),
-              )
-            else
-              SizedBox(height: barInset + peekHeight),
           ],
         ),
       ],

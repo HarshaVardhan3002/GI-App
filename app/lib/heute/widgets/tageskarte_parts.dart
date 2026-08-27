@@ -84,13 +84,24 @@ class _TageskarteImagesState extends State<TageskarteImages> {
 }
 
 /// {@template bleeding_frame}
-/// One frame in the field: top-anchored, at its own height, dissolving at its
-/// own lower edge.
+/// One frame, centred in the image box, dissolving into the light on whichever
+/// sides it does not reach.
 ///
-/// The mask is `dstIn`, so what shows through the last [TageskarteImages
-/// .bleedExtent] is whatever is painted behind the card, which is the image's
-/// own ambient light at exactly the colours that edge of the frame was. That is
-/// what makes it read as bleeding rather than as a gradient laid on top.
+/// **Centred, not top-anchored.** A frame shorter than the box used to sit at
+/// the top with the whole shortfall banked under it, which put a single tall
+/// band of ground between the image and the text and read as the screen having
+/// run out. Half above and half below is the shape a picture makes in a frame,
+/// and it halves the largest run of empty ground on the card.
+///
+/// The mask is `dstIn`, so what shows through a dissolved edge is whatever is
+/// painted behind the card, which is the image's own ambient light at exactly
+/// the colours that edge of the frame was. That is what makes it read as
+/// bleeding rather than as a gradient laid on top.
+///
+/// **An edge that reaches the box is not dissolved.** A frame tall enough to
+/// fill the image box runs to the top of the screen, and feathering it there
+/// would fade the picture out under the status bar for no reason: there is
+/// nothing on the other side of that edge to bleed into.
 /// {@endtemplate}
 class _BleedingFrame extends StatelessWidget {
   const _BleedingFrame({required this.image});
@@ -105,17 +116,20 @@ class _BleedingFrame extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         // A placeholder has no pixels and so no shape to ask for. It takes the
-        // field, which is the honest thing for a surface whose whole message
-        // is that there is nothing here yet.
+        // box, which is the honest thing for a surface whose whole message is
+        // that there is nothing here yet.
         final height = image.isPlaceholder
             ? constraints.maxHeight
             : (constraints.maxWidth / image.aspectRatio).clamp(
                 0.0,
                 constraints.maxHeight,
               );
+        // Half a dp of slack: a frame that misses filling the box by a rounding
+        // error has no ground above it to bleed into, and feathering it would
+        // be a visible fade with nothing behind it.
+        final hasGap = constraints.maxHeight - height > 1;
 
-        return Align(
-          alignment: Alignment.topCenter,
+        return Center(
           child: SizedBox(
             width: double.infinity,
             height: height,
@@ -125,18 +139,25 @@ class _BleedingFrame extends StatelessWidget {
                 // Read off the painted rect rather than assumed, for the same
                 // reason `GiMaterial` does: the feather is a fixed number of dp
                 // whatever height this frame ended up at.
-                final start = rect.height <= bleed
-                    ? 0.0
-                    : (rect.height - bleed) / rect.height;
+                final h = rect.height;
+                if (h <= bleed * 2) {
+                  return const LinearGradient(
+                    colors: [Colors.white, Colors.white],
+                  ).createShader(rect);
+                }
+                // The bottom edge always dissolves: the pane or the ground is
+                // under it either way. The top only when there is ground above.
+                final top = hasGap ? bleed / h : 0.0;
                 return LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: const [
+                  colors: [
+                    if (hasGap) Colors.transparent else Colors.white,
                     Colors.white,
                     Colors.white,
                     Colors.transparent,
                   ],
-                  stops: [0, start, 1],
+                  stops: [0, top, (h - bleed) / h, 1],
                 ).createShader(rect);
               },
               child: GiImageView(image: image),

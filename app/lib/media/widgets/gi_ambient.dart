@@ -136,6 +136,12 @@ class GiAmbient extends StatelessWidget {
                 // the frame *adds*, and the result is light. On white it
                 // *subtracts*, and the same alpha does not read as light at
                 // all, it reads as a stain on the paper. Light gets a wash.
+                //
+                // Light was raised from 24% to 32% once the frame moved to the
+                // middle of the image box: at 24% the bands above and below it
+                // were grey paper rather than the image's colour, which is the
+                // whole reason they are not just left empty. It is still well
+                // under half of dark's, for the reason above.
                 colors: isDark
                     ? const [
                         Color(0x8CFFFFFF),
@@ -144,8 +150,8 @@ class GiAmbient extends StatelessWidget {
                         Color(0x33FFFFFF),
                       ]
                     : const [
-                        Color(0x3DFFFFFF),
-                        Color(0x3DFFFFFF),
+                        Color(0x52FFFFFF),
+                        Color(0x52FFFFFF),
                         Color(0x21FFFFFF),
                         Color(0x16FFFFFF),
                       ],
